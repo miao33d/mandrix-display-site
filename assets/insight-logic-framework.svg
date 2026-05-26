@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Logic-based Mandarin framework</title>
+  <desc id="desc">Editorial illustration of Chinese sentence logic as a reusable system.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff8ef"/>
+      <stop offset="0.5" stop-color="#f8fbff"/>
+      <stop offset="1" stop-color="#eef7f2"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1">
+      <stop offset="0" stop-color="#1f7a63"/>
+      <stop offset="1" stop-color="#5fa2cf"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <rect x="82" y="72" width="1036" height="531" rx="34" fill="#fff" stroke="#d9e7f2" stroke-width="2"/>
+  <text x="126" y="164" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="900" fill="#1f7a63">Logic-based Mandarin</text>
+  <text x="126" y="254" font-family="Inter, Arial, sans-serif" font-size="76" font-weight="900" fill="#1b2a3b">Stop collecting</text>
+  <text x="126" y="331" font-family="Inter, Arial, sans-serif" font-size="76" font-weight="900" fill="#1b2a3b">random phrases</text>
+  <g transform="translate(128 414)">
+    <rect x="0" y="0" width="188" height="74" rx="18" fill="#eef7ff" stroke="#cfe2f2"/>
+    <rect x="224" y="0" width="188" height="74" rx="18" fill="#fff4e6" stroke="#edd4b4"/>
+    <rect x="448" y="0" width="188" height="74" rx="18" fill="#eaf6f0" stroke="#c9e2d4"/>
+    <text x="47" y="47" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="900" fill="#2d6fa0">Pattern</text>
+    <text x="274" y="47" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="900" fill="#9a6630">Context</text>
+    <text x="502" y="47" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="900" fill="#1f7a63">Output</text>
+  </g>
+  <g transform="translate(775 148)">
+    <circle cx="130" cy="130" r="126" fill="#f8fbff" stroke="#d5e6f4" stroke-width="2"/>
+    <path d="M130 36v188M36 130h188M64 64l132 132M196 64L64 196" stroke="#c8d8e8" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="130" cy="130" r="42" fill="url(#accent)"/>
+    <text x="98" y="140" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" fill="#fff">逻辑</text>
+  </g>
+</svg>

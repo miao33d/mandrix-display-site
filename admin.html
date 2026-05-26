@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mandrix Admin | Bookings</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="admin-page">
+    <header class="admin-header">
+      <div>
+        <p class="eyebrow">Mandrix Admin</p>
+        <h1>Booking Requests</h1>
+      </div>
+      <div class="actions">
+        <button class="btn secondary" id="langToggle" type="button">中文</button>
+        <button class="btn secondary" id="refreshBookings" type="button">Refresh</button>
+        <button class="btn primary" id="exportCsv" type="button">Export CSV</button>
+        <a class="btn secondary" href="/">View Site</a>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <section class="admin-login" id="adminLogin" hidden>
+        <form id="adminLoginForm">
+          <p class="eyebrow">Admin Access</p>
+          <h2>Enter the admin password</h2>
+          <p id="adminLoginMessage">Your saved password may be outdated. Enter the current password to load bookings.</p>
+          <label>Admin Password
+            <input id="adminPassword" type="password" autocomplete="current-password" required>
+          </label>
+          <button class="btn primary" type="submit">Load Bookings</button>
+        </form>
+      </section>
+
+      <nav class="admin-tabs" aria-label="Admin sections">
+        <button class="active" type="button" data-admin-tab="operations">Operations</button>
+        <button type="button" data-admin-tab="analytics">数据中心</button>
+      </nav>
+
+      <section class="admin-toolbar" data-admin-panel="operations">
+        <label>Status Filter
+          <select id="statusFilter">
+            <option value="">All</option>
+            <option>New</option>
+            <option>Paid - needs verification</option>
+            <option>Payment Pending</option>
+            <option>Paid</option>
+            <option>Time Confirmed</option>
+            <option>Meeting Link Sent</option>
+            <option>Completed</option>
+            <option>Cancelled</option>
+          </select>
+        </label>
+        <label>Search
+          <input id="searchBookings" placeholder="Name, email, course, contact...">
+        </label>
+        <label>Timetable Start Date
+          <input id="timetableStart" type="date">
+        </label>
+        <label>Timetable Range
+          <select id="timetableDays">
+            <option value="7">7 days</option>
+            <option value="14" selected>14 days</option>
+            <option value="30">30 days</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="admin-summary" id="bookingSummary" data-admin-panel="operations"></section>
+
+      <section class="admin-timetable" data-admin-panel="operations">
+        <div class="admin-section-head">
+          <div>
+            <p class="eyebrow">Timetable</p>
+            <h2>Availability Timetable</h2>
+          </div>
+          <p>Available slots are shown by date and Beijing time. Booked slots show the student and course.</p>
+        </div>
+        <div class="lesson-list" id="lessonList">
+          <p>Loading timetable...</p>
+        </div>
+      </section>
+
+      <section class="booking-list" id="bookingList" data-admin-panel="operations">
+        <p>Loading bookings...</p>
+      </section>
+
+      <section class="analytics-panel" id="analyticsPanel" data-admin-panel="analytics" hidden>
+        <div class="admin-section-head">
+          <div>
+            <p class="eyebrow">数据中心</p>
+            <h2>流量、画像与转化分析</h2>
+          </div>
+          <label class="analytics-range">时间范围
+            <select id="analyticsRange">
+              <option value="7">近 7 天</option>
+              <option value="30" selected>近 30 天</option>
+              <option value="90">近 90 天</option>
+            </select>
+          </label>
+        </div>
+        <div class="analytics-status" id="analyticsStatus">正在加载数据中心...</div>
+        <div class="analytics-kpis" id="analyticsKpis"></div>
+        <div class="analytics-grid">
+          <article class="analytics-card analytics-wide">
+            <h3>每日趋势</h3>
+            <div class="mini-chart" id="dailyChart"></div>
+          </article>
+          <article class="analytics-card">
+            <h3>转化漏斗</h3>
+            <div class="funnel-list" id="funnelList"></div>
+          </article>
+          <article class="analytics-card">
+            <h3>增长诊断</h3>
+            <div class="insight-list" id="growthDiagnosis"></div>
+          </article>
+          <article class="analytics-card">
+            <h3>课程兴趣排行</h3>
+            <div class="rank-list" id="courseInterest"></div>
+          </article>
+          <article class="analytics-card analytics-wide">
+            <h3>课程转化明细</h3>
+            <div class="conversion-table" id="courseConversion"></div>
+          </article>
+          <article class="analytics-card">
+            <h3>内容表现</h3>
+            <div class="rank-list" id="contentPerformance"></div>
+          </article>
+          <article class="analytics-card">
+            <h3>文章助攻预约</h3>
+            <div class="assist-list" id="articleAssists"></div>
+          </article>
+          <article class="analytics-card">
+            <h3>热门页面</h3>
+            <div class="rank-list" id="topPages"></div>
+          </article>
+          <article class="analytics-card">
+            <h3>用户画像</h3>
+            <div class="split-grid" id="profileSplits"></div>
+          </article>
+          <article class="analytics-card">
+            <h3>流量来源</h3>
+            <div class="rank-list" id="trafficSources"></div>
+          </article>
+          <article class="analytics-card">
+            <h3>互动信号</h3>
+            <div class="signal-grid" id="engagementSignals"></div>
+          </article>
+          <article class="analytics-card analytics-wide">
+            <h3>人群转化</h3>
+            <div class="segment-grid" id="segmentConversion"></div>
+          </article>
+          <article class="analytics-card">
+            <h3>按钮表现</h3>
+            <div class="rank-list" id="ctaPerformance"></div>
+          </article>
+          <article class="analytics-card">
+            <h3>优先行动</h3>
+            <div class="action-list" id="priorityActions"></div>
+          </article>
+          <article class="analytics-card analytics-wide">
+            <h3>最近行为记录</h3>
+            <div class="event-table" id="recentEvents"></div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script src="admin.js"></script>
+  </body>
+</html>

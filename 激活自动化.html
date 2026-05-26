@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mandrix 自动化激活向导</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #0D1B2A;
+    color: #E8EDF2;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+  }
+
+  .container { max-width: 780px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .header .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #1ED760, #0FAA47);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .header h1 {
+    font-size: 30px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .header p {
+    font-size: 16px;
+    color: #8FA3B8;
+    line-height: 1.6;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    display: flex;
+    gap: 0;
+    margin-bottom: 48px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #1C2E40;
+  }
+  .progress-step {
+    flex: 1;
+    padding: 14px 10px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    background: #111E2B;
+    border-right: 1px solid #1C2E40;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #4A6A85;
+  }
+  .progress-step:last-child { border-right: none; }
+  .progress-step.active { background: #1C2E40; color: #1ED760; }
+  .progress-step.done { background: #0D2218; color: #1ED760; }
+  .progress-step .step-num {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 3px;
+  }
+
+  /* Cards */
+  .step-card {
+    background: #111E2B;
+    border: 1px solid #1C2E40;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    display: none;
+  }
+  .step-card.active { display: block; }
+
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .step-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .step-icon.blue { background: #0D2233; }
+  .step-icon.green { background: #0D2218; }
+  .step-icon.purple { background: #1A1133; }
+  .step-icon.gold { background: #221A05; }
+
+  .step-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .step-subtitle { font-size: 13px; color: #5A7A95; }
+  .step-time {
+    margin-left: auto;
+    background: #0D2233;
+    color: #5BA3D0;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  /* Steps list */
+  .steps-list { list-style: none; counter-reset: step-counter; }
+  .steps-list li {
+    counter-increment: step-counter;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .steps-list li::before {
+    content: counter(step-counter);
+    width: 28px;
+    height: 28px;
+    background: #1C2E40;
+    color: #5BA3D0;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .steps-list li .content { flex: 1; }
+  .steps-list li strong { color: #E8EDF2; }
+  .steps-list li a {
+    color: #5BA3D0;
+    text-decoration: none;
+  }
+  .steps-list li a:hover { text-decoration: underline; }
+
+  /* Code box */
+  .code-box {
+    background: #080F17;
+    border: 1px solid #1C2E40;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 13px;
+    color: #1ED760;
+    margin: 12px 0;
+    position: relative;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .code-box .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #1C2E40;
+    color: #8FA3B8;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .code-box .copy-btn:hover { background: #263D52; color: #fff; }
+
+  /* Info box */
+  .info-box {
+    background: #0D1F30;
+    border-left: 3px solid #5BA3D0;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 14px;
+    color: #8FA3B8;
+    line-height: 1.6;
+  }
+  .info-box strong { color: #E8EDF2; }
+
+  .success-box {
+    background: #0D2218;
+    border-left: 3px solid #1ED760;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 14px;
+    color: #8FA3B8;
+    line-height: 1.6;
+  }
+  .success-box strong { color: #1ED760; }
+
+  /* Env var rows */
+  .env-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .env-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: #4A6A85;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-bottom: 1px solid #1C2E40;
+  }
+  .env-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #111E2B;
+    font-size: 13px;
+    vertical-align: top;
+  }
+  .env-table tr:last-child td { border-bottom: none; }
+  .env-key {
+    font-family: "SF Mono", monospace;
+    color: #F5A623;
+    font-size: 12px;
+  }
+  .env-desc { color: #8FA3B8; }
+  .env-source { color: #1ED760; font-size: 12px; }
+
+  /* Navigation buttons */
+  .nav-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .btn {
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #1ED760, #0FAA47);
+    color: #fff;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(30,215,96,0.3); }
+  .btn-secondary {
+    background: #1C2E40;
+    color: #8FA3B8;
+  }
+  .btn-secondary:hover { background: #263D52; color: #E8EDF2; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Final success screen */
+  .success-screen {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .success-screen .big-icon { font-size: 64px; margin-bottom: 20px; }
+  .success-screen h2 { font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+  .success-screen p { font-size: 15px; color: #8FA3B8; line-height: 1.7; max-width: 480px; margin: 0 auto 28px; }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 24px 0;
+    text-align: left;
+  }
+  .result-item {
+    background: #0D2218;
+    border: 1px solid #1A3D28;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .result-item .icon { font-size: 22px; margin-bottom: 8px; }
+  .result-item .label { font-size: 12px; color: #4A8A5E; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .result-item .value { font-size: 14px; color: #E8EDF2; font-weight: 600; }
+
+  .admin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #1C2E40, #263D52);
+    border: 1px solid #3A5570;
+    border-radius: 12px;
+    padding: 16px 24px;
+    text-decoration: none;
+    color: #E8EDF2;
+    font-weight: 600;
+    font-size: 15px;
+    margin-top: 12px;
+    transition: all 0.2s;
+  }
+  .admin-link:hover { transform: translateY(-2px); border-color: #1ED760; color: #1ED760; }
+
+  @media (max-width: 540px) {
+    .result-grid { grid-template-columns: 1fr; }
+    .step-time { display: none; }
+    .progress-step { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge">⚡ 一次配置，永久自动</div>
+    <h1>激活 Mandrix 自动化系统</h1>
+    <p>你的网站自动化代码已经写好了。只需要开通 3 个免费账号，<br>添加几个密钥，系统就会自动运转，你只需做管理。</p>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-step active" data-step="1" onclick="goToStep(1)">
+      <span class="step-num">①</span>Supabase<br>数据库
+    </div>
+    <div class="progress-step" data-step="2" onclick="goToStep(2)">
+      <span class="step-num">②</span>Resend<br>邮件服务
+    </div>
+    <div class="progress-step" data-step="3" onclick="goToStep(3)">
+      <span class="step-num">③</span>Vercel<br>填入密钥
+    </div>
+    <div class="progress-step" data-step="4" onclick="goToStep(4)">
+      <span class="step-num">④</span>测试<br>完成！
+    </div>
+  </div>
+
+  <!-- ===================== STEP 1: SUPABASE ===================== -->
+  <div class="step-card active" id="step-1">
+    <div class="step-header">
+      <div class="step-icon blue">🗄️</div>
+      <div>
+        <div class="step-title">第一步：创建 Supabase 数据库</div>
+        <div class="step-subtitle">免费 · 存储所有预约记录 · 约 10 分钟</div>
+      </div>
+      <div class="step-time">⏱ ~10 分钟</div>
+    </div>
+
+    <div class="info-box">
+      <strong>Supabase 是什么？</strong><br>
+      免费的云数据库。每个学员预约后，信息自动存在这里。你可以随时查看全部记录，不会丢失。
+    </div>
+
+    <ul class="steps-list">
+      <li>
+        <div class="content">
+          打开 <a href="https://supabase.com" target="_blank">supabase.com</a>，点击 <strong>Start your project</strong>，用 GitHub 账号或邮箱注册（完全免费）
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          登录后点击 <strong>New Project</strong>，填写：<br>
+          • Name：<strong>mandrix</strong><br>
+          • Database Password：设一个密码（记住它）<br>
+          • Region：选 <strong>Singapore</strong>（最近）<br>
+          然后点 <strong>Create new project</strong>，等待约 2 分钟
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          项目创建好后，点左侧菜单 <strong>SQL Editor</strong>，点右上角 <strong>New query</strong><br>
+          把下面这段 SQL 全部粘贴进去，点 <strong>Run</strong>（绿色按钮）
+          <div class="code-box" id="sql-code">-- 在 Supabase SQL Editor 中运行这个文件：
+-- 文件位置：你的网站文件夹 / supabase-bookings.sql
+-- 用记事本或文本编辑器打开，复制全部内容，粘贴到这里运行
+<button class="copy-btn" onclick="openFile()">📂 打开文件</button></div>
+          <div class="info-box">💡 提示：<strong>supabase-bookings.sql</strong> 文件已经保存在你的网站文件夹里，用"文本编辑"打开，全选复制，粘贴到 SQL Editor 里运行。</div>
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          运行成功后，点左侧 <strong>Project Settings</strong>（齿轮图标） → <strong>API</strong><br>
+          找到并复制这两个值，保存在备忘录里：
+          <table class="env-table">
+            <tr>
+              <th>名称</th><th>在哪里找</th>
+            </tr>
+            <tr>
+              <td><span class="env-key">SUPABASE_URL</span></td>
+              <td class="env-desc">Project URL 那一行（https://xxxxx.supabase.co）</td>
+            </tr>
+            <tr>
+              <td><span class="env-key">SUPABASE_SERVICE_ROLE_KEY</span></td>
+              <td class="env-desc">service_role 那一行的密钥（点眼睛图标显示，点复制）</td>
+            </tr>
+          </table>
+          <div class="info-box">⚠️ <strong>service_role key 是私密密钥，不要分享给任何人</strong></div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="nav-buttons">
+      <span></span>
+      <button class="btn btn-primary" onclick="goToStep(2)">下一步：设置邮件 →</button>
+    </div>
+  </div>
+
+  <!-- ===================== STEP 2: RESEND ===================== -->
+  <div class="step-card" id="step-2">
+    <div class="step-header">
+      <div class="step-icon green">📧</div>
+      <div>
+        <div class="step-title">第二步：开通 Resend 邮件服务</div>
+        <div class="step-subtitle">免费 · 自动发送预约确认邮件 · 约 5 分钟</div>
+      </div>
+      <div class="step-time">⏱ ~5 分钟</div>
+    </div>
+
+    <div class="info-box">
+      <strong>Resend 是什么？</strong><br>
+      免费邮件发送服务。学员提交预约后，系统自动给学员发确认邮件，同时给你发通知邮件。你完全不需要手动发。
+    </div>
+
+    <ul class="steps-list">
+      <li>
+        <div class="content">
+          打开 <a href="https://resend.com" target="_blank">resend.com</a>，点 <strong>Get Started for Free</strong>，用邮箱注册
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          登录后，左侧菜单点 <strong>API Keys</strong>，点 <strong>Create API Key</strong><br>
+          名称填 <strong>mandrix</strong>，权限选 <strong>Full Access</strong>，点 <strong>Add</strong>
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          复制生成的 API Key（以 <code>re_</code> 开头），保存在备忘录里<br>
+          <div class="info-box">⚠️ 这个 Key 只显示一次，务必立刻保存！<br><strong>变量名：RESEND_API_KEY</strong></div>
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          <strong>（可选但推荐）</strong>验证你的域名，让邮件从 <strong>noreply@mandrix.top</strong> 发出，而不是默认地址<br>
+          左侧点 <strong>Domains</strong> → <strong>Add Domain</strong> → 输入 <strong>mandrix.top</strong> → 按提示在你的域名 DNS 里添加记录<br>
+          <div class="info-box">💡 如果觉得麻烦，可以先跳过这步，系统会用 Resend 的默认地址发邮件，功能一样正常。</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="goToStep(1)">← 上一步</button>
+      <button class="btn btn-primary" onclick="goToStep(3)">下一步：填入 Vercel →</button>
+    </div>
+  </div>
+
+  <!-- ===================== STEP 3: VERCEL ===================== -->
+  <div class="step-card" id="step-3">
+    <div class="step-header">
+      <div class="step-icon purple">🔑</div>
+      <div>
+        <div class="step-title">第三步：在 Vercel 填入所有密钥</div>
+        <div class="step-subtitle">把三个密钥填进去，系统立刻激活 · 约 5 分钟</div>
+      </div>
+      <div class="step-time">⏱ ~5 分钟</div>
+    </div>
+
+    <div class="info-box">
+      <strong>Vercel 是什么？</strong><br>
+      你的网站 mandrix.top 就托管在 Vercel 上。在 Vercel 设置里填入密钥，网站就能连上数据库和邮件服务。
+    </div>
+
+    <ul class="steps-list">
+      <li>
+        <div class="content">
+          打开 <a href="https://vercel.com/dashboard" target="_blank">vercel.com/dashboard</a>，找到你的 <strong>mandrix-display-site</strong> 项目，点进去
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          点顶部 <strong>Settings</strong> 标签 → 左侧菜单点 <strong>Environment Variables</strong>
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          逐一添加以下 4 个变量（每次点 <strong>Add New</strong>，填 Key 和 Value，点 <strong>Save</strong>）：
+          <table class="env-table" style="margin-top: 16px;">
+            <tr>
+              <th>Key（变量名）</th>
+              <th>Value（填什么）</th>
+            </tr>
+            <tr>
+              <td><span class="env-key">SUPABASE_URL</span></td>
+              <td class="env-source">从第一步 Supabase 复制的 Project URL</td>
+            </tr>
+            <tr>
+              <td><span class="env-key">SUPABASE_SERVICE_ROLE_KEY</span></td>
+              <td class="env-source">从第一步 Supabase 复制的 service_role key</td>
+            </tr>
+            <tr>
+              <td><span class="env-key">RESEND_API_KEY</span></td>
+              <td class="env-source">从第二步 Resend 复制的 API Key（re_开头）</td>
+            </tr>
+            <tr>
+              <td><span class="env-key">ADMIN_TOKEN</span></td>
+              <td class="env-source">自己设一个密码（例如：Mandrix2026!），用于进入管理后台</td>
+            </tr>
+          </table>
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          4 个变量全部添加完成后，点左侧 <strong>Deployments</strong>，找最新一次部署，点右边 <strong>…</strong> → <strong>Redeploy</strong><br>
+          等待约 1 分钟，部署完成后自动化系统即刻激活 ✅
+        </div>
+      </li>
+    </ul>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="goToStep(2)">← 上一步</button>
+      <button class="btn btn-primary" onclick="goToStep(4)">最后一步：测试 →</button>
+    </div>
+  </div>
+
+  <!-- ===================== STEP 4: TEST ===================== -->
+  <div class="step-card" id="step-4">
+    <div class="step-header">
+      <div class="step-icon gold">✅</div>
+      <div>
+        <div class="step-title">第四步：测试 + 你的管理后台</div>
+        <div class="step-subtitle">验证系统正常运作，开始全自动管理</div>
+      </div>
+      <div class="step-time">⏱ ~5 分钟</div>
+    </div>
+
+    <ul class="steps-list">
+      <li>
+        <div class="content">
+          打开你的网站 <a href="https://www.mandrix.top" target="_blank">mandrix.top</a>，提交一次测试预约（用自己的邮箱，付款参考号填"TEST001"）
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          检查你的邮箱（Jane.Mandrix@outlook.com）是否收到了<strong>自动通知邮件</strong>
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          打开管理后台：<a href="https://www.mandrix.top/admin" target="_blank"><strong>mandrix.top/admin</strong></a><br>
+          输入你在第三步设置的 <strong>ADMIN_TOKEN</strong> 密码<br>
+          你应该能看到刚才的测试预约出现在列表里 ✅
+        </div>
+      </li>
+      <li>
+        <div class="content">
+          在管理后台里，你可以：<br>
+          • 更新预约状态（New → Paid → Meeting Link Sent → Completed）<br>
+          • 查看所有学员、课程、支付状态<br>
+          • 导出 CSV 报表<br>
+          • 查看网站访问数据分析
+        </div>
+      </li>
+    </ul>
+
+    <div class="success-box" style="margin-top: 24px;">
+      <strong>🎉 激活完成后，系统将自动处理：</strong><br><br>
+      ✅ 学员提交预约 → 自动存入数据库<br>
+      ✅ 同时自动发邮件给你 和 学员<br>
+      ✅ 每天自动检查 → 上课前 24 小时发提醒邮件<br>
+      ✅ 你的管理后台实时显示所有预约<br>
+      ✅ 你只需要：在后台确认付款、发送腾讯会议链接
+    </div>
+
+    <div class="result-grid">
+      <div class="result-item">
+        <div class="icon">📥</div>
+        <div class="label">收到预约</div>
+        <div class="value">自动存储 + 邮件通知</div>
+      </div>
+      <div class="result-item">
+        <div class="icon">💳</div>
+        <div class="label">确认付款</div>
+        <div class="value">你在后台更新状态</div>
+      </div>
+      <div class="result-item">
+        <div class="icon">📅</div>
+        <div class="label">上课提醒</div>
+        <div class="value">自动发送（每天凌晨）</div>
+      </div>
+      <div class="result-item">
+        <div class="icon">📊</div>
+        <div class="label">数据分析</div>
+        <div class="value">后台实时查看</div>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 24px;">
+      <a class="admin-link" href="https://www.mandrix.top/admin" target="_blank">
+        🖥️ 打开管理后台 mandrix.top/admin
+      </a>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="goToStep(3)">← 上一步</button>
+      <button class="btn btn-primary" onclick="window.open('运营中心.html')">返回运营中心 →</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentStep = 1;
+
+function goToStep(n) {
+  // Hide all
+  document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.progress-step').forEach((s, i) => {
+    s.classList.remove('active');
+    if (i + 1 < n) s.classList.add('done');
+    else s.classList.remove('done');
+  });
+  // Show target
+  document.getElementById('step-' + n).classList.add('active');
+  document.querySelector('[data-step="' + n + '"]').classList.add('active');
+  currentStep = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openFile() {
+  alert('请在你的网站文件夹里找到 supabase-bookings.sql 文件，用"文本编辑"打开，全选复制，然后粘贴到 Supabase SQL Editor 中运行。');
+}
+</script>
+</body>
+</html>
