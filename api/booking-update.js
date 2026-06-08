@@ -1,6 +1,6 @@
-import { isAdmin } from "./_auth.js";
-import { sendMeetingLinkNotification } from "./_email.js";
-import { deleteBooking, patchBooking, sendJson } from "./_supabase.js";
+import { isAdmin } from "../lib/_auth.js";
+import { sendMeetingLinkNotification } from "../lib/_email.js";
+import { deleteBooking, patchBooking, sendJson } from "../lib/_supabase.js";
 
 export default async function handler(req, res) {
   if (!isAdmin(req)) {

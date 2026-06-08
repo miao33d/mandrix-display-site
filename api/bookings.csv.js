@@ -1,5 +1,5 @@
-import { isAdmin } from "./_auth.js";
-import { listBookings } from "./_supabase.js";
+import { isAdmin } from "../lib/_auth.js";
+import { listBookings } from "../lib/_supabase.js";
 
 function toCsvValue(value) {
   const text = typeof value === "object" && value !== null ? JSON.stringify(value) : String(value ?? "");

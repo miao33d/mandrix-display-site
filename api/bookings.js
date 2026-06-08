@@ -1,8 +1,8 @@
-import { buildBookingFromPayload, missingFields } from "./_bookingCreate.js";
-import { cleanString } from "./_bookingLogic.js";
-import { assertEmailConfigured, sendBookingNotifications } from "./_email.js";
-import { isAdmin } from "./_auth.js";
-import { insertBooking, listBookings, patchBooking, sendJson } from "./_supabase.js";
+import { buildBookingFromPayload, missingFields } from "../lib/_bookingCreate.js";
+import { cleanString } from "../lib/_bookingLogic.js";
+import { assertEmailConfigured, sendBookingNotifications } from "../lib/_email.js";
+import { isAdmin } from "../lib/_auth.js";
+import { insertBooking, listBookings, patchBooking, sendJson } from "../lib/_supabase.js";
 
 export default async function handler(req, res) {
   // CORS — allow the ops dashboard and any local file to call this API

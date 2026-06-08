@@ -39,7 +39,9 @@
 
       <nav class="admin-tabs" aria-label="Admin sections">
         <button class="active" type="button" data-admin-tab="operations">Operations</button>
+        <button type="button" data-admin-tab="level-checks">AI Level Checks</button>
         <button type="button" data-admin-tab="analytics">数据中心</button>
+        <button type="button" data-admin-tab="seo">SEO 发布</button>
       </nav>
 
       <section class="admin-toolbar" data-admin-panel="operations">
@@ -73,6 +75,8 @@
 
       <section class="admin-summary" id="bookingSummary" data-admin-panel="operations"></section>
 
+      <section class="renewal-panel" id="renewalPanel" data-admin-panel="operations"></section>
+
       <section class="admin-timetable" data-admin-panel="operations">
         <div class="admin-section-head">
           <div>
@@ -90,6 +94,20 @@
         <p>Loading bookings...</p>
       </section>
 
+      <section class="analytics-panel" id="levelChecksPanel" data-admin-panel="level-checks" hidden>
+        <div class="admin-section-head">
+          <div>
+            <p class="eyebrow">Lead Capture</p>
+            <h2>Free AI Level Check Leads</h2>
+          </div>
+          <p>Every submitted level check appears here with the report summary, course path, and student sample.</p>
+        </div>
+        <div class="analytics-status" id="levelChecksStatus">Loading AI level checks...</div>
+        <div class="booking-list" id="levelChecksList">
+          <p>Loading level checks...</p>
+        </div>
+      </section>
+
       <section class="analytics-panel" id="analyticsPanel" data-admin-panel="analytics" hidden>
         <div class="admin-section-head">
           <div>
@@ -103,6 +121,7 @@
               <option value="90">近 90 天</option>
             </select>
           </label>
+          <button class="btn secondary danger" id="clearAnalyticsButton" type="button">清空浏览数据</button>
         </div>
         <div class="analytics-status" id="analyticsStatus">正在加载数据中心...</div>
         <div class="analytics-kpis" id="analyticsKpis"></div>
@@ -167,6 +186,224 @@
             <h3>最近行为记录</h3>
             <div class="event-table" id="recentEvents"></div>
           </article>
+        </div>
+      </section>
+
+      <section class="seo-publisher" id="seoPublisher" data-admin-panel="seo" hidden>
+        <div class="admin-section-head">
+          <div>
+            <p class="eyebrow">SEO Factory</p>
+            <h2>SEO 页面发布后台</h2>
+          </div>
+          <p>填内容，看预览，复制发布包给 Codex。页面会用同一个 Mandrix 模板生成，避免每次手写出不同版式。</p>
+        </div>
+
+        <div class="seo-workbench">
+          <form class="seo-form" id="seoForm">
+            <div class="seo-ai-box">
+              <div class="seo-form-head">
+                <div>
+                  <p class="eyebrow">AI Paste Mode</p>
+                  <h3>复制 AI 生成的固定格式</h3>
+                </div>
+                <button class="btn secondary" type="button" id="seoCopyAiPrompt">复制 AI 生成口令</button>
+              </div>
+              <label>AI SEO 页面代码
+                <textarea id="seoAiCode" rows="12" placeholder='把 AI 生成的 ```json ... ``` 整段粘贴到这里，然后点“套用并预览”。'></textarea>
+              </label>
+              <div class="seo-ai-actions">
+                <button class="btn primary" type="button" id="seoApplyAiCode">套用并预览</button>
+                <button class="btn secondary" type="button" id="seoClearAiCode">清空</button>
+              </div>
+              <p class="seo-ai-note">固定格式会自动生成同一套 Mandrix 页面模板。你不用管代码、meta、schema、排版。</p>
+            </div>
+
+            <div class="seo-form-head">
+              <div>
+                <p class="eyebrow">Template</p>
+                <h3>高级细节编辑</h3>
+              </div>
+              <select id="seoPreset" aria-label="SEO page preset">
+                <option value="custom">自定义页面</option>
+                <option value="sourcing">Sourcing / 采购中文</option>
+                <option value="business">Business Chinese / 商务中文</option>
+                <option value="hsk">HSK Prep / HSK 备考</option>
+              </select>
+            </div>
+
+            <div class="seo-field-grid">
+              <label>内容分区
+                <select name="category">
+                  <option value="business-chinese">Business Chinese</option>
+                  <option value="hsk-prep">HSK Prep</option>
+                  <option value="daily-chinese">Daily Chinese</option>
+                  <option value="sourcing-chinese">Sourcing Chinese</option>
+                  <option value="culture-communication">Culture & Communication</option>
+                  <option value="learning-method">Learning Method</option>
+                </select>
+                <small>前台会自动收进 Insights 对应分区。</small>
+              </label>
+              <label>发布状态
+                <select name="status">
+                  <option value="published">直接发布</option>
+                  <option value="draft">保存草稿</option>
+                </select>
+                <small>发布后会进入动态 sitemap，谷歌可抓。</small>
+              </label>
+            </div>
+
+            <div class="seo-field-grid">
+              <label>URL 文件名
+                <input name="slug" placeholder="business-chinese-online">
+                <small>自动生成：<span id="seoSlugPreview">/business-chinese-online.html</span></small>
+              </label>
+              <label>页面小标签
+                <input name="eyebrow" placeholder="Business Chinese Online">
+              </label>
+            </div>
+
+            <label>SEO Title
+              <input name="title" placeholder="Business Chinese Lessons Online for Professionals | Mandrix">
+            </label>
+            <label>Meta Description
+              <textarea name="description" rows="3" placeholder="155 characters max is best."></textarea>
+            </label>
+            <label>H1 主标题
+              <textarea name="h1" rows="2" placeholder="Sound professional in Chinese — not just grammatically correct."></textarea>
+            </label>
+            <label>首屏正文
+              <textarea name="lead" rows="4"></textarea>
+            </label>
+            <label>正文扩展内容
+              <textarea name="articleBody" rows="7" placeholder="这里写更完整的正文。建议包含：痛点、具体场景、解决方法、适合谁、下一步。"></textarea>
+            </label>
+
+            <div class="seo-field-grid">
+              <label>主图
+                <select name="image">
+                  <option value="assets/sourcing-supplier-laptop.jpg">Sourcing: 供应商资料/电脑沟通</option>
+                  <option value="assets/backup-business-meeting.jpg">Business: 会议桌/报告</option>
+                  <option value="assets/backup-study-desk.jpg">HSK: 线上学习桌面</option>
+                  <option value="assets/course-daily.jpg">Daily Chinese: 日常沟通</option>
+                  <option value="assets/course-diagnostic-online.webp">Diagnostic: 在线诊断</option>
+                  <option value="assets/corporate-training-hero.png">Corporate: 企业培训</option>
+                </select>
+              </label>
+              <label>主图 alt 文案
+                <input name="imageAlt" placeholder="Business meeting desk with reports and working notes">
+              </label>
+            </div>
+
+            <div class="seo-image-lab">
+              <div class="seo-form-head">
+                <div>
+                  <p class="eyebrow">Image Style</p>
+                  <h3>图片风格固定</h3>
+                </div>
+                <button class="btn secondary" type="button" id="seoCopyImagePrompt">复制图片生成口令</button>
+              </div>
+              <label>AI 图片生成口令
+                <textarea id="seoImagePrompt" rows="7" readonly></textarea>
+              </label>
+              <div class="seo-field-grid">
+                <label>上传/预览图片
+                  <input id="seoImageUpload" type="file" accept="image/png,image/jpeg,image/webp">
+                  <small>上传后这里只做预览；发布时把图片发给我，我会放进 assets。</small>
+                </label>
+                <label>建议保存路径
+                  <input id="seoImageTarget" readonly>
+                  <small>发布包会自动写入这个路径。</small>
+                </label>
+              </div>
+              <img class="seo-image-preview" id="seoImagePreview" alt="Uploaded SEO preview" hidden>
+            </div>
+
+            <label>标签 Chips
+              <input name="chips" placeholder="WeChat and email, Meetings and calls, Negotiation, Professional tone">
+            </label>
+
+            <div class="seo-field-grid">
+              <label>主按钮文字
+                <input name="primaryLabel" value="Reserve $29 Diagnostic">
+              </label>
+              <label>副按钮文字
+                <input name="secondaryLabel" placeholder="View Business Programs">
+              </label>
+            </div>
+            <div class="seo-field-grid">
+              <label>主按钮链接
+                <input name="primaryHref" value="index.html#booking">
+              </label>
+              <label>副按钮链接
+                <input name="secondaryHref" placeholder="index.html#courses">
+              </label>
+            </div>
+
+            <div class="seo-block-editor">
+              <p class="eyebrow">Three Cards</p>
+              <div class="seo-card-editors">
+                <label>卡片 1
+                  <input name="card1Title" placeholder="WeChat & professional email">
+                  <textarea name="card1Text" rows="3"></textarea>
+                </label>
+                <label>卡片 2
+                  <input name="card2Title" placeholder="Meetings & calls">
+                  <textarea name="card2Text" rows="3"></textarea>
+                </label>
+                <label>卡片 3
+                  <input name="card3Title" placeholder="Negotiation & presentations">
+                  <textarea name="card3Text" rows="3"></textarea>
+                </label>
+              </div>
+            </div>
+
+            <div class="seo-block-editor">
+              <p class="eyebrow">Middle Section</p>
+              <label>中段小标签
+                <input name="sectionEyebrow" placeholder="Bring real work materials">
+              </label>
+              <label>中段标题
+                <input name="sectionTitle" placeholder="Your course can use your real messages.">
+              </label>
+              <label>中段正文
+                <textarea name="sectionBody" rows="4"></textarea>
+              </label>
+            </div>
+
+            <div class="seo-block-editor">
+              <p class="eyebrow">Final CTA</p>
+              <label>CTA 小标签
+                <input name="ctaEyebrow" value="Start with diagnosis">
+              </label>
+              <label>CTA 标题
+                <input name="ctaTitle" placeholder="Find the blocker first.">
+              </label>
+              <label>CTA 正文
+                <textarea name="ctaBody" rows="3"></textarea>
+              </label>
+            </div>
+
+            <div class="seo-actions">
+              <button class="btn primary" type="button" id="seoPublishLive">发布到 Insights</button>
+              <button class="btn primary" type="button" id="seoCopyPackage">复制发布包</button>
+              <button class="btn secondary" type="button" id="seoDownloadHtml">下载 HTML</button>
+              <button class="btn secondary" type="button" id="seoCopySitemap">复制 Sitemap 条目</button>
+              <button class="btn secondary" type="button" id="seoSaveDraft">保存草稿</button>
+            </div>
+            <p class="seo-ai-note" id="seoLiveStatus">发布后正式地址会显示在这里。每天发完后，把地址复制到 Google Search Console 做 URL 检查。</p>
+          </form>
+
+          <aside class="seo-preview-panel">
+            <div class="seo-checks" id="seoChecks"></div>
+            <div class="seo-preview-toolbar">
+              <strong>实时预览</strong>
+              <span id="seoPreviewPath">/page.html</span>
+            </div>
+            <iframe id="seoPreview" title="SEO page preview"></iframe>
+            <label class="seo-output">发布包预览
+              <textarea id="seoOutput" rows="10" readonly></textarea>
+            </label>
+          </aside>
         </div>
       </section>
     </main>

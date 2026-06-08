@@ -298,7 +298,7 @@ function buildBookingMessage(data) {
         country: "Country / Region",
         timezone: "Time Zone",
         level: "Current Chinese Level",
-        course: "Course Package",
+        course: "Course Plan",
         date: "First Class Date",
         time: "Fixed Class Time",
         frequency: "Class Frequency",
@@ -489,7 +489,9 @@ if (courseTabLinks.length && programBlocks.length) {
   const tabMap = {};
   courseTabLinks.forEach((tab) => {
     const href = tab.getAttribute("href");
-    if (href && href.startsWith("#")) tabMap[href.slice(1)] = tab;
+    if (!href) return;
+    if (href.startsWith("#")) tabMap[href.slice(1)] = tab;
+    if (href.startsWith("/")) tabMap[href.replace("/", "")] = tab;
   });
 
   const tabObserver = new IntersectionObserver(
@@ -509,6 +511,91 @@ if (courseTabLinks.length && programBlocks.length) {
     if (block.id) tabObserver.observe(block);
   });
 }
+
+/* ─── Program details: diagnostic-first folded course flow ───────── */
+(function () {
+  const blocks = document.querySelectorAll(".program-block");
+  const toggles = document.querySelectorAll(".program-toggle");
+  if (!blocks.length || !toggles.length) return;
+  const isChinesePage = document.documentElement.lang && document.documentElement.lang.startsWith("zh");
+
+  const expandedCopyEn = {
+    daily: "Hide Daily Chinese plans",
+    business: "Hide Business Chinese plans",
+    hsk: "Hide HSK plans",
+    specialty: "Hide Specialty plans",
+    private: "Hide Private Intensive options",
+  };
+
+  const collapsedCopyEn = {
+    daily: "View Daily Chinese plans",
+    business: "View Business Chinese plans",
+    hsk: "View HSK plans",
+    specialty: "View Specialty plans",
+    private: "Show Private Intensive options",
+  };
+
+  const expandedCopyZh = {
+    daily: "收起日常中文课包",
+    business: "收起商务中文课包",
+    hsk: "收起 HSK 课包",
+    specialty: "收起专项课程",
+    private: "收起私人强化课程",
+  };
+
+  const collapsedCopyZh = {
+    daily: "展开日常中文课包",
+    business: "展开商务中文课包",
+    hsk: "展开 HSK 课包",
+    specialty: "展开专项课程",
+    private: "展开私人强化课程",
+  };
+
+  const expandedCopy = isChinesePage ? expandedCopyZh : expandedCopyEn;
+  const collapsedCopy = isChinesePage ? collapsedCopyZh : collapsedCopyEn;
+
+  function setBlockExpanded(block, expanded) {
+    if (!block || !block.id) return;
+    block.classList.toggle("is-expanded", expanded);
+    const toggle = block.querySelector(".program-toggle");
+    if (toggle) {
+      toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+      toggle.textContent = expanded
+        ? expandedCopy[block.id] || "Hide details"
+        : collapsedCopy[block.id] || "Show details";
+    }
+  }
+
+  function expandFromPath(pathname = window.location.pathname, hash = window.location.hash) {
+    const routeKey = pathname.replace("/", "");
+    const hashKey = hash ? hash.replace("#", "") : "";
+    const targetId = routeKey && !routeKey.endsWith(".html") ? routeKey : hashKey;
+    if (!targetId) return;
+    const target = document.getElementById(targetId);
+    if (target && target.classList.contains("program-block")) {
+      setBlockExpanded(target, true);
+    }
+  }
+
+  toggles.forEach((toggle) => {
+    toggle.addEventListener("click", () => {
+      const block = toggle.closest(".program-block");
+      if (!block) return;
+      const shouldExpand = !block.classList.contains("is-expanded");
+      setBlockExpanded(block, shouldExpand);
+    });
+  });
+
+  expandFromPath();
+  window.addEventListener("popstate", () => expandFromPath());
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("a[href]");
+    if (!link) return;
+    const url = new URL(link.href, window.location.href);
+    if (url.origin !== window.location.origin) return;
+    requestAnimationFrame(() => expandFromPath(url.pathname, url.hash));
+  });
+})();
 
 /* ─── Scroll-reveal: auto-apply to key sections ────────── */
 (function () {
@@ -583,16 +670,321 @@ if (courseTabLinks.length && programBlocks.length) {
   counterEls.forEach((el) => counterObserver.observe(el));
 })();
 
-/* ─── Floating CTA: hide when #booking is in view ──────── */
+/* ─── Floating CTA: hide where it would cover dense content ──────── */
 const floatingContact = document.querySelector(".floating-contact");
-const bookingSection = document.querySelector("#booking");
+const cleanSectionRoutes = {
+  "/method": "method",
+  "/courses": "courses",
+  "/about": "about",
+  "/level-check": "level-check",
+  "/faq": "faq",
+  "/booking": "booking",
+  "/contact": "contact",
+  "/diagnostic": "diagnostic",
+  "/daily": "daily",
+  "/business": "business",
+  "/hsk": "hsk",
+  "/specialty": "specialty",
+  "/private": "private",
+  "/sourcing-spotlight": "sourcing-spotlight",
+};
 
-if (floatingContact && bookingSection) {
+function scrollToCleanSection(pathname = window.location.pathname, shouldReplace = false, hash = window.location.hash) {
+  const hashId = hash ? hash.replace("#", "") : "";
+  const targetId = cleanSectionRoutes[pathname] || hashId;
+  if (!targetId) return false;
+  const target = document.getElementById(targetId);
+  if (!target) return false;
+  requestAnimationFrame(() => {
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  if (shouldReplace) history.replaceState(null, "", pathname);
+  return true;
+}
+
+scrollToCleanSection(window.location.pathname, false, window.location.hash);
+
+document.addEventListener("click", (event) => {
+  const link = event.target.closest("a[href]");
+  if (!link) return;
+  const url = new URL(link.href, window.location.href);
+  if (url.origin !== window.location.origin) return;
+  if (!cleanSectionRoutes[url.pathname]) return;
+  if (!document.getElementById(cleanSectionRoutes[url.pathname])) return;
+  event.preventDefault();
+  history.pushState(null, "", url.pathname);
+  scrollToCleanSection(url.pathname);
+});
+
+window.addEventListener("popstate", () => scrollToCleanSection(window.location.pathname, false, window.location.hash));
+
+const floatingHideSections = [
+  "#method",
+  ".outcomes-section",
+  "#level-check",
+  "#results",
+  "#courses",
+  "#faq",
+  "#booking",
+]
+  .map((selector) => document.querySelector(selector))
+  .filter(Boolean);
+
+if (floatingContact && floatingHideSections.length) {
+  const visibleSections = new Set();
+  const updateFloatingContact = () => {
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const shouldHide = floatingHideSections.some((section) => {
+      const rect = section.getBoundingClientRect();
+      return rect.top < viewportHeight - 40 && rect.bottom > 40;
+    });
+    floatingContact.classList.toggle("is-hidden", shouldHide || visibleSections.size > 0);
+  };
   const floatObserver = new IntersectionObserver(
-    ([entry]) => {
-      floatingContact.classList.toggle("is-hidden", entry.isIntersecting);
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          visibleSections.add(entry.target);
+        } else {
+          visibleSections.delete(entry.target);
+        }
+      });
+      updateFloatingContact();
     },
-    { threshold: 0.1 }
+    { rootMargin: "0px 0px -35% 0px", threshold: 0 }
   );
-  floatObserver.observe(bookingSection);
+  floatingHideSections.forEach((section) => floatObserver.observe(section));
+  window.addEventListener("scroll", updateFloatingContact, { passive: true });
+  window.addEventListener("resize", updateFloatingContact);
+  updateFloatingContact();
+}
+
+/* ─── Free AI Level Check: branded report + lead capture ─────────── */
+const levelCheckForm = document.querySelector("#levelCheckForm");
+const levelCheckSubmit = document.querySelector("#levelCheckSubmit");
+const levelReport = document.querySelector("#levelReport");
+const levelReportContent = document.querySelector("#levelReportContent");
+const levelReportStatus = document.querySelector("#levelReportStatus");
+const levelCheckReset = document.querySelector("#levelCheckReset");
+
+const goalLabels = {
+  daily: "Daily Chinese",
+  business: "Business Chinese",
+  hsk: "HSK System Prep",
+  sourcing: "Sourcing & Supplier Chinese",
+  travel: "Travel / Relocation Chinese",
+};
+
+function textLengthScore(sample = "") {
+  const chineseChars = (sample.match(/[\u3400-\u9fff]/g) || []).length;
+  const latinWords = (sample.match(/[a-zA-Z]+/g) || []).length;
+  const pinyinSignals = (sample.match(/\b(wo|ni|ta|xiang|yao|xue|zhongwen|hanyu|yinwei|kehu|gongsi|laoshi)\b/gi) || []).length;
+  if (chineseChars >= 45 || latinWords >= 35 || pinyinSignals >= 8) return 3;
+  if (chineseChars >= 18 || latinWords >= 18 || pinyinSignals >= 4) return 2;
+  if (chineseChars >= 4 || latinWords >= 8 || pinyinSignals >= 2) return 1;
+  return 0;
+}
+
+function answerScore(value) {
+  if (value === "high") return 2;
+  if (value === "medium" || value === "business") return 1;
+  return 0;
+}
+
+function estimateLevel(data) {
+  let score = 0;
+  if (data.background === "months") score += 1;
+  if (data.background === "one-two") score += 2;
+  if (data.background === "three-plus") score += 3;
+  if (data.confidence === "medium") score += 1;
+  if (data.confidence === "high") score += 2;
+  score += answerScore(data.recognition);
+  score += answerScore(data.wordOrder);
+  score += answerScore(data.grammar);
+  score += answerScore(data.scenario);
+  score += textLengthScore(data.sample);
+
+  if (score <= 3) return { label: "Beginner", hsk: "Closest HSK range: Pre-HSK / HSK 1", score };
+  if (score <= 7) return { label: "Elementary", hsk: "Closest HSK range: HSK 1-2", score };
+  if (score <= 11) return { label: "Lower-intermediate", hsk: "Closest HSK range: HSK 2-3", score };
+  return { label: "Intermediate", hsk: "Closest HSK range: HSK 3-4+", score };
+}
+
+function blockerInsight(blocker) {
+  const map = {
+    translation: {
+      title: "Translation habit",
+      detail: "You may know more Chinese than you can use because every sentence passes through English first.",
+    },
+    "word-order": {
+      title: "Sentence order instability",
+      detail: "Your next improvement will likely come from reusable sentence frames, not more isolated vocabulary.",
+    },
+    grammar: {
+      title: "Disconnected grammar",
+      detail: "Rules may feel like separate facts. Mandrix would connect them into patterns you can reuse.",
+    },
+    output: {
+      title: "Passive-to-active gap",
+      detail: "Your comprehension is probably ahead of your speaking. You need controlled output practice.",
+    },
+  };
+  return map[blocker] || map["word-order"];
+}
+
+function recommendPath(goal) {
+  const map = {
+    daily: {
+      path: "Daily Chinese",
+      why: "Best for real-life fluency, daily interaction, and speaking confidence.",
+      firstStep: "Build 8-10 reusable sentence frames for introductions, needs, plans, and opinions.",
+    },
+    business: {
+      path: "Business Chinese",
+      why: "Best for meetings, messages, client conversations, negotiation, and professional tone.",
+      firstStep: "Start with polite request structures, meeting language, and work-message templates.",
+    },
+    hsk: {
+      path: "HSK System Prep",
+      why: "Best when you need structured grammar, vocabulary, reading, listening, and exam tasks.",
+      firstStep: "Map your current HSK gap, then study grammar and vocabulary through exam-style output.",
+    },
+    sourcing: {
+      path: "Sourcing & Supplier Chinese",
+      why: "Best for factory visits, WeChat supplier messages, pricing, MOQ, samples, and problem solving.",
+      firstStep: "Learn supplier-message templates for price, quality, timeline, samples, and follow-up.",
+    },
+    travel: {
+      path: "Travel / Relocation Chinese",
+      why: "Best for practical survival Chinese and confidence in daily Chinese-speaking environments.",
+      firstStep: "Practice high-frequency scenes: food, transport, housing, appointments, and help requests.",
+    },
+  };
+  return map[goal] || map.daily;
+}
+
+function buildLevelReport(data) {
+  const level = estimateLevel(data);
+  const blocker = blockerInsight(data.blocker);
+  const path = recommendPath(data.goal);
+  const structureCorrect = [data.recognition, data.wordOrder, data.grammar].filter((value) => value === "high").length;
+  const grammarNote = structureCorrect >= 2
+    ? "You can recognize basic meaning and structure. The next step is making that structure available during real-time speaking."
+    : "The structure tasks suggest that meaning, word order, and aspect markers may still feel separate. That is exactly where a pattern-first method helps.";
+  const scenarioNote = data.scenario === "business"
+    ? "Your scenario choice shows awareness of tone and negotiation context, not just literal translation."
+    : "Your scenario choice suggests you may need more practice with tone, politeness, and context-specific Chinese.";
+  const sampleNote = textLengthScore(data.sample) >= 2
+    ? "Your optional sample gives Jane extra material for a sharper follow-up diagnosis."
+    : "You did not need a Chinese keyboard to finish this check. For a deeper human diagnosis, you can later send Chinese, pinyin, voice, or English notes.";
+
+  return {
+    level,
+    blocker,
+    path,
+    grammarNote,
+    scenarioNote,
+    sampleNote,
+    scores: {
+      structure: Math.min(95, 34 + level.score * 5 + structureCorrect * 9),
+      comprehension: Math.min(94, 38 + answerScore(data.recognition) * 18 + answerScore(data.wordOrder) * 13 + answerScore(data.grammar) * 10),
+      communication: Math.min(92, 35 + answerScore(data.scenario) * 18 + (data.goal === "business" || data.goal === "sourcing" ? 8 : 0)),
+      output: Math.min(92, 30 + textLengthScore(data.sample) * 14 + (data.confidence === "high" ? 18 : data.confidence === "medium" ? 8 : 0)),
+      confidence: data.confidence === "high" ? 78 : data.confidence === "medium" ? 58 : 38,
+      goalFit: 88,
+    },
+  };
+}
+
+function renderScoreBar(label, value) {
+  return `<div class="level-score-row"><span>${label}</span><b>${value}%</b><i style="--score:${value}%"></i></div>`;
+}
+
+function renderLevelReport(data, report) {
+  const safeGoal = goalLabels[data.goal] || "Mandrix Path";
+  levelReportContent.innerHTML = `
+    <p class="eyebrow">Initial Report</p>
+    <h3>${data.fullName || "Your"} Chinese Level Check</h3>
+    <div class="level-report-summary">
+      <article><span>Estimated level</span><strong>${report.level.label}</strong><small>${report.level.hsk}</small></article>
+      <article><span>Main blocker</span><strong>${report.blocker.title}</strong><small>${report.blocker.detail}</small></article>
+      <article><span>Best path</span><strong>${safeGoal}</strong><small>${report.path.why}</small></article>
+    </div>
+    <div class="level-score-panel">
+      ${renderScoreBar("Structure awareness", report.scores.structure)}
+      ${renderScoreBar("Comprehension", report.scores.comprehension)}
+      ${renderScoreBar("Real communication", report.scores.communication)}
+      ${renderScoreBar("Active output", report.scores.output)}
+      ${renderScoreBar("Speaking confidence", report.scores.confidence)}
+      ${renderScoreBar("Mandrix path fit", report.scores.goalFit)}
+    </div>
+    <div class="level-report-block">
+      <h4>What this suggests</h4>
+      <p>${report.grammarNote}</p>
+      <p>${report.scenarioNote}</p>
+      <p>${report.sampleNote}</p>
+      <p>${report.blocker.detail}</p>
+    </div>
+    <div class="level-report-block">
+      <h4>Helpful next step</h4>
+      <p>For the next 30 days, focus on one narrow path: ${report.path.firstStep}</p>
+      <p>This initial check is intentionally short. A Jane consultation can review your actual sentences line by line and turn this into a precise study plan.</p>
+    </div>
+    <div class="level-course-recommendation">
+      <span>Recommended Mandrix path</span>
+      <strong>${report.path.path}</strong>
+      <p>${report.path.why}</p>
+    </div>
+  `;
+}
+
+async function submitLevelCheck(data, report) {
+  const response = await fetch("/api/level-check.js", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...data, report }),
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(result.error || "Could not save level check");
+  return result;
+}
+
+if (levelCheckForm) {
+  levelCheckForm.addEventListener("invalid", (event) => {
+    const details = event.target.closest?.(".level-check-details");
+    if (details) details.open = true;
+  }, true);
+
+  levelCheckForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(levelCheckForm).entries());
+    const report = buildLevelReport(data);
+    renderLevelReport(data, report);
+    levelReport.hidden = false;
+    levelReport.scrollIntoView({ behavior: "smooth", block: "start" });
+    levelReportStatus.textContent = "Saving your report and sending it to your email...";
+    levelCheckSubmit.disabled = true;
+    levelCheckSubmit.textContent = "Report Generated";
+    try {
+      const result = await submitLevelCheck(data, report);
+      const emailText = result.emailSent ? "A copy has been sent to your email." : "Your report is saved. If email is not configured yet, Jane can still see it in admin.";
+      levelReportStatus.textContent = emailText;
+      window.MandrixAnalytics?.track("level_check_submit_success", {
+        goal: data.goal,
+        level: report.level.label,
+        path: report.path.path,
+      });
+    } catch (error) {
+      levelReportStatus.textContent = "Your report is shown here. Email saving needs server setup.";
+      window.MandrixAnalytics?.track("level_check_submit_error", { error: error.message });
+    }
+  });
+
+  levelCheckReset?.addEventListener("click", () => {
+    levelCheckForm.reset();
+    levelReport.hidden = true;
+    levelCheckSubmit.disabled = false;
+    levelCheckSubmit.textContent = "Generate My Free Report";
+    levelCheckForm.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 }

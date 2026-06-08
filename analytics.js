@@ -1,6 +1,27 @@
-(function () {
+(function bootAnalytics() {
+  const start = () => {
   const endpoint = "/api/analytics.js";
   const sessionKey = "mandrixAnalyticsSession";
+  const optOutKey = "mandrixAnalyticsOptOut";
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.get("mandrix_analytics") === "off" || params.get("analytics") === "off") {
+    localStorage.setItem(optOutKey, "1");
+  }
+
+  if (params.get("mandrix_analytics") === "on" || params.get("analytics") === "on") {
+    localStorage.removeItem(optOutKey);
+  }
+
+  const analyticsDisabled = localStorage.getItem(optOutKey) === "1";
+  if (analyticsDisabled) {
+    window.MandrixAnalytics = {
+      disabled: true,
+      track: () => {},
+    };
+    return;
+  }
+
   const now = Date.now();
   const existing = JSON.parse(localStorage.getItem(sessionKey) || "null");
   const session = existing && now - existing.createdAt < 30 * 60 * 1000
@@ -99,4 +120,10 @@
       send("course_select", { course: field.value });
     }
   });
+  };
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(start, { timeout: 2500 });
+  } else {
+    window.setTimeout(start, 1200);
+  }
 })();

@@ -15,6 +15,7 @@ const loginMessage = document.querySelector("#adminLoginMessage");
 const adminTabs = document.querySelectorAll("[data-admin-tab]");
 const adminPanels = document.querySelectorAll("[data-admin-panel]");
 const analyticsRange = document.querySelector("#analyticsRange");
+const clearAnalyticsButton = document.querySelector("#clearAnalyticsButton");
 const analyticsStatus = document.querySelector("#analyticsStatus");
 const analyticsKpis = document.querySelector("#analyticsKpis");
 const dailyChart = document.querySelector("#dailyChart");
@@ -32,6 +33,31 @@ const courseConversion = document.querySelector("#courseConversion");
 const articleAssists = document.querySelector("#articleAssists");
 const segmentConversion = document.querySelector("#segmentConversion");
 const priorityActions = document.querySelector("#priorityActions");
+const renewalPanel = document.querySelector("#renewalPanel");
+const seoForm = document.querySelector("#seoForm");
+const seoPreset = document.querySelector("#seoPreset");
+const seoChecks = document.querySelector("#seoChecks");
+const seoPreview = document.querySelector("#seoPreview");
+const seoOutput = document.querySelector("#seoOutput");
+const seoPreviewPath = document.querySelector("#seoPreviewPath");
+const seoSlugPreview = document.querySelector("#seoSlugPreview");
+const seoCopyPackage = document.querySelector("#seoCopyPackage");
+const seoDownloadHtml = document.querySelector("#seoDownloadHtml");
+const seoCopySitemap = document.querySelector("#seoCopySitemap");
+const seoSaveDraft = document.querySelector("#seoSaveDraft");
+const seoPublishLive = document.querySelector("#seoPublishLive");
+const seoLiveStatus = document.querySelector("#seoLiveStatus");
+const seoAiCode = document.querySelector("#seoAiCode");
+const seoApplyAiCode = document.querySelector("#seoApplyAiCode");
+const seoClearAiCode = document.querySelector("#seoClearAiCode");
+const seoCopyAiPrompt = document.querySelector("#seoCopyAiPrompt");
+const seoImagePromptBox = document.querySelector("#seoImagePrompt");
+const seoCopyImagePrompt = document.querySelector("#seoCopyImagePrompt");
+const seoImageUpload = document.querySelector("#seoImageUpload");
+const seoImagePreview = document.querySelector("#seoImagePreview");
+const seoImageTarget = document.querySelector("#seoImageTarget");
+const levelChecksStatus = document.querySelector("#levelChecksStatus");
+const levelChecksList = document.querySelector("#levelChecksList");
 
 const timeSlots = [
   "08:00 - 09:00",
@@ -57,6 +83,147 @@ const statuses = [
   "Completed",
   "Cancelled",
 ];
+
+const seoUsedImages = {
+  "assets/course-business.jpg": "首页/中文页 Business 课程图",
+  "assets/course-daily.jpg": "首页/中文页 Daily 课程图",
+  "assets/course-hsk.jpg": "首页/中文页 HSK 课程图",
+  "assets/course-diagnostic-student.webp": "首页/中文页 Diagnostic 图",
+  "assets/jane.png": "首页/中文页 Jane 头像",
+  "assets/corporate-training-hero.png": "Corporate 企业培训页",
+};
+
+const seoCategoryLabels = {
+  "business-chinese": "Business Chinese",
+  "hsk-prep": "HSK Prep",
+  "daily-chinese": "Daily Chinese",
+  "sourcing-chinese": "Sourcing Chinese",
+  "culture-communication": "Culture & Communication",
+  "learning-method": "Learning Method",
+};
+
+const seoPresets = {
+  custom: {
+    category: "learning-method",
+    status: "published",
+    slug: "new-mandarin-page",
+    title: "Learn Mandarin Chinese Online | Mandrix",
+    description: "Logic-based Mandarin Chinese lessons for adults. Start with a $29 diagnostic and leave with a clear learning roadmap.",
+    eyebrow: "Mandrix Chinese",
+    h1: "Build Chinese you can actually use.",
+    lead: "A focused Mandrix page for adult learners who want Chinese explained through logic, structure, and real output.",
+    articleBody: "This guide should explain one clear Chinese learning problem, show how Mandrix diagnoses it, and give the learner a practical next step. Keep the writing specific, grounded, and useful for adults.",
+    image: "assets/sourcing-supplier-laptop.jpg",
+    imageAlt: "Reviewing Mandarin learning materials on a laptop",
+    chips: "Logic first, Adult learners, Real output, $29 diagnostic",
+    primaryLabel: "Book $29 Diagnostic",
+    primaryHref: "/booking",
+    secondaryLabel: "View Courses",
+    secondaryHref: "/courses",
+    card1Title: "Diagnose the blocker",
+    card1Text: "Find the exact grammar, tone, or communication gap that keeps your Chinese from moving forward.",
+    card2Title: "Decode the logic",
+    card2Text: "Learn the sentence structure behind useful Chinese instead of memorizing scattered phrases.",
+    card3Title: "Build real output",
+    card3Text: "Leave each session with templates, corrected wording, or a roadmap you can use right away.",
+    sectionEyebrow: "Why Mandrix works",
+    sectionTitle: "Chinese becomes lighter when the structure is visible.",
+    sectionBody: "Most adult learners do not need more random phrases. They need someone to show how Chinese sentences are assembled, then help them build their own.",
+    ctaEyebrow: "Start with diagnosis",
+    ctaTitle: "Find the blocker first.",
+    ctaBody: "The $29 diagnostic gives you one immediate improvement and a clear path before you invest in a full program.",
+  },
+  sourcing: {
+    category: "sourcing-chinese",
+    status: "published",
+    slug: "chinese-for-sourcing-agents",
+    title: "Chinese for Sourcing Agents & Amazon Sellers | Mandrix",
+    description: "Learn practical Mandarin for factory visits, supplier negotiation, 1688, MOQ, and WeChat communication. Logic-based Chinese for buyers and importers.",
+    eyebrow: "Sourcing & Supplier Chinese",
+    h1: "Stop relying on Google Translate with your suppliers.",
+    lead: "For buyers, Amazon sellers, and importers who deal with Chinese factories daily. Learn the Mandarin that actually comes up: MOQ, samples, lead time, quality issues, and price negotiation.",
+    articleBody: "Sourcing conversations are different from general Mandarin. The goal is not to sound impressive. The goal is to ask accurate questions, reduce misunderstanding, and protect business decisions.\n\nA strong sourcing Chinese lesson should include supplier WeChat phrases, factory visit questions, 1688 listing language, sample requests, MOQ discussion, payment terms, production timing, and quality issue wording.\n\nMandrix starts by diagnosing the exact sourcing situations you face, then builds reusable Chinese templates around them.",
+    image: "assets/sourcing-supplier-laptop.jpg",
+    imageAlt: "Reviewing supplier details and sourcing messages on a laptop",
+    chips: "Factory visits, Supplier WeChat, 1688 listings, MOQ and price terms",
+    primaryLabel: "Book $29 Diagnostic",
+    primaryHref: "/booking",
+    secondaryLabel: "View Sourcing Program",
+    secondaryHref: "/specialty",
+    card1Title: "Factory and market visits",
+    card1Text: "Handle Yiwu, Guangzhou, Shenzhen, and factory floor conversations without depending on translation apps for every sentence.",
+    card2Title: "Supplier WeChat and 1688",
+    card2Text: "Read listings, negotiate on WeChat, ask follow-up questions, and keep communication professional in Chinese.",
+    card3Title: "Negotiation language",
+    card3Text: "Discuss price, MOQ, samples, lead time, payment terms, quality issues, and shipment details with more control.",
+    sectionEyebrow: "Why this is not general Mandarin",
+    sectionTitle: "Sourcing Chinese protects business decisions.",
+    sectionBody: "General Chinese teaches you how to order food and introduce yourself. Sourcing Chinese teaches you how to ask about quality without sounding accusatory, negotiate price without losing face, and understand what a supplier means when they say no problem.",
+    ctaEyebrow: "Not sure where to start?",
+    ctaTitle: "Start with the $29 diagnostic.",
+    ctaBody: "In 60 minutes, Jane identifies what blocks your supplier communication and maps the fastest path toward usable sourcing Chinese.",
+  },
+  business: {
+    category: "business-chinese",
+    status: "published",
+    slug: "business-chinese-online",
+    title: "Business Chinese Lessons Online for Professionals | Mandrix",
+    description: "1-on-1 Business Chinese coaching for professionals. Emails, WeChat, meetings, negotiations. Bring real work materials. Start with a $29 diagnostic.",
+    eyebrow: "Business Chinese Online",
+    h1: "Sound professional in Chinese, not just grammatically correct.",
+    lead: "Business Chinese is not vocabulary. Tone, structure, and cultural context decide whether your message sounds clear and trustworthy or blunt and unprepared.",
+    articleBody: "Business Chinese requires more than correct grammar. In real work, the same sentence can sound confident, abrupt, vague, or overly casual depending on structure and tone.\n\nMandrix helps professionals work with real materials: WeChat messages, emails, meeting notes, proposals, presentations, and follow-up wording. The focus is to understand why Chinese business communication works the way it does, then build reusable templates.\n\nStart with a diagnostic if you need to know whether your blocker is grammar, vocabulary, tone, pronunciation, or cultural context.",
+    image: "assets/backup-business-meeting.jpg",
+    imageAlt: "Business meeting desk with reports and working notes",
+    chips: "WeChat and email, Meetings and calls, Negotiation, Professional tone",
+    primaryLabel: "Book $29 Diagnostic",
+    primaryHref: "/booking",
+    secondaryLabel: "View Business Programs",
+    secondaryHref: "/courses",
+    card1Title: "WeChat and professional email",
+    card1Text: "Write messages that sound natural, respectful, and appropriately formal instead of translated or stiff.",
+    card2Title: "Meetings and calls",
+    card2Text: "Follow conversations, ask clarifying questions, express opinions, and respond without translating every sentence in your head.",
+    card3Title: "Negotiation and presentations",
+    card3Text: "Structure proposals, handle objections, present numbers, and manage difficult conversations with the right register.",
+    sectionEyebrow: "Bring real work materials",
+    sectionTitle: "Your course can use your real messages.",
+    sectionBody: "Mandrix lessons can work with real emails, WeChat messages, meeting notes, company introductions, proposals, or presentation drafts. You leave with polished, ready-to-use wording and a correction record you can reuse.",
+    ctaEyebrow: "Start with diagnosis",
+    ctaTitle: "Find the workplace blocker first.",
+    ctaBody: "The $29 diagnostic identifies the exact grammar, tone, or structure gap behind your business communication problem.",
+  },
+  hsk: {
+    category: "hsk-prep",
+    status: "published",
+    slug: "hsk-preparation-online",
+    title: "HSK 3.0 Exam Preparation Online — Tutor & Coaching | Mandrix",
+    description: "Structured HSK 3.0 preparation with 1-on-1 coaching. Vocabulary, grammar, listening, reading, and mock tests. Aligned with official HSK framework.",
+    eyebrow: "HSK Exam Preparation",
+    h1: "Pass your HSK exam without just drilling vocabulary lists.",
+    lead: "Most students struggle with HSK because they never understood the grammar patterns behind the exam questions. Mandrix decodes the logic so the test format has no surprises.",
+    articleBody: "HSK preparation works best when vocabulary, grammar, listening, reading, and mock test correction are connected. Memorizing lists may help short term, but it often breaks down when the exam asks the same pattern in a new way.\n\nMandrix starts with a level diagnosis, then builds a study plan around the learner's target level, weak grammar points, listening habits, and reading speed.\n\nThe goal is exam readiness and practical Chinese at the same time.",
+    image: "assets/backup-study-desk.jpg",
+    imageAlt: "Online HSK preparation desk with notes and video lesson",
+    chips: "Level diagnosis, Grammar logic, Mock tests, Correction plan",
+    primaryLabel: "Book $29 HSK Diagnostic",
+    primaryHref: "/booking",
+    secondaryLabel: "View HSK Programs",
+    secondaryHref: "/courses",
+    card1Title: "Level diagnosis first",
+    card1Text: "Know exactly where you are and what to study before buying a full course or choosing an exam date.",
+    card2Title: "Grammar logic, not just rules",
+    card2Text: "Understand the patterns behind HSK questions so you can answer new questions, not just repeat old ones.",
+    card3Title: "Mock tests and correction",
+    card3Text: "Review mistakes with Jane and identify why the wrong answer looked right before the exam makes it expensive.",
+    sectionEyebrow: "Aligned preparation",
+    sectionTitle: "HSK study should build real Chinese too.",
+    sectionBody: "Mandrix is not an official HSK testing center. Courses are aligned with the official HSK 3.0 framework and use exam-style practice to build both test readiness and practical communication ability.",
+    ctaEyebrow: "Start with an HSK diagnostic",
+    ctaTitle: "Map your study plan before you cram.",
+    ctaBody: "In 60 minutes, Jane checks your current level, finds your biggest HSK blockers, and recommends a realistic plan for your target level.",
+  },
+};
 
 const i18n = {
   en: {
@@ -88,6 +255,21 @@ const i18n = {
     active: "Active",
     paidPending: "Paid / Verify",
     lessonsToday: "Lessons Today",
+    renewalDue: "Renewal Follow-ups",
+    renewalPanelTitle: "Renewal Follow-ups",
+    renewalPanelIntro: "Students who need a continuation message before momentum drops.",
+    noRenewals: "No renewal follow-ups due right now.",
+    copyRenewal: "Copy Renewal Email",
+    sendRenewal: "Send Renewal Email",
+    sendingRenewal: "Sending...",
+    renewalSent: "Renewal Sent",
+    renewalSendFailed: "Renewal email was not sent. It may have already been sent or email service may need checking.",
+    clearAnalytics: "Clear analytics",
+    clearAnalyticsConfirm: "Clear all website analytics events? This will not delete booking records.",
+    clearingAnalytics: "Clearing...",
+    analyticsCleared: "Analytics records cleared.",
+    analyticsClearFailed: "Could not clear analytics. Please check the admin password and try again.",
+    copied: "Copied",
     noBookings: "No booking requests found.",
     noLessons: "No lessons in this range.",
     loadingBookings: "Loading bookings...",
@@ -150,6 +332,21 @@ const i18n = {
     active: "进行中",
     paidPending: "已付款待核验",
     lessonsToday: "今日课程",
+    renewalDue: "续课跟进",
+    renewalPanelTitle: "续课漏斗提醒",
+    renewalPanelIntro: "这些学员需要现在跟进，避免课包结束后自然流失。",
+    noRenewals: "当前没有需要跟进的续课提醒。",
+    copyRenewal: "复制续课邮件",
+    sendRenewal: "发送续课邮件",
+    sendingRenewal: "发送中...",
+    renewalSent: "已发送续课邮件",
+    renewalSendFailed: "续课邮件未发送，可能已发送过或邮件服务需要检查。",
+    clearAnalytics: "清空浏览数据",
+    clearAnalyticsConfirm: "确定清空所有浏览统计吗？此操作不会删除预约订单。",
+    clearingAnalytics: "清空中...",
+    analyticsCleared: "浏览数据已清空。",
+    analyticsClearFailed: "清空失败，请确认后台密码后重试。",
+    copied: "已复制",
     noBookings: "没有符合条件的预约订单。",
     noLessons: "这个范围内没有课程。",
     loadingBookings: "正在加载订单...",
@@ -186,9 +383,12 @@ const i18n = {
 };
 
 let bookings = [];
+let levelChecks = [];
 let analytics = null;
-let activeAdminTab = "operations";
+let activeAdminTab = new URLSearchParams(window.location.search).get("tab") || "operations";
+if (!["operations", "level-checks", "analytics", "seo"].includes(activeAdminTab)) activeAdminTab = "operations";
 let adminLang = localStorage.getItem("mandrixAdminLang") || "zh";
+let seoUploadedImagePreviewUrl = "";
 const urlToken = new URLSearchParams(window.location.search).get("token") || "";
 let adminToken = urlToken || sessionStorage.getItem("mandrixAdminToken") || "";
 if (urlToken) sessionStorage.setItem("mandrixAdminToken", urlToken);
@@ -248,6 +448,7 @@ function applyLanguage() {
   langToggle.textContent = t("toggle");
   refreshButton.textContent = t("refresh");
   exportButton.textContent = t("export");
+  if (clearAnalyticsButton) clearAnalyticsButton.textContent = t("clearAnalytics");
   document.querySelector(".admin-header a.btn").textContent = t("viewSite");
   document.querySelector("#adminLogin .eyebrow").textContent = t("access");
   document.querySelector("#adminLogin h2").textContent = t("passwordTitle");
@@ -296,6 +497,215 @@ function lessonScheduleFor(booking) {
   return [];
 }
 
+function parseLessonDate(value) {
+  if (!value) return null;
+  const date = new Date(`${value}T00:00:00+08:00`);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function daysSince(value) {
+  const date = parseLessonDate(value);
+  if (!date) return 0;
+  return Math.floor((Date.now() - date.getTime()) / 86400000);
+}
+
+function lessonIsUsed(lesson) {
+  const status = String(lesson.status || "").toLowerCase();
+  if (status.includes("complete") || status.includes("done") || status.includes("attended")) return true;
+  return String(lesson.date || "") < todayIso();
+}
+
+function recommendContinuation(booking) {
+  const course = String(booking.course || "").toLowerCase();
+  if (course.includes("diagnostic")) {
+    return "a 12-lesson foundation path based on your diagnostic result";
+  }
+  if (course.includes("sourcing") || course.includes("supplier") || course.includes("e-commerce")) {
+    return "a continuation block focused on supplier negotiation, follow-up messages, and quality issue handling";
+  }
+  if (course.includes("business") || course.includes("executive")) {
+    return "the next Business Chinese block focused on meetings, follow-up messages, and professional tone";
+  }
+  if (course.includes("hsk")) {
+    return "the next HSK block with a clear mock-test and weak-point repair plan";
+  }
+  if (course.includes("group")) {
+    return "the next small-group block so you can keep the same learning rhythm";
+  }
+  return "the next Mandrix course block so your current progress does not cool down";
+}
+
+function renewalStatusFor(booking) {
+  if (!booking || booking.status === "Cancelled") return null;
+  const schedule = lessonScheduleFor(booking);
+  const total = Number(booking.lessonCount) || schedule.length || 1;
+  const used = booking.status === "Completed"
+    ? total
+    : schedule.filter(lessonIsUsed).length;
+  const remaining = Math.max(total - used, 0);
+  const lastLesson = schedule
+    .map((lesson) => lesson.date)
+    .filter(Boolean)
+    .sort()
+    .at(-1);
+  const firstLesson = schedule
+    .map((lesson) => lesson.date)
+    .filter(Boolean)
+    .sort()
+    .at(0);
+  const isDiagnostic = String(booking.course || "").toLowerCase().includes("diagnostic");
+
+  if (isDiagnostic && (booking.status === "Completed" || (lastLesson && String(lastLesson) < todayIso()))) {
+    return {
+      stage: "diagnostic",
+      priority: 1,
+      label: adminLang === "zh" ? "测评后转正课" : "Diagnostic conversion",
+      timing: adminLang === "zh" ? "测评已结束，48 小时抵扣窗口要及时跟进。" : "Diagnostic finished. Follow up while the 48-hour credit window is warm.",
+      total,
+      used,
+      remaining,
+      recommendation: recommendContinuation(booking),
+    };
+  }
+
+  if (remaining === 0 && lastLesson && daysSince(lastLesson) >= 7) {
+    return {
+      stage: "ended7",
+      priority: 1,
+      label: adminLang === "zh" ? "课包结束后 7 天" : "7 days after package end",
+      timing: adminLang === "zh" ? "学习热度正在下降，需要唤醒。" : "Momentum is cooling. Send a reactivation note.",
+      total,
+      used,
+      remaining,
+      recommendation: recommendContinuation(booking),
+    };
+  }
+
+  if (remaining === 1) {
+    return {
+      stage: "oneLeft",
+      priority: 2,
+      label: adminLang === "zh" ? "剩 1 节" : "1 lesson left",
+      timing: adminLang === "zh" ? "现在确认下一阶段，最容易保住原时间段。" : "Best moment to reserve the next block.",
+      total,
+      used,
+      remaining,
+      recommendation: recommendContinuation(booking),
+    };
+  }
+
+  if (remaining > 1 && remaining <= 3) {
+    return {
+      stage: "threeLeft",
+      priority: 3,
+      label: adminLang === "zh" ? `剩 ${remaining} 节` : `${remaining} lessons left`,
+      timing: adminLang === "zh" ? "提前规划续课，避免最后一节才仓促推销。" : "Plan before the last lesson so the next step feels natural.",
+      total,
+      used,
+      remaining,
+      recommendation: recommendContinuation(booking),
+    };
+  }
+
+  if (remaining === 0 && firstLesson) {
+    return {
+      stage: "completed",
+      priority: 4,
+      label: adminLang === "zh" ? "课包刚结束" : "Package just ended",
+      timing: adminLang === "zh" ? "建议在 7 天内发送总结和下一阶段建议。" : "Send a wrap-up and next-step recommendation within 7 days.",
+      total,
+      used,
+      remaining,
+      recommendation: recommendContinuation(booking),
+    };
+  }
+
+  return null;
+}
+
+function renewalEmailFor(booking, renewal) {
+  const firstName = String(booking.fullName || "there").trim().split(/\s+/)[0] || "there";
+  const course = booking.course || "your Mandrix course";
+  const recommendation = renewal?.recommendation || recommendContinuation(booking);
+  const stage = renewal?.stage || "threeLeft";
+  const templates = {
+    threeLeft: {
+      subject: "Your next Chinese learning step after this package",
+      body: `Hi ${firstName},
+
+You have about ${renewal?.remaining || 3} lessons left in your current Mandrix package.
+
+This is a good moment to decide the next step before the learning rhythm breaks. Based on your current course (${course}), I recommend ${recommendation}.
+
+If you would like to continue, I can reserve your current time slot and map the next block around the mistake patterns we have already identified.
+
+Best,
+Jane`,
+    },
+    oneLeft: {
+      subject: "One lesson left: shall I reserve your next Mandrix block?",
+      body: `Hi ${firstName},
+
+You have one lesson left in your current Mandrix package.
+
+You have already built useful momentum, so I do not recommend stopping here without a next step. Based on your current progress in ${course}, I recommend ${recommendation}.
+
+If you want to continue, reply to this message and I will reserve your preferred time slot before it opens to new bookings.
+
+Best,
+Jane`,
+    },
+    ended7: {
+      subject: "Keep your Chinese momentum going",
+      body: `Hi ${firstName},
+
+It has been about a week since your Mandrix package ended, so I wanted to check in before the rhythm fades.
+
+The most important thing now is not starting over. Based on your previous course (${course}), I recommend ${recommendation}.
+
+If you would like to continue, I can send the next plan and help you restart from the exact point where we stopped.
+
+Best,
+Jane`,
+    },
+    diagnostic: {
+      subject: "Your Mandrix diagnostic next step",
+      body: `Hi ${firstName},
+
+Thank you for completing your Mandrix diagnostic.
+
+Based on what we saw in class, the next step should not be random practice. I recommend ${recommendation}, with the first lessons focused on the blockers we identified during the diagnostic.
+
+Your $29 diagnostic fee can be used as course credit within 48 hours. If you would like to continue, reply here and I will help you choose the right package.
+
+Best,
+Jane`,
+    },
+    completed: {
+      subject: "Your next Mandrix learning plan",
+      body: `Hi ${firstName},
+
+Congratulations on completing your current Mandrix package.
+
+Before the learning rhythm cools down, I recommend ${recommendation}. The next block should build directly on your existing correction record instead of making you restart from general lessons.
+
+If you would like to continue, I can send the next plan and reserve your preferred time slot.
+
+Best,
+Jane`,
+    },
+  };
+  const template = templates[stage] || templates.threeLeft;
+  return `Subject: ${template.subject}\n\n${template.body}`;
+}
+
+function renewalRows(rows) {
+  return rows
+    .map((booking) => ({ booking, renewal: renewalStatusFor(booking) }))
+    .filter((row) => row.renewal && row.renewal.priority <= 3)
+    .sort((a, b) => a.renewal.priority - b.renewal.priority);
+}
+
 function flattenLessons(rows) {
   return rows
     .filter((booking) => booking.status !== "Cancelled")
@@ -338,11 +748,41 @@ function renderSummary(rows) {
   const paidPending = rows.filter((row) => row.status === "Paid - needs verification" || row.payment === "Paid - needs verification").length;
   const lessons = flattenLessons(rows);
   const todayRows = lessons.filter((row) => row.date === todayIso()).length;
+  const renewalCount = renewalRows(rows).length;
   summary.innerHTML = `
     <div><strong>${rows.length}</strong><span>${t("total")}</span></div>
     <div><strong>${active}</strong><span>${t("active")}</span></div>
     <div><strong>${paidPending || rows.filter(isPaidLike).length}</strong><span>${t("paidPending")}</span></div>
     <div><strong>${todayRows}</strong><span>${t("lessonsToday")}</span></div>
+    <div><strong>${renewalCount}</strong><span>${t("renewalDue")}</span></div>
+  `;
+}
+
+function renderRenewalPanel(rows) {
+  if (!renewalPanel) return;
+  const due = renewalRows(rows);
+  renewalPanel.innerHTML = `
+    <div class="renewal-panel-head">
+      <div>
+        <p class="eyebrow">${t("renewalPanelTitle")}</p>
+        <h2>${adminLang === "zh" ? "先把现有学员的钱收好" : "Protect current student revenue first"}</h2>
+      </div>
+      <p>${t("renewalPanelIntro")}</p>
+    </div>
+    ${due.length ? `
+      <div class="renewal-grid">
+        ${due.map(({ booking, renewal }) => `
+          <article class="renewal-mini-card" data-id="${escapeHtml(booking.id)}">
+            <span>${escapeHtml(renewal.label)}</span>
+            <strong>${escapeHtml(booking.fullName)}</strong>
+            <p>${escapeHtml(booking.course)}</p>
+            <small>${escapeHtml(renewal.timing)}</small>
+            <button class="btn secondary copy-renewal" type="button">${t("copyRenewal")}</button>
+            <button class="btn primary send-renewal" type="button">${t("sendRenewal")}</button>
+          </article>
+        `).join("")}
+      </div>
+    ` : `<p class="renewal-empty">${t("noRenewals")}</p>`}
   `;
 }
 
@@ -400,12 +840,15 @@ function renderLessons() {
 function renderBookings() {
   const rows = bookings.filter(matchesFilters);
   renderSummary(bookings);
+  renderRenewalPanel(bookings);
   renderLessons();
   if (!rows.length) {
     list.innerHTML = `<p>${t("noBookings")}</p>`;
     return;
   }
-  list.innerHTML = rows.map((booking) => `
+  list.innerHTML = rows.map((booking) => {
+    const renewal = renewalStatusFor(booking);
+    return `
     <article class="booking-card" data-id="${booking.id}">
       <div class="booking-card-head">
         <div>
@@ -438,6 +881,19 @@ function renderBookings() {
           ${lessonScheduleFor(booking).map((lesson) => `<li>Lesson ${escapeHtml(lesson.lesson)} · ${escapeHtml(lesson.date)} · ${escapeHtml(lesson.time)} ${t("beijingTime")}</li>`).join("")}
         </ol>
       </div>
+      ${renewal ? `
+        <div class="renewal-card">
+          <div>
+            <span>${escapeHtml(renewal.label)}</span>
+            <strong>${adminLang === "zh" ? "续课建议" : "Renewal recommendation"}</strong>
+            <p>${escapeHtml(renewal.timing)} ${adminLang === "zh" ? "建议：" : "Recommendation:"} ${escapeHtml(renewal.recommendation)}</p>
+          </div>
+          <div class="renewal-actions">
+            <button class="btn secondary copy-renewal" type="button">${t("copyRenewal")}</button>
+            <button class="btn primary send-renewal" type="button">${t("sendRenewal")}</button>
+          </div>
+        </div>
+      ` : ""}
       <div class="booking-edit">
         <label>${t("status")}
           <select data-field="status">
@@ -462,7 +918,73 @@ function renderBookings() {
         ${booking.meetingLink ? `<a class="btn secondary" href="${escapeHtml(booking.meetingLink)}" target="_blank" rel="noopener">${t("openMeeting")}</a>` : ""}
       </div>
     </article>
-  `).join("");
+  `;
+  }).join("");
+}
+
+function renderLevelChecks() {
+  if (!levelChecksList || !levelChecksStatus) return;
+  levelChecksStatus.textContent = levelChecks.length
+    ? `${levelChecks.length} AI level check lead${levelChecks.length === 1 ? "" : "s"} loaded.`
+    : "No AI level checks yet.";
+  if (!levelChecks.length) {
+    levelChecksList.innerHTML = "<p>No AI level checks yet.</p>";
+    return;
+  }
+  levelChecksList.innerHTML = levelChecks.map((item) => {
+    const report = item.report || {};
+    const level = report.level || {};
+    const blocker = report.blocker || {};
+    const path = report.path || {};
+    const scores = report.scores || {};
+    return `
+      <article class="booking-card">
+        <div class="booking-card-head">
+          <div>
+            <p class="eyebrow">${escapeHtml(item.status || "New")} · ${escapeHtml(formatCreatedAt(item.createdAt))}</p>
+            <h2>${escapeHtml(item.fullName)}</h2>
+            <p>${escapeHtml(item.email)}${item.contact ? ` · ${escapeHtml(item.contact)}` : ""}</p>
+          </div>
+          <div class="booking-time">
+            <strong>${escapeHtml(level.label || "Level pending")}</strong>
+            <span>${escapeHtml(level.hsk || "")}</span>
+          </div>
+        </div>
+        <div class="booking-grid">
+          <p><strong>Goal</strong><br>${escapeHtml(item.goal)}</p>
+          <p><strong>Main blocker</strong><br>${escapeHtml(blocker.title || item.blocker)}</p>
+          <p><strong>Recommended path</strong><br>${escapeHtml(path.path || "-")}</p>
+          <p><strong>Structure</strong><br>${escapeHtml(scores.structure || "-")}%</p>
+          <p><strong>Output</strong><br>${escapeHtml(scores.output || "-")}%</p>
+          <p><strong>Confidence</strong><br>${escapeHtml(scores.confidence || "-")}%</p>
+        </div>
+        <div class="booking-notes">
+          <p><strong>Report insight</strong><br>${escapeHtml(blocker.detail || "No detail")}</p>
+          <p><strong>Student sample</strong><br>${escapeHtml(item.sample || "No sample")}</p>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+async function loadLevelChecks() {
+  if (!adminToken || !levelChecksList) return;
+  levelChecksStatus.textContent = "Loading AI level checks...";
+  const response = await fetch("/api/level-check.js", {
+    headers: { "x-admin-token": adminToken },
+  });
+  if (response.status === 401) {
+    showLogin(t("wrongPassword"));
+    return;
+  }
+  if (!response.ok) {
+    levelChecksStatus.textContent = "AI level checks could not load. Make sure the Supabase table has been created.";
+    levelChecksList.innerHTML = "<p>Load failed.</p>";
+    return;
+  }
+  const data = await response.json();
+  levelChecks = data.levelChecks || [];
+  renderLevelChecks();
 }
 
 async function loadBookings() {
@@ -488,6 +1010,7 @@ async function loadBookings() {
   const data = await response.json();
   bookings = data.bookings || [];
   renderBookings();
+  loadLevelChecks();
   loadAnalytics();
 }
 
@@ -499,7 +1022,15 @@ function switchAdminTab(tab) {
   adminPanels.forEach((panel) => {
     panel.hidden = panel.dataset.adminPanel !== tab;
   });
+  const headerTitle = document.querySelector(".admin-header h1");
+  if (headerTitle) {
+    headerTitle.textContent = tab === "seo" ? "SEO 发布" : tab === "analytics" ? "数据中心" : tab === "level-checks" ? "AI Level Checks" : t("pageTitle");
+  }
+  if (refreshButton) refreshButton.hidden = tab !== "operations";
+  if (exportButton) exportButton.hidden = tab !== "operations";
+  if (tab === "level-checks") loadLevelChecks();
   if (tab === "analytics" && !analytics) loadAnalytics();
+  if (tab === "seo") updateSeoBuilder();
 }
 
 function renderKpis(totals = {}) {
@@ -829,6 +1360,588 @@ async function loadAnalytics() {
   renderAnalytics();
 }
 
+async function clearAnalytics() {
+  if (!adminToken) {
+    showLogin(t("wrongPassword"));
+    return;
+  }
+  if (!window.confirm(t("clearAnalyticsConfirm"))) return;
+  const original = clearAnalyticsButton?.textContent || t("clearAnalytics");
+  if (clearAnalyticsButton) {
+    clearAnalyticsButton.disabled = true;
+    clearAnalyticsButton.textContent = t("clearingAnalytics");
+  }
+  const response = await fetch("/api/analytics.js", {
+    method: "DELETE",
+    headers: { "x-admin-token": adminToken },
+  });
+  if (clearAnalyticsButton) {
+    clearAnalyticsButton.disabled = false;
+    clearAnalyticsButton.textContent = original;
+  }
+  if (response.status === 401) {
+    showLogin(t("wrongPassword"));
+    return;
+  }
+  if (!response.ok) {
+    alert(t("analyticsClearFailed"));
+    return;
+  }
+  analytics = null;
+  analyticsStatus.textContent = t("analyticsCleared");
+  await loadAnalytics();
+}
+
+function seoFields() {
+  if (!seoForm) return {};
+  const data = Object.fromEntries(new FormData(seoForm).entries());
+  if (seoImageUpload?.files?.[0]) data.imageUploadTarget = seoImageAssetPath(data);
+  return data;
+}
+
+function cleanSeoSlug(value) {
+  const slug = String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\.html$/i, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return slug || "new-mandarin-page";
+}
+
+function cleanSeoCategory(value) {
+  const category = cleanSeoSlug(value);
+  return seoCategoryLabels[category] ? category : "learning-method";
+}
+
+function seoUrl(slug) {
+  const data = seoFields();
+  return `https://www.mandrix.top/insights/${cleanSeoCategory(data.category)}/${cleanSeoSlug(slug)}`;
+}
+
+function splitSeoList(value) {
+  return String(value || "")
+    .split(/[,，\n]/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .slice(0, 6);
+}
+
+function seoImageUrl(path) {
+  const value = String(path || "");
+  if (/^(https?:|blob:|data:)/i.test(value)) return value;
+  return `https://www.mandrix.top/${value.replace(/^\/+/, "")}`;
+}
+
+function seoImageAssetPath(data = seoFields()) {
+  return `assets/${cleanSeoSlug(data.slug)}-hero.jpg`;
+}
+
+function seoImageStylePrompt(data = seoFields()) {
+  const topic = data.h1 || data.title || "Mandrix Chinese learning page";
+  const context = data.eyebrow || "Mandrix online Chinese coaching";
+  return `Create one premium website hero image for Mandrix.
+
+Topic: ${topic}
+Context: ${context}
+
+Style requirements:
+- Realistic adult education / professional Chinese learning scene
+- Clean modern desk, online lesson, notes, laptop, subtle Chinese learning materials
+- Warm natural daylight, calm premium atmosphere
+- Editorial website photography, not stock-photo cheesy
+- Minimal composition with generous negative space
+- No cartoon, no childish elements, no exaggerated smiles
+- No text inside the image, no logo, no watermark
+- Avoid clutter, neon colors, fantasy, AI-tech glow, and busy backgrounds
+- Color palette should match Mandrix: warm white, soft blue, charcoal, small natural accents
+- Horizontal 16:9 composition, suitable for a refined education brand landing page
+
+Output: high-resolution JPG or PNG.`;
+}
+
+function seoCardData(data) {
+  return [
+    { title: data.card1Title, text: data.card1Text },
+    { title: data.card2Title, text: data.card2Text },
+    { title: data.card3Title, text: data.card3Text },
+  ];
+}
+
+function buildSeoHtml(rawData = seoFields()) {
+  const data = { ...seoPresets.custom, ...rawData };
+  const slug = cleanSeoSlug(data.slug);
+  const pageUrl = seoUrl(slug);
+  const image = data.imageUploadTarget || data.image || seoPresets.custom.image;
+  const title = data.title || seoPresets.custom.title;
+  const description = data.description || seoPresets.custom.description;
+  const chips = splitSeoList(data.chips);
+  const cards = seoCardData(data);
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: title.replace(/\s*\|\s*Mandrix\s*$/i, ""),
+    description,
+    provider: {
+      "@type": "EducationalOrganization",
+      name: "Mandrix",
+      url: "https://www.mandrix.top/",
+    },
+    url: pageUrl,
+    inLanguage: "en",
+  };
+  const jsonLd = JSON.stringify(schema, null, 8);
+  const chipHtml = chips.map((chip) => `                <span>${escapeHtml(chip)}</span>`).join("\n");
+  const cardHtml = cards.map((card, index) => `        <article class="landing-card">
+          <span>${String(index + 1).padStart(2, "0")}</span>
+          <h3>${escapeHtml(card.title)}</h3>
+          <p>${escapeHtml(card.text)}</p>
+        </article>`).join("\n");
+  const secondaryButton = data.secondaryLabel && data.secondaryHref
+    ? `                <a class="btn secondary" href="${escapeHtml(data.secondaryHref)}">${escapeHtml(data.secondaryLabel)}</a>`
+    : "";
+
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${escapeHtml(title)}</title>
+    <meta name="description" content="${escapeHtml(description)}">
+    <link rel="canonical" href="${pageUrl}">
+    <meta property="og:title" content="${escapeHtml(title)}">
+    <meta property="og:description" content="${escapeHtml(description)}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="${pageUrl}">
+    <meta property="og:image" content="${seoImageUrl(image)}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${escapeHtml(title)}">
+    <meta name="twitter:description" content="${escapeHtml(description)}">
+    <meta name="twitter:image" content="${seoImageUrl(image)}">
+    <link rel="icon" type="image/png" href="assets/mandrix-logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">
+${jsonLd}
+    </script>
+  </head>
+  <body class="landing-page">
+    <div class="shell">
+      <header class="nav" translate="no">
+        <div class="nav-inner">
+          <a class="brand" href="/">
+            <img src="assets/mandrix-logo.png" alt="Mandrix logo">
+            <span class="brand-word">
+              <span class="brand-name">Mandrix</span>
+              <span class="brand-line">Chinese, decoded.</span>
+            </span>
+          </a>
+          <nav class="nav-links" id="navLinks">
+            <a href="/method">Method</a>
+            <a href="/courses">Courses</a>
+            <a href="/corporate">Corporate</a>
+            <a href="/about">About</a>
+            <a href="/insights">Insights</a>
+            <a href="/faq">FAQ</a>
+            <a class="nav-cta" href="/booking">Book $29 Diagnostic</a>
+            <a class="lang-switch" href="/zh">中文</a>
+          </nav>
+          <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </header>
+
+      <main id="top">
+        <section class="landing-hero">
+          <div class="wrap landing-hero-grid">
+            <div class="landing-copy">
+              <p class="eyebrow">${escapeHtml(data.eyebrow)}</p>
+              <h1>${escapeHtml(data.h1)}</h1>
+              <p class="lead">${escapeHtml(data.lead)}</p>
+              <div class="actions">
+                <a class="btn primary" href="${escapeHtml(data.primaryHref || "/booking")}">${escapeHtml(data.primaryLabel || "Book $29 Diagnostic")}</a>
+${secondaryButton}
+              </div>
+              <div class="landing-proof">
+${chipHtml}
+              </div>
+            </div>
+            <div class="landing-visual">
+              <img src="${escapeHtml(image)}" alt="${escapeHtml(data.imageAlt)}">
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <section class="section">
+      <div class="wrap landing-card-grid">
+${cardHtml}
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap landing-content">
+        <p class="eyebrow">${escapeHtml(data.sectionEyebrow)}</p>
+        <h2>${escapeHtml(data.sectionTitle)}</h2>
+        <p>${escapeHtml(data.sectionBody)}</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap landing-cta-panel">
+        <div>
+          <p class="eyebrow">${escapeHtml(data.ctaEyebrow)}</p>
+          <h2>${escapeHtml(data.ctaTitle)}</h2>
+          <p>${escapeHtml(data.ctaBody)}</p>
+        </div>
+        <a class="btn primary" href="${escapeHtml(data.primaryHref || "/booking")}">${escapeHtml(data.primaryLabel || "Book $29 Diagnostic")}</a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div class="footer-brand">
+          <strong>Mandrix</strong>
+          <span>Chinese, decoded.</span>
+          <p>Clearer Chinese for adult learners.</p>
+        </div>
+        <nav class="footer-links" aria-label="Contact links">
+          <a href="/method">Method</a>
+          <a href="/courses">Courses</a>
+          <a href="/corporate">Corporate</a>
+          <a href="/insights">Insights</a>
+          <a href="/booking">Booking</a>
+          <a href="mailto:Jane.Mandrix@outlook.com">Jane.Mandrix@outlook.com</a>
+          <a href="https://wa.me/message/S6GHIZYKAV4ZH1" translate="no">WhatsApp</a>
+        </nav>
+        <span>© 2026 Mandrix | Jane Chen. All Rights Reserved.</span>
+      </div>
+    </footer>
+    <script src="analytics.js"></script>
+    <script>
+      const navToggle = document.querySelector("#navToggle");
+      const navLinks = document.querySelector("#navLinks");
+      navToggle?.addEventListener("click", () => {
+        const isOpen = navLinks.classList.toggle("nav-open");
+        navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+    </script>
+  </body>
+</html>
+`;
+}
+
+function buildSeoSitemapEntry(data = seoFields()) {
+  const slug = cleanSeoSlug(data.slug);
+  return `  <url>
+    <loc>${seoUrl(slug)}</loc>
+    <lastmod>${todayIso()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+}
+
+function seoPublishPackage() {
+  const data = seoFields();
+  const slug = cleanSeoSlug(data.slug);
+  const html = buildSeoHtml(data);
+  const uploadedImage = seoImageUpload?.files?.[0];
+  const imageNote = uploadedImage
+    ? `\n图片文件：${uploadedImage.name}\n请 Codex 把我上传/发送的图片保存为：${seoImageAssetPath(data)}\n`
+    : "\n图片文件：未上传新图片，使用表单里选择的现有 assets 图片。\n";
+  return `Mandrix SEO 发布包
+
+目标页面：/insights/${cleanSeoCategory(data.category)}/${slug}
+正式链接：${seoUrl(slug)}
+${imageNote}
+
+请 Codex 执行：
+1. 如果后台发布按钮无法使用，再用这个 HTML 手动创建页面。
+2. 正常情况下请优先使用“发布到 Insights”，它会自动写入 Supabase，并进入动态 sitemap。
+3. 运行 node --check、JSON-LD 校验、npx vercel build --yes。
+4. 用 Playwright 截桌面和手机图，确认排版不挤、不重图。
+5. npx vercel --prod 部署正式站。
+6. 部署后清空 analytics，并保持我的电脑不记录。
+
+Sitemap 条目：
+${buildSeoSitemapEntry(data)}
+
+HTML：
+\`\`\`html
+${html}
+\`\`\`
+`;
+}
+
+function fillSeoForm(values) {
+  if (!seoForm) return;
+  Object.entries(values).forEach(([key, value]) => {
+    const field = seoForm.elements[key];
+    if (field) field.value = value;
+  });
+  updateSeoBuilder();
+}
+
+function seoAiPrompt() {
+  return `你是 Mandrix 官网 SEO 页面文案助手。请只输出一个可复制的 JSON 代码块，不要解释。
+
+品牌：Mandrix，在线中文教学，高级、清楚、专业，面向成年学习者、商务人士、HSK 学生、采购/跨境/企业客户。
+目标：生成一个可直接粘贴进 Mandrix 后台的 SEO 页面。语言为英文。不要幼稚、不要夸张、不要长篇大论。
+
+固定输出格式如下，字段一个都不要少：
+\`\`\`json
+{
+  "category": "business-chinese",
+  "status": "published",
+  "slug": "example-page-url",
+  "title": "SEO title, 35-65 characters, ends with | Mandrix",
+  "description": "Meta description, 110-160 characters.",
+  "eyebrow": "Short page label",
+  "h1": "Clear page headline.",
+  "lead": "2-3 sentence hero paragraph for adult learners.",
+  "articleBody": "Full article body. 500-900 words. Include concrete examples, FAQs, and internal link suggestions in natural prose.",
+  "image": "assets/backup-business-meeting.jpg",
+  "imageAlt": "Short image alt text",
+  "chips": "Chip one, Chip two, Chip three, Chip four",
+  "primaryLabel": "Book $29 Diagnostic",
+  "primaryHref": "/booking",
+  "secondaryLabel": "View Courses",
+  "secondaryHref": "/courses",
+  "card1Title": "Card 1 title",
+  "card1Text": "Card 1 text, specific and useful.",
+  "card2Title": "Card 2 title",
+  "card2Text": "Card 2 text, specific and useful.",
+  "card3Title": "Card 3 title",
+  "card3Text": "Card 3 text, specific and useful.",
+  "sectionEyebrow": "Middle section label",
+  "sectionTitle": "Middle section title.",
+  "sectionBody": "Middle section paragraph. Keep it concrete.",
+  "ctaEyebrow": "Start here",
+  "ctaTitle": "Final CTA title.",
+  "ctaBody": "Final CTA body with clear next step."
+}
+\`\`\`
+
+Allowed image values only:
+- assets/sourcing-supplier-laptop.jpg
+- assets/backup-business-meeting.jpg
+- assets/backup-study-desk.jpg
+- assets/course-daily.jpg
+- assets/course-diagnostic-online.webp
+- assets/corporate-training-hero.png
+
+Rules:
+- category must be one of: business-chinese, hsk-prep, daily-chinese, sourcing-chinese, culture-communication, learning-method
+- Do not invent prices except $29 diagnostic.
+- Do not promise fluency in unrealistic time.
+- Keep title readable, not keyword stuffing.
+- H1 should sound human, not AI startup language.
+- Use concrete learner situations, not abstract methodology.
+- Output JSON only.`;
+}
+
+function extractSeoJsonCode(rawValue) {
+  const raw = String(rawValue || "").trim();
+  if (!raw) throw new Error("请先粘贴 AI 生成的 JSON 代码。");
+  const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  const candidate = fenced ? fenced[1].trim() : raw;
+  const jsonText = candidate
+    .replace(/^const\s+\w+\s*=\s*/i, "")
+    .replace(/^window\.\w+\s*=\s*/i, "")
+    .replace(/;\s*$/g, "")
+    .trim();
+  const objectMatch = jsonText.match(/\{[\s\S]*\}/);
+  if (!objectMatch) throw new Error("没有找到 JSON 对象。请让 AI 按固定格式输出。");
+  return JSON.parse(objectMatch[0]);
+}
+
+function normalizeSeoAiData(data) {
+  const allowedKeys = [
+    "category", "status", "slug", "title", "description", "eyebrow", "h1", "lead", "articleBody", "image", "imageAlt", "chips",
+    "primaryLabel", "primaryHref", "secondaryLabel", "secondaryHref",
+    "card1Title", "card1Text", "card2Title", "card2Text", "card3Title", "card3Text",
+    "sectionEyebrow", "sectionTitle", "sectionBody", "ctaEyebrow", "ctaTitle", "ctaBody",
+  ];
+  const cleaned = {};
+  allowedKeys.forEach((key) => {
+    cleaned[key] = String(data?.[key] ?? "").trim();
+  });
+  cleaned.slug = cleanSeoSlug(cleaned.slug);
+  cleaned.category = cleanSeoCategory(cleaned.category);
+  cleaned.status = cleaned.status === "draft" ? "draft" : "published";
+  cleaned.primaryLabel ||= "Book $29 Diagnostic";
+  cleaned.primaryHref ||= "/booking";
+  cleaned.secondaryLabel ||= "View Courses";
+  cleaned.secondaryHref ||= "/courses";
+  if (!seoForm?.elements.image?.querySelector(`option[value="${CSS.escape(cleaned.image)}"]`)) {
+    cleaned.image = seoPresets.custom.image;
+  }
+  return cleaned;
+}
+
+function applySeoAiCode() {
+  try {
+    const parsed = extractSeoJsonCode(seoAiCode?.value);
+    const data = normalizeSeoAiData(parsed);
+    fillSeoForm(data);
+    localStorage.setItem("mandrixSeoDraft", JSON.stringify(seoFields()));
+    if (seoApplyAiCode) {
+      const original = seoApplyAiCode.textContent;
+      seoApplyAiCode.textContent = "已套用";
+      setTimeout(() => {
+        seoApplyAiCode.textContent = original;
+      }, 1600);
+    }
+  } catch (error) {
+    alert(`AI 代码格式不对：${error.message}`);
+  }
+}
+
+function seoValidation(data) {
+  const slug = cleanSeoSlug(data.slug);
+  const checks = [];
+  checks.push({
+    ok: slug === data.slug?.replace(/\.html$/i, ""),
+    text: slug === data.slug?.replace(/\.html$/i, "") ? `URL OK: /insights/${cleanSeoCategory(data.category)}/${slug}` : `URL 会自动修正为 /insights/${cleanSeoCategory(data.category)}/${slug}`,
+  });
+  checks.push({
+    ok: Boolean(seoCategoryLabels[cleanSeoCategory(data.category)]),
+    text: `分区：${seoCategoryLabels[cleanSeoCategory(data.category)]}`,
+  });
+  checks.push({
+    ok: data.title.length >= 35 && data.title.length <= 65,
+    text: `Title ${data.title.length} 字符，建议 35-65`,
+  });
+  checks.push({
+    ok: data.description.length >= 110 && data.description.length <= 160,
+    text: `Description ${data.description.length} 字符，建议 110-160`,
+  });
+  checks.push({
+    ok: !seoUsedImages[data.image],
+    text: seoUsedImages[data.image] ? `图片已用于：${seoUsedImages[data.image]}` : "主图未在核心页面重复使用",
+  });
+  checks.push({
+    ok: splitSeoList(data.chips).length >= 3,
+    text: "至少 3 个 chips，首屏信息会更稳",
+  });
+  checks.push({
+    ok: seoCardData(data).every((card) => card.title && card.text),
+    text: "三个卡片标题和正文都已填写",
+  });
+  return checks;
+}
+
+function updateSeoBuilder() {
+  if (!seoForm) return;
+  const data = seoFields();
+  const slug = cleanSeoSlug(data.slug);
+  const category = cleanSeoCategory(data.category);
+  const html = buildSeoHtml(data);
+  if (seoSlugPreview) seoSlugPreview.textContent = `/insights/${category}/${slug}`;
+  if (seoPreviewPath) seoPreviewPath.textContent = `/insights/${category}/${slug}`;
+  if (seoImageTarget) seoImageTarget.value = seoImageAssetPath(data);
+  if (seoImagePromptBox) seoImagePromptBox.value = seoImageStylePrompt(data);
+  if (seoOutput) seoOutput.value = seoPublishPackage();
+  if (seoPreview) {
+    const previewData = seoUploadedImagePreviewUrl ? { ...data, imageUploadTarget: seoUploadedImagePreviewUrl } : data;
+    const previewHtml = buildSeoHtml(previewData);
+    seoPreview.srcdoc = previewHtml.replace("<head>", `<head><base href="${window.location.origin}/">`);
+  }
+  if (seoChecks) {
+    seoChecks.innerHTML = seoValidation(data).map((check) => `
+      <div class="${check.ok ? "ok" : "warn"}">
+        <span>${check.ok ? "OK" : "注意"}</span>
+        <p>${escapeHtml(check.text)}</p>
+      </div>
+    `).join("");
+  }
+}
+
+async function copySeoText(text, button, doneText = "已复制") {
+  try {
+    await navigator.clipboard.writeText(text);
+    const original = button?.textContent;
+    if (button) {
+      button.textContent = doneText;
+      setTimeout(() => {
+        button.textContent = original;
+      }, 1600);
+    }
+  } catch (error) {
+    window.prompt("复制失败，请手动复制：", text);
+  }
+}
+
+function downloadSeoHtml() {
+  const data = seoFields();
+  const slug = cleanSeoSlug(data.slug);
+  const blob = new Blob([buildSeoHtml(data)], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${slug}.html`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function saveSeoDraft() {
+  const data = seoFields();
+  localStorage.setItem("mandrixSeoDraft", JSON.stringify(data));
+  const original = seoSaveDraft?.textContent;
+  if (seoSaveDraft) {
+    seoSaveDraft.textContent = "已保存";
+    setTimeout(() => {
+      seoSaveDraft.textContent = original;
+    }, 1600);
+  }
+}
+
+async function publishSeoLive() {
+  if (!adminToken) {
+    alert("请先输入后台密码，再发布 SEO 页面。");
+    return;
+  }
+  const data = seoFields();
+  const payload = {
+    ...data,
+    category: cleanSeoCategory(data.category),
+    slug: cleanSeoSlug(data.slug),
+  };
+  if (seoPublishLive) {
+    seoPublishLive.disabled = true;
+    seoPublishLive.textContent = "发布中...";
+  }
+  if (seoLiveStatus) seoLiveStatus.textContent = "正在写入 Insights 分区，并生成可抓取页面...";
+  try {
+    const response = await fetch("/api/seo-pages.js", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-admin-token": adminToken },
+      body: JSON.stringify(payload),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || "发布失败");
+    const url = result.url || seoUrl(payload.slug);
+    localStorage.setItem("mandrixSeoDraft", JSON.stringify(payload));
+    if (seoLiveStatus) {
+      seoLiveStatus.innerHTML = `已发布：<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(url)}</a><br>下一步：复制这个地址，到 Google Search Console 做 URL 检查。`;
+    }
+  } catch (error) {
+    if (seoLiveStatus) seoLiveStatus.textContent = `发布失败：${error.message}。如果提示 seo_pages 不存在，需要先执行我给你的 Supabase SQL。`;
+    alert(`发布失败：${error.message}`);
+  } finally {
+    if (seoPublishLive) {
+      seoPublishLive.disabled = false;
+      seoPublishLive.textContent = "发布到 Insights";
+    }
+  }
+}
+
 async function saveBooking(card) {
   const id = card.dataset.id;
   const payload = {};
@@ -854,6 +1967,16 @@ async function saveBooking(card) {
 }
 
 list.addEventListener("click", (event) => {
+  const sendButton = event.target.closest(".send-renewal");
+  if (sendButton) {
+    sendRenewalEmail(sendButton.closest(".booking-card"));
+    return;
+  }
+  const copyButton = event.target.closest(".copy-renewal");
+  if (copyButton) {
+    copyRenewalEmail(copyButton.closest(".booking-card"));
+    return;
+  }
   const saveButton = event.target.closest(".save-booking");
   if (saveButton) {
     saveBooking(saveButton.closest(".booking-card"));
@@ -865,6 +1988,63 @@ list.addEventListener("click", (event) => {
   if (!window.confirm(t("deleteConfirm"))) return;
   deleteBooking(card);
 });
+
+renewalPanel?.addEventListener("click", (event) => {
+  const sendButton = event.target.closest(".send-renewal");
+  if (sendButton) {
+    sendRenewalEmail(sendButton.closest("[data-id]"));
+    return;
+  }
+  const copyButton = event.target.closest(".copy-renewal");
+  if (!copyButton) return;
+  copyRenewalEmail(copyButton.closest("[data-id]"));
+});
+
+async function sendRenewalEmail(card) {
+  const booking = bookings.find((row) => String(row.id) === String(card?.dataset.id));
+  if (!booking) return;
+  const button = card.querySelector(".send-renewal");
+  const original = button?.textContent || t("sendRenewal");
+  if (button) {
+    button.disabled = true;
+    button.textContent = t("sendingRenewal");
+  }
+  const response = await fetch("/api/reminders.js?job=renewals", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-admin-token": adminToken },
+    body: JSON.stringify({ bookingId: booking.id }),
+  });
+  if (!response.ok) {
+    alert(t("renewalSendFailed"));
+    if (button) {
+      button.disabled = false;
+      button.textContent = original;
+    }
+    return;
+  }
+  if (button) button.textContent = t("renewalSent");
+  await loadBookings();
+}
+
+async function copyRenewalEmail(card) {
+  const booking = bookings.find((row) => String(row.id) === String(card?.dataset.id));
+  if (!booking) return;
+  const renewal = renewalStatusFor(booking);
+  const text = renewalEmailFor(booking, renewal);
+  try {
+    await navigator.clipboard.writeText(text);
+    const button = card.querySelector(".copy-renewal");
+    if (button) {
+      const original = button.textContent;
+      button.textContent = t("copied");
+      setTimeout(() => {
+        button.textContent = original;
+      }, 1600);
+    }
+  } catch (error) {
+    window.prompt(adminLang === "zh" ? "复制失败，请手动复制：" : "Copy failed. Copy manually:", text);
+  }
+}
 
 async function deleteBooking(card) {
   const id = card.dataset.id;
@@ -897,6 +2077,36 @@ adminTabs.forEach((button) => {
 });
 
 analyticsRange.addEventListener("change", loadAnalytics);
+clearAnalyticsButton?.addEventListener("click", clearAnalytics);
+seoPreset?.addEventListener("change", () => {
+  fillSeoForm(seoPresets[seoPreset.value] || seoPresets.custom);
+});
+seoForm?.addEventListener("input", updateSeoBuilder);
+seoApplyAiCode?.addEventListener("click", applySeoAiCode);
+seoClearAiCode?.addEventListener("click", () => {
+  if (seoAiCode) seoAiCode.value = "";
+});
+seoCopyAiPrompt?.addEventListener("click", () => copySeoText(seoAiPrompt(), seoCopyAiPrompt, "已复制口令"));
+seoCopyImagePrompt?.addEventListener("click", () => copySeoText(seoImageStylePrompt(), seoCopyImagePrompt, "已复制图片口令"));
+seoImageUpload?.addEventListener("change", () => {
+  const file = seoImageUpload.files?.[0];
+  if (seoUploadedImagePreviewUrl) URL.revokeObjectURL(seoUploadedImagePreviewUrl);
+  seoUploadedImagePreviewUrl = "";
+  if (!file || !seoImagePreview) {
+    if (seoImagePreview) seoImagePreview.hidden = true;
+    updateSeoBuilder();
+    return;
+  }
+  seoUploadedImagePreviewUrl = URL.createObjectURL(file);
+  seoImagePreview.src = seoUploadedImagePreviewUrl;
+  seoImagePreview.hidden = false;
+  updateSeoBuilder();
+});
+seoCopyPackage?.addEventListener("click", () => copySeoText(seoPublishPackage(), seoCopyPackage));
+seoDownloadHtml?.addEventListener("click", downloadSeoHtml);
+seoCopySitemap?.addEventListener("click", () => copySeoText(buildSeoSitemapEntry(), seoCopySitemap));
+seoSaveDraft?.addEventListener("click", saveSeoDraft);
+seoPublishLive?.addEventListener("click", publishSeoLive);
 
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -925,5 +2135,11 @@ exportButton.addEventListener("click", async () => {
 });
 
 timetableStart.value = todayIso();
+try {
+  const savedSeoDraft = JSON.parse(localStorage.getItem("mandrixSeoDraft") || "null");
+  fillSeoForm(savedSeoDraft || seoPresets.business);
+} catch (error) {
+  fillSeoForm(seoPresets.business);
+}
 applyLanguage();
 loadBookings();

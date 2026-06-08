@@ -3,5 +3,9 @@
 data/*.json
 setup-env.sh
 *.xlsx
+*.docx
+test-results/
+assets/mandrix-scene-*.png
 Mandrix续费留存报告_*.md
+weekly_renewal_report_*.md
 运营中心.html

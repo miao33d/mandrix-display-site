@@ -1,5 +1,5 @@
-import { isAdmin } from "./_auth.js";
-import { insertAnalyticsEvent, listAnalyticsEvents, sendJson } from "./_supabase.js";
+import { isAdmin } from "../lib/_auth.js";
+import { clearAnalyticsEvents, insertAnalyticsEvent, listAnalyticsEvents, sendJson } from "../lib/_supabase.js";
 
 function clean(value) {
   return String(value || "").trim();
@@ -52,7 +52,8 @@ function pageGroup(path = "") {
   if (value.includes("/insights/")) return "Insights Article";
   if (value.includes("insights.html")) return "Insights Index";
   if (value.includes("zh.html")) return "Chinese Home";
-  if (value.includes("#booking")) return "Booking Section";
+  if (value.includes("#booking") || value === "/booking" || value.includes("/booking?")) return "Booking Section";
+  if (["/method", "/courses", "/about", "/testimonials", "/faq", "/contact", "/diagnostic", "/daily", "/business", "/hsk", "/specialty", "/private"].includes(value)) return "English Home Section";
   if (value === "/" || value.includes("index.html")) return "English Home";
   return "Other";
 }
@@ -330,6 +331,16 @@ export default async function handler(req, res) {
       }
       await insertAnalyticsEvent(event);
       sendJson(res, 201, { ok: true });
+      return;
+    }
+
+    if (req.method === "DELETE") {
+      if (!isAdmin(req)) {
+        sendJson(res, 401, { error: "Admin password required" });
+        return;
+      }
+      await clearAnalyticsEvents();
+      sendJson(res, 200, { ok: true, cleared: true });
       return;
     }
 

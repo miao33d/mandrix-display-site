@@ -1,5 +1,5 @@
-import { analyzeAvailability } from "./_bookingLogic.js";
-import { listBookings, sendJson } from "./_supabase.js";
+import { analyzeAvailability } from "../lib/_bookingLogic.js";
+import { listBookings, sendJson } from "../lib/_supabase.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
