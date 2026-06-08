@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/generate-section-pages.mjs && node scripts/generate-sitemap.mjs",
+    "build:cloudflare": "npm run build && node scripts/build-cloudflare.mjs",
     "dev": "node server.js",
     "start": "node server.js"
   }
