@@ -4,6 +4,8 @@ pages_build_output_dir = "dist-cloudflare"
 
 [vars]
 GOOGLE_MEET_LINK = ""
+PAYPAL_ENV = "live"
+PAYPAL_CURRENCY = "USD"
 
 [[d1_databases]]
 binding = "MANDRIX_DB"

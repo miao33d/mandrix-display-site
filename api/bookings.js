@@ -39,8 +39,8 @@ export default async function handler(req, res) {
 
     const rows = await listBookings();
     const { availability, booking } = buildBookingFromPayload(payload, rows, {
-      payment: "WorldFirst reference received",
-      paymentProvider: "WorldFirst",
+      payment: "PayPal payment confirmed",
+      paymentProvider: "PayPal",
     });
     if (!availability.ok) {
       sendJson(res, 409, { error: availability.message, availability });

@@ -187,7 +187,7 @@
                 "name": "How does booking work at Mandrix?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Students choose a diagnostic or program, pay through Jane's PayPal link, submit the paid booking form, and receive a meeting link from Jane after payment verification."
+                  "text": "Students choose a diagnostic or program, pay through PayPal Business checkout, submit the booking form after payment, and receive the generated class schedule and Google Meet details by email."
                 }
               },
               {
@@ -277,7 +277,7 @@
               <span>✓ Every lesson leaves a usable output</span>
               <span>✓ Built for daily life, work, or HSK</span>
             </div>
-            <p class="hero-risk">3–5 minute initial check &nbsp;·&nbsp; Get your level, blockers, and best Mandrix path by email</p>
+            <p class="hero-risk"><span></span>3-5 minute assessment</p>
           </div>
 
           <div class="hero-visual" aria-hidden="true">
@@ -449,7 +449,7 @@
             </div>
             <div id="levelReportContent"></div>
             <div class="level-report-actions">
-              <a class="btn primary" href="/booking" data-course="Chinese Level Diagnostic — 1 session — $29">Book Jane Consultation</a>
+              <a class="btn primary" href="/level-check">Start Free AI Level Check</a>
               <button class="btn secondary" type="button" id="levelCheckReset">Retake Check</button>
             </div>
             <p class="level-check-note" id="levelReportStatus">Your report is being saved and emailed.</p>
@@ -1035,7 +1035,7 @@
           </details>
           <details>
             <summary>How does payment work?</summary>
-            <p>Choose your program, pay through Jane's PayPal link, then submit the booking form with your payment reference. Jane personally reviews every booking within 24 business hours and sends your meeting link directly. You are booking time with the founder — not a platform.</p>
+            <p>Choose your program, complete PayPal Business checkout, then submit the booking form. Mandrix attaches the PayPal order ID automatically and sends your class schedule and Google Meet details by email.</p>
           </details>
           <details>
             <summary>Can I reschedule?</summary>
@@ -1043,7 +1043,7 @@
           </details>
           <details>
             <summary>What if I book the diagnostic and decide not to continue?</summary>
-            <p>That's completely fine. The $29 diagnostic stands on its own — you'll leave with a written level assessment, a list of your main blockers, and a recommended study path. You keep that regardless of what you decide next. If you do enroll in a course within 48 hours, the $29 is credited toward your program.</p>
+            <p>That's completely fine. Start with the free AI level check first. You'll receive an initial level estimate, likely blockers, and a suggested Mandrix path. If you want deeper correction and a human plan, you can book a paid program afterward.</p>
           </details>
           <details>
             <summary>I'm nervous about speaking Chinese with a teacher for the first time. Is that normal?</summary>
@@ -1070,7 +1070,7 @@
         <aside class="booking-sidebar">
           <p class="eyebrow">Booking Form</p>
           <h2>Book once. Get your schedule by email.</h2>
-          <p>Choose a program, submit your details, and use your WorldFirst payment reference for confirmation. Mandrix generates your class schedule and sends the Google Meet details by email.</p>
+          <p>Choose a program, pay securely through PayPal Business checkout, and receive your generated schedule and Google Meet details by email.</p>
           <div class="booking-guide compact-booking-guide">
             <article>
               <span>01</span>
@@ -1079,8 +1079,8 @@
             </article>
             <article>
               <span>02</span>
-              <strong>Submit payment reference</strong>
-              <p>Use the WorldFirst order or transfer reference for matching.</p>
+              <strong>Pay securely with PayPal</strong>
+              <p>Pay by PayPal, card, or supported local methods through PayPal Business checkout.</p>
             </article>
             <article>
               <span>03</span>
@@ -1091,12 +1091,12 @@
           <div class="booking-guarantee">
             <div class="booking-guarantee-icon">✓</div>
             <div>
-              <strong>$29 diagnostic credit, guaranteed.</strong>
-              <p>Reserve a diagnostic, learn exactly what's blocking you, and get a written roadmap. If you enroll in any course within 48 hours, the full $29 is credited — automatically, no questions asked.</p>
+              <strong>Start with the free AI check.</strong>
+              <p>Use the free report to understand your level first. PayPal checkout is only for confirmed paid lessons or programs.</p>
             </div>
           </div>
           <div class="booking-trust-stack" aria-label="Booking trust and confirmation">
-            <article><strong>WorldFirst reference</strong><span>No card details are collected on this website.</span></article>
+            <article><strong>PayPal Business checkout</strong><span>Mandrix never stores your card details.</span></article>
             <article><strong>Auto schedule</strong><span>The selected date, time, and frequency generate the lesson plan.</span></article>
             <article><strong>Google Meet email</strong><span>Student and Jane receive the same booking record automatically.</span></article>
           </div>
@@ -1122,7 +1122,7 @@
           <label>Course Plan
             <select name="course" required>
               <option value="">Select a course</option>
-              <option>Chinese Level Diagnostic — 1 session — $29</option>
+              <option disabled>Free AI Level Check — start from the Level Check page</option>
               <optgroup label="DAILY CHINESE">
                 <option>Daily Chinese: First Conversation — 1-on-1 — 3 lessons — $69</option>
                 <option>Daily Chinese: First Conversation — Group — 3 lessons — $45</option>
@@ -1172,8 +1172,8 @@
           <div class="amount-preview" id="amountPreview" hidden>
             <span>Amount to pay</span>
             <strong id="amountValue">$0</strong>
-            <small>Use this amount when paying through WorldFirst. Paste your payment reference below so the order can be matched automatically.</small>
-            <a class="btn primary payment-button" id="paymentPageLink" href="#paymentReferenceField">Add Reference</a>
+            <small>Pay securely through PayPal Business checkout. After payment, your PayPal order ID is attached to this booking automatically.</small>
+            <a class="btn primary payment-button" id="paymentPageLink" href="#paypalCheckoutPanel">Pay with PayPal</a>
             <small class="payment-note">After submission, Mandrix emails the generated class schedule and Google Meet details to both sides.</small>
           </div>
           <label>Preferred Class Date<input name="date" type="date" required></label>
@@ -1218,7 +1218,16 @@
             <strong id="availabilityTitle"></strong>
             <p id="availabilityText"></p>
           </div>
-          <label id="paymentReferenceField">WorldFirst Payment Reference<input name="paymentReference" placeholder="Order ID / transfer reference" required></label>
+          <div class="paypal-checkout-panel" id="paypalCheckoutPanel">
+            <span>Secure checkout</span>
+            <strong>PayPal Business</strong>
+            <p id="paypalStatus">Choose a paid course, then complete payment here before submitting your booking.</p>
+            <div id="paypalButtons" class="paypal-buttons"></div>
+          </div>
+          <input type="hidden" name="paymentReference" id="paymentReferenceInput" required>
+          <input type="hidden" name="paymentProvider" value="PayPal">
+          <input type="hidden" name="paypalOrderId" id="paypalOrderId">
+          <input type="hidden" name="paypalPayerEmail" id="paypalPayerEmail">
           <label>Learning Goal<textarea name="goal" placeholder="e.g. pass HSK 3, improve work emails, travel to China next year" required></textarea></label>
           <label>Special Requests<textarea name="notes" placeholder="Optional: scheduling notes, learning background, or questions"></textarea></label>
           <button class="btn primary" type="submit" id="submitBooking">Submit Booking</button>
@@ -1309,7 +1318,7 @@
     </footer>
 
     <div class="floating-contact" aria-label="Quick booking">
-      <a href="/booking" data-course="Chinese Level Diagnostic — 1 session — $29">Reserve Your $29 Diagnostic →</a>
+      <a href="/level-check">Start Free AI Level Check →</a>
     </div>
 
     <script src="analytics.js" defer></script>

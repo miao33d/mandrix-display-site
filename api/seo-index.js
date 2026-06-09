@@ -91,11 +91,11 @@ ${baseHead({
     ${categorySections}
     <section class="section alt contact">
       <div class="wrap">
-        <p class="eyebrow">Start with diagnosis</p>
-        <h2>Find the exact blocker before buying a larger course.</h2>
-        <p class="lead">Book a $29 diagnostic and receive a written roadmap for daily Chinese, Business Chinese, or HSK preparation.</p>
+        <p class="eyebrow">Start with the free AI check</p>
+        <h2>Find the likely blocker before buying a larger course.</h2>
+        <p class="lead">Use the free AI level check to receive an initial direction for daily Chinese, Business Chinese, or HSK preparation.</p>
         <div class="actions">
-          <a class="btn primary" href="/booking">Book $29 Diagnostic</a>
+          <a class="btn primary" href="/level-check">Start Free AI Level Check</a>
           <a class="btn secondary" href="mailto:Jane.Mandrix@outlook.com">Email Jane</a>
         </div>
       </div>

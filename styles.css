@@ -10993,3 +10993,163 @@ html[lang^="zh"] .hero-risk::before {
     font-size: clamp(30px, 8vw, 38px) !important;
   }
 }
+
+/* Final payment and screenshot QA fixes: clearer hero pill, compact guarantee, PayPal checkout. */
+.hero-risk,
+html[lang^="zh"] .hero-risk,
+.dark .hero-risk,
+.hero-card .hero-risk {
+  width: fit-content !important;
+  max-width: min(100%, 420px) !important;
+  min-height: 48px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  margin-top: 22px !important;
+  padding: 12px 24px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, #eef8ff 0%, #dff0fb 100%) !important;
+  border: 1px solid rgba(82, 145, 188, 0.42) !important;
+  color: #1d3149 !important;
+  font-size: clamp(15px, 1.35vw, 18px) !important;
+  font-weight: 850 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0 !important;
+  text-shadow: none !important;
+  box-shadow: 0 12px 28px rgba(29, 49, 73, 0.12), inset 0 1px 0 rgba(255,255,255,0.75) !important;
+}
+
+.hero-risk::before,
+html[lang^="zh"] .hero-risk::before {
+  display: none !important;
+}
+
+.hero-risk span {
+  width: 12px !important;
+  height: 12px !important;
+  display: inline-block !important;
+  flex: 0 0 auto !important;
+  border-radius: 999px !important;
+  background: #5aa2cf !important;
+  box-shadow: 0 0 0 6px rgba(90, 162, 207, 0.14) !important;
+}
+
+#booking .booking-guarantee {
+  display: grid !important;
+  grid-template-columns: 38px minmax(0, 1fr) !important;
+  gap: 16px !important;
+  align-items: start !important;
+  width: 100% !important;
+  margin: 22px 0 18px !important;
+  padding: 20px 22px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(39, 155, 92, 0.22) !important;
+  background: linear-gradient(135deg, #f0fbf5 0%, #ffffff 100%) !important;
+  box-shadow: 0 16px 40px rgba(31, 45, 70, 0.07) !important;
+}
+
+#booking .booking-guarantee-icon {
+  width: 38px !important;
+  height: 38px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 999px !important;
+  background: #177a48 !important;
+  color: #fff !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+}
+
+#booking .booking-guarantee strong {
+  margin: 0 0 7px !important;
+  color: #162235 !important;
+  font-size: clamp(18px, 1.6vw, 22px) !important;
+  line-height: 1.25 !important;
+}
+
+#booking .booking-guarantee p {
+  max-width: 420px !important;
+  margin: 0 !important;
+  color: #445269 !important;
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+}
+
+#booking .paypal-checkout-panel {
+  grid-column: 1 / -1 !important;
+  display: grid !important;
+  gap: 10px !important;
+  padding: 20px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(32, 40, 58, 0.1) !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f7f9fd 100%) !important;
+  box-shadow: 0 14px 36px rgba(31, 45, 70, 0.06) !important;
+}
+
+#booking .paypal-checkout-panel span {
+  width: fit-content !important;
+  color: #5d6f88 !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
+#booking .paypal-checkout-panel strong {
+  color: #152137 !important;
+  font-size: clamp(22px, 2vw, 30px) !important;
+  line-height: 1.15 !important;
+}
+
+#booking .paypal-checkout-panel p {
+  margin: 0 !important;
+  color: #58677c !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+#booking .paypal-checkout-panel[data-status="paid"] {
+  border-color: rgba(39, 155, 92, 0.34) !important;
+  background: linear-gradient(135deg, #eefbf4 0%, #ffffff 100%) !important;
+}
+
+#booking .paypal-checkout-panel[data-status="warning"] {
+  border-color: rgba(255, 143, 61, 0.34) !important;
+  background: linear-gradient(135deg, #fff8ef 0%, #ffffff 100%) !important;
+}
+
+#booking .paypal-buttons {
+  max-width: 420px !important;
+}
+
+@media (max-width: 900px) {
+  .hero-risk,
+  html[lang^="zh"] .hero-risk {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 46px !important;
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+  }
+
+  #booking .booking-guarantee {
+    grid-template-columns: 34px minmax(0, 1fr) !important;
+    padding: 18px !important;
+  }
+
+  #booking .booking-guarantee-icon {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 19px !important;
+  }
+
+  #booking .booking-guarantee p {
+    max-width: none !important;
+  }
+
+  #booking .paypal-buttons {
+    max-width: 100% !important;
+  }
+}

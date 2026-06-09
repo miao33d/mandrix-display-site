@@ -10,6 +10,11 @@ const frequencySelect = form.elements.frequency;
 const amountPreview = document.querySelector("#amountPreview");
 const amountValue = document.querySelector("#amountValue");
 const paymentPageLink = document.querySelector("#paymentPageLink");
+const paypalCheckoutPanel = document.querySelector("#paypalCheckoutPanel");
+const paypalButtons = document.querySelector("#paypalButtons");
+const paypalStatus = document.querySelector("#paypalStatus");
+const paypalOrderIdInput = document.querySelector("#paypalOrderId");
+const paypalPayerEmailInput = document.querySelector("#paypalPayerEmail");
 const dateInput = form.elements.date;
 const timeSelect = form.elements.time;
 const timezoneInput = form.elements.timezone;
@@ -35,6 +40,9 @@ const submittingText = lang === "zh" ? "提交中..." : "Submitting...";
 
 let latestAvailability = null;
 let availabilityTimer = 0;
+let paypalReady = false;
+let paypalButtonsRendered = false;
+let paidCourseKey = "";
 
 function extractAmount(course) {
   const match = String(course || "").match(/\$(\d+(?:\.\d{1,2})?)/);
@@ -57,6 +65,8 @@ function updateAmountPreview() {
     paymentPageLink.href = "mailto:Jane.Mandrix@outlook.com?subject=Mandrix%20Private%20Intensive%20Consultation";
     paymentPageLink.textContent = "Request Consultation";
     paymentReferenceInput.required = false;
+    paymentReferenceInput.value = "";
+    setPayPalStatus(lang === "zh" ? "申请制课程请先联系 Jane，不需要在线付款。" : "Private intensives require a consultation first. Online payment is not required here.", "neutral");
     if (paymentAccountInput) paymentAccountInput.required = false;
     dateInput.required = false;
     timeSelect.required = false;
@@ -72,8 +82,10 @@ function updateAmountPreview() {
   if (!courseSelect.value) {
     amountPreview.hidden = false;
     amountValue.textContent = lang === "zh" ? "请选择课程" : "Select a course";
-    paymentPageLink.href = "#paymentReferenceField";
-    paymentPageLink.textContent = lang === "zh" ? "填写付款参考号" : "Add Reference";
+    paymentPageLink.href = "#paypalCheckoutPanel";
+    paymentPageLink.textContent = lang === "zh" ? "选择课程" : "Choose Course";
+    resetPayPalPayment();
+    setPayPalStatus(lang === "zh" ? "请选择课程后再付款。" : "Choose a course before payment.", "neutral");
     submitButton.textContent = submitDefaultText;
     return;
   }
@@ -87,9 +99,118 @@ function updateAmountPreview() {
   }
   amountPreview.hidden = false;
   amountValue.textContent = `$${amount}`;
-  paymentPageLink.href = "#paymentReferenceField";
-  paymentPageLink.textContent = lang === "zh" ? "填写付款参考号" : "Add Reference";
+  paymentPageLink.href = "#paypalCheckoutPanel";
+  paymentPageLink.textContent = lang === "zh" ? "使用 PayPal 付款" : "Pay with PayPal";
+  if (paidCourseKey && paidCourseKey !== paymentKey()) resetPayPalPayment();
+  if (!paymentReferenceInput.value) setPayPalStatus(lang === "zh" ? "请先完成 PayPal 付款，再提交预约。" : "Complete PayPal payment before submitting your booking.", "neutral");
   submitButton.textContent = submitDefaultText;
+}
+
+function paymentKey() {
+  return `${courseSelect.value}|${extractAmount(courseSelect.value)}`;
+}
+
+function setPayPalStatus(message, tone = "neutral") {
+  if (!paypalStatus) return;
+  paypalStatus.textContent = message;
+  paypalCheckoutPanel?.setAttribute("data-status", tone);
+}
+
+function resetPayPalPayment() {
+  paidCourseKey = "";
+  paymentReferenceInput.value = "";
+  if (paypalOrderIdInput) paypalOrderIdInput.value = "";
+  if (paypalPayerEmailInput) paypalPayerEmailInput.value = "";
+}
+
+async function fetchJson(url, options = {}) {
+  const response = await fetch(url, options);
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || "Request failed");
+  return data;
+}
+
+async function loadPayPalCheckout() {
+  if (!paypalButtons || paypalReady || paypalButtonsRendered) return;
+  try {
+    const config = await fetchJson("/api/paypal/config.js");
+    if (!config.configured || !config.clientId) {
+      setPayPalStatus(lang === "zh"
+        ? "PayPal 商家收款还差 Client ID 配置。配置后这里会自动显示 PayPal 按钮。"
+        : "PayPal Business checkout is ready in code. Add the PayPal Client ID in Cloudflare to show the live button.",
+      "warning");
+      return;
+    }
+    await new Promise((resolve, reject) => {
+      const existing = document.querySelector("script[data-paypal-sdk]");
+      if (existing) {
+        existing.addEventListener("load", resolve, { once: true });
+        if (window.paypal) resolve();
+        return;
+      }
+      const script = document.createElement("script");
+      script.dataset.paypalSdk = "true";
+      script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(config.clientId)}&currency=${encodeURIComponent(config.currency || "USD")}&intent=capture&components=buttons`;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error("PayPal SDK failed to load"));
+      document.head.append(script);
+    });
+    if (!window.paypal) throw new Error("PayPal SDK unavailable");
+    paypalReady = true;
+    window.paypal.Buttons({
+      style: { layout: "vertical", color: "gold", shape: "rect", label: "paypal" },
+      onClick: () => {
+        const amount = extractAmount(courseSelect.value);
+        if (!courseSelect.value || !amount) {
+          setPayPalStatus(lang === "zh" ? "请先选择一个可付款课程。" : "Please choose a paid course first.", "warning");
+          return false;
+        }
+        const requiredBeforePayment = ["fullName", "email", "contact", "country", "timezone", "level", "course", "date", "time", "frequency"];
+        const missing = requiredBeforePayment.find((name) => !String(form.elements[name]?.value || "").trim());
+        if (missing) {
+          form.elements[missing]?.focus();
+          setPayPalStatus(lang === "zh" ? "请先填写上方预约信息，再付款。" : "Fill in the booking details above before payment.", "warning");
+          return false;
+        }
+        return true;
+      },
+      createOrder: async () => {
+        const payload = Object.fromEntries(new FormData(form).entries());
+        payload.amount = extractAmount(payload.course);
+        const data = await fetchJson("/api/paypal/create-order.js", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        return data.orderId;
+      },
+      onApprove: async (data) => {
+        const result = await fetchJson("/api/paypal/capture-order.js", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId: data.orderID }),
+        });
+        paymentReferenceInput.value = result.orderId || data.orderID;
+        if (paypalOrderIdInput) paypalOrderIdInput.value = result.orderId || data.orderID;
+        if (paypalPayerEmailInput) paypalPayerEmailInput.value = result.payerEmail || "";
+        paidCourseKey = paymentKey();
+        setPayPalStatus(lang === "zh" ? `付款成功：${paymentReferenceInput.value}` : `Payment confirmed: ${paymentReferenceInput.value}`, "paid");
+        window.MandrixAnalytics?.track("paypal_payment_success", {
+          course: courseSelect.value,
+          amount: extractAmount(courseSelect.value),
+          orderId: paymentReferenceInput.value,
+        });
+      },
+      onError: (error) => {
+        console.error(error);
+        setPayPalStatus(lang === "zh" ? "PayPal 付款未完成，请重试。" : "PayPal payment was not completed. Please try again.", "warning");
+      },
+    }).render("#paypalButtons");
+    paypalButtonsRendered = true;
+  } catch (error) {
+    console.error(error);
+    setPayPalStatus(error.message || (lang === "zh" ? "PayPal 暂时不可用。" : "PayPal is temporarily unavailable."), "warning");
+  }
 }
 
 function getUserTimeZone() {
@@ -282,7 +403,7 @@ function buildBookingMessage(data) {
         frequency: "上课频率",
         localTime: "学生本地时间",
         schedule: "自动生成课表",
-        paymentReference: "付款参考号 / 交易号",
+        paymentReference: "PayPal 订单号",
         paymentAccount: "付款账户 / 持卡人姓名",
         paymentProofLink: "付款截图或收据链接",
         goal: "学习目标",
@@ -304,7 +425,7 @@ function buildBookingMessage(data) {
         frequency: "Class Frequency",
         localTime: "Student Local Time",
         schedule: "Auto Lesson Schedule",
-        paymentReference: "WorldFirst Payment Reference",
+        paymentReference: "PayPal Order ID",
         paymentAccount: "Payment Account",
         paymentProofLink: "Receipt Link",
         goal: "Learning Goal",
@@ -371,6 +492,15 @@ form.addEventListener("submit", async (event) => {
   const localSchedule = latestAvailability?.schedule || buildLessonScheduleLocal();
   payload.lessonSchedule = localSchedule.map(formatScheduleLine).join("\n");
   payload.amount = extractAmount(payload.course);
+  payload.paymentProvider = "PayPal";
+  if (!payload.paymentReference || paidCourseKey !== paymentKey()) {
+    setPayPalStatus(lang === "zh" ? "请先完成当前课程金额的 PayPal 付款。" : "Please complete PayPal payment for the selected course before submitting.", "warning");
+    resultTitle.textContent = lang === "zh" ? "请先完成付款。" : "Please complete payment first.";
+    resultText.textContent = lang === "zh" ? "PayPal 成功后，系统会自动写入订单号，然后你就可以提交预约。" : "After PayPal confirms the payment, the order ID is attached automatically and you can submit the booking.";
+    output.hidden = false;
+    paypalCheckoutPanel?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
   submitButton.disabled = true;
   submitButton.textContent = submittingText;
 
@@ -392,6 +522,7 @@ form.addEventListener("submit", async (event) => {
     window.MandrixAnalytics?.track("booking_submit_success", {
       course: payload.course,
       amount: payload.amount,
+      paymentProvider: "PayPal",
       date: payload.date,
       time: payload.time,
     });
@@ -458,6 +589,7 @@ document.querySelectorAll("[data-course]").forEach((button) => {
 });
 
 updateAmountPreview();
+loadPayPalCheckout();
 updateLocalTimePreview();
 updateSchedulePreview([]);
 setAvailabilityState("pending");

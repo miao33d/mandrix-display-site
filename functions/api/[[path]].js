@@ -32,6 +32,11 @@ function amountFromCourse(course) {
   return match ? match[1] : "";
 }
 
+function normalizeAmount(value) {
+  const number = Number(clean(value).replace(/[^\d.]/g, ""));
+  return Number.isFinite(number) ? number.toFixed(2) : "";
+}
+
 function lessonCount(course) {
   const text = clean(course);
   const lesson = text.match(/(\d+)\s+lessons?/i);
@@ -385,6 +390,21 @@ async function handleBookings(request, env) {
   const { schedule, conflicts } = scheduleConflicts(rows, payload);
   if (conflicts.length) return json({ error: "This time is already booked. Please choose another slot.", availability: { ok: false, conflicts } }, 409);
 
+  const paymentProvider = clean(payload.paymentProvider || "PayPal");
+  const expectedAmount = normalizeAmount(clean(payload.amount) || amountFromCourse(payload.course));
+  if (/paypal/i.test(paymentProvider)) {
+    const payment = await db.prepare("SELECT * FROM payment_orders WHERE provider = ? AND order_id = ? AND status = ? ORDER BY created_at DESC LIMIT 1")
+      .bind("PayPal", clean(payload.paymentReference), "COMPLETED").first();
+    const fallbackPayment = payment || await db.prepare("SELECT * FROM payment_orders WHERE provider = ? AND order_id = ? ORDER BY created_at DESC LIMIT 1")
+      .bind("PayPal", clean(payload.paymentReference)).first();
+    if (!fallbackPayment || clean(fallbackPayment.status).toUpperCase() !== "COMPLETED") {
+      return json({ error: "PayPal payment has not been confirmed. Please complete PayPal checkout first." }, 402);
+    }
+    if (expectedAmount && normalizeAmount(fallbackPayment.amount) !== expectedAmount) {
+      return json({ error: "PayPal payment amount does not match the selected course." }, 402);
+    }
+  }
+
   const booking = {
     id: randomId(),
     status: "New",
@@ -401,8 +421,8 @@ async function handleBookings(request, env) {
     frequency: clean(payload.frequency || "weekly"),
     frequencyLabel: frequencyLabel(payload.frequency || "weekly"),
     lessonCount: schedule.length,
-    payment: "WorldFirst reference received",
-    paymentProvider: "WorldFirst",
+    payment: /paypal/i.test(paymentProvider) ? "PayPal payment confirmed" : "Payment reference received",
+    paymentProvider: paymentProvider || "PayPal",
     paymentReference: clean(payload.paymentReference),
     amount: clean(payload.amount) || amountFromCourse(payload.course),
     goal: clean(payload.goal),
@@ -438,7 +458,7 @@ async function sendBookingEmails(env, booking) {
     `Contact: ${booking.contact}`,
     `Course: ${booking.course}`,
     `Amount: $${booking.amount}`,
-    `WorldFirst reference: ${booking.paymentReference}`,
+    `${booking.paymentProvider} reference: ${booking.paymentReference}`,
     `Google Meet: ${booking.meetingLink || "Not configured"}`,
     "",
     schedule,
@@ -452,7 +472,7 @@ async function sendBookingEmails(env, booking) {
     "Your Mandrix booking has been received and your class schedule has been generated.",
     `Course: ${booking.course}`,
     `Amount: $${booking.amount}`,
-    `WorldFirst reference: ${booking.paymentReference}`,
+    `${booking.paymentProvider} reference: ${booking.paymentReference}`,
     booking.meetingLink ? `Google Meet: ${booking.meetingLink}` : "Google Meet: Jane will confirm the class link by email.",
     "",
     schedule,
@@ -630,6 +650,119 @@ async function handleWorldFirstWebhook(request, env) {
   return json({ ok: true, orderId });
 }
 
+function paypalBaseUrl(env) {
+  return clean(env.PAYPAL_ENV).toLowerCase() === "sandbox"
+    ? "https://api-m.sandbox.paypal.com"
+    : "https://api-m.paypal.com";
+}
+
+function paypalConfigured(env) {
+  return Boolean(clean(env.PAYPAL_CLIENT_ID) && clean(env.PAYPAL_CLIENT_SECRET));
+}
+
+async function paypalAccessToken(env) {
+  if (!paypalConfigured(env)) throw new Error("PayPal Business credentials are not configured.");
+  const credentials = btoa(`${clean(env.PAYPAL_CLIENT_ID)}:${clean(env.PAYPAL_CLIENT_SECRET)}`);
+  const response = await fetch(`${paypalBaseUrl(env)}/v1/oauth2/token`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${credentials}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: "grant_type=client_credentials",
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error_description || data.error || "PayPal authentication failed");
+  return data.access_token;
+}
+
+async function paypalRequest(env, path, options = {}) {
+  const token = await paypalAccessToken(env);
+  const response = await fetch(`${paypalBaseUrl(env)}${path}`, {
+    ...options,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.message || data.error_description || data.error || "PayPal request failed");
+  return data;
+}
+
+async function handlePayPalConfig(request, env) {
+  if (request.method !== "GET") return json({ error: "Method not allowed" }, 405);
+  return json({
+    configured: Boolean(clean(env.PAYPAL_CLIENT_ID)),
+    clientId: clean(env.PAYPAL_CLIENT_ID),
+    currency: clean(env.PAYPAL_CURRENCY) || "USD",
+    environment: clean(env.PAYPAL_ENV) || "live",
+  });
+}
+
+async function handlePayPalCreateOrder(request, env) {
+  if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
+  const db = await ensureDb(env);
+  if (!db) return json({ error: "Cloudflare D1 binding MANDRIX_DB is not configured." }, 500);
+  const payload = await request.json();
+  const amount = normalizeAmount(clean(payload.amount) || amountFromCourse(payload.course));
+  if (!amount || Number(amount) <= 0) return json({ error: "A valid payment amount is required." }, 400);
+  const course = clean(payload.course);
+  if (!course || /Request Consultation/i.test(course)) return json({ error: "This course requires consultation before payment." }, 400);
+
+  const order = await paypalRequest(env, "/v2/checkout/orders", {
+    method: "POST",
+    body: JSON.stringify({
+      intent: "CAPTURE",
+      purchase_units: [{
+        reference_id: randomId(),
+        description: course.slice(0, 120),
+        amount: {
+          currency_code: clean(env.PAYPAL_CURRENCY) || "USD",
+          value: amount,
+        },
+        custom_id: clean(payload.email) || "mandrix-booking",
+      }],
+      application_context: {
+        brand_name: "Mandrix",
+        shipping_preference: "NO_SHIPPING",
+        user_action: "PAY_NOW",
+      },
+    }),
+  });
+
+  await db.prepare("INSERT INTO payment_orders (id,provider,order_id,email,amount,course,raw_payload,status) VALUES (?,?,?,?,?,?,?,?)")
+    .bind(randomId(), "PayPal", clean(order.id), clean(payload.email), amount, course, JSON.stringify(order), clean(order.status || "CREATED")).run();
+  return json({ orderId: order.id, status: order.status, amount });
+}
+
+async function handlePayPalCaptureOrder(request, env) {
+  if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
+  const db = await ensureDb(env);
+  if (!db) return json({ error: "Cloudflare D1 binding MANDRIX_DB is not configured." }, 500);
+  const payload = await request.json();
+  const orderId = clean(payload.orderId);
+  if (!orderId) return json({ error: "PayPal order ID is required." }, 400);
+  const capture = await paypalRequest(env, `/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`, { method: "POST", body: "{}" });
+  const unit = capture.purchase_units?.[0] || {};
+  const transaction = unit.payments?.captures?.[0] || {};
+  const amount = transaction.amount?.value || unit.amount?.value || "";
+  const payerEmail = clean(capture.payer?.email_address);
+  const status = clean(capture.status || transaction.status || "CAPTURED");
+
+  await db.prepare("INSERT INTO payment_orders (id,provider,order_id,email,amount,course,raw_payload,status) VALUES (?,?,?,?,?,?,?,?)")
+    .bind(randomId(), "PayPal", orderId, payerEmail, normalizeAmount(amount), clean(unit.description), JSON.stringify(capture), status).run();
+  return json({
+    ok: status === "COMPLETED",
+    orderId,
+    status,
+    amount: normalizeAmount(amount),
+    payerEmail,
+    captureId: clean(transaction.id),
+  });
+}
+
 async function hmacHex(secret, body) {
   const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(body));
@@ -663,6 +796,9 @@ export async function onRequest(context) {
     if (path === "analytics.js") return handleAnalytics(request, env);
     if (path === "seo-pages.js") return handleSeoPages(request, env);
     if (path === "reminders.js") return handleReminders(request, env);
+    if (path === "paypal/config.js") return handlePayPalConfig(request, env);
+    if (path === "paypal/create-order.js") return handlePayPalCreateOrder(request, env);
+    if (path === "paypal/capture-order.js") return handlePayPalCaptureOrder(request, env);
     if (path === "webhooks/worldfirst.js" || path === "worldfirst-webhook.js") return handleWorldFirstWebhook(request, env);
     if (path === "sitemap.xml.js") return handleSitemap();
     return json({ error: "Cloudflare API route not found", path }, 404);

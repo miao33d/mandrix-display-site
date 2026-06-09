@@ -108,14 +108,14 @@ const seoPresets = {
     status: "published",
     slug: "new-mandarin-page",
     title: "Learn Mandarin Chinese Online | Mandrix",
-    description: "Logic-based Mandarin Chinese lessons for adults. Start with a $29 diagnostic and leave with a clear learning roadmap.",
+    description: "Logic-based Mandarin Chinese lessons for adults. Start with the free AI level check, then choose a paid path if it fits.",
     eyebrow: "Mandrix Chinese",
     h1: "Build Chinese you can actually use.",
     lead: "A focused Mandrix page for adult learners who want Chinese explained through logic, structure, and real output.",
     articleBody: "This guide should explain one clear Chinese learning problem, show how Mandrix diagnoses it, and give the learner a practical next step. Keep the writing specific, grounded, and useful for adults.",
     image: "assets/sourcing-supplier-laptop.jpg",
     imageAlt: "Reviewing Mandarin learning materials on a laptop",
-    chips: "Logic first, Adult learners, Real output, $29 diagnostic",
+    chips: "Logic first, Adult learners, Real output, Free AI check",
     primaryLabel: "Book $29 Diagnostic",
     primaryHref: "/booking",
     secondaryLabel: "View Courses",
@@ -131,7 +131,7 @@ const seoPresets = {
     sectionBody: "Most adult learners do not need more random phrases. They need someone to show how Chinese sentences are assembled, then help them build their own.",
     ctaEyebrow: "Start with diagnosis",
     ctaTitle: "Find the blocker first.",
-    ctaBody: "The $29 diagnostic gives you one immediate improvement and a clear path before you invest in a full program.",
+    ctaBody: "The free AI level check gives you an initial direction before you invest in a paid program.",
   },
   sourcing: {
     category: "sourcing-chinese",
@@ -160,7 +160,7 @@ const seoPresets = {
     sectionTitle: "Sourcing Chinese protects business decisions.",
     sectionBody: "General Chinese teaches you how to order food and introduce yourself. Sourcing Chinese teaches you how to ask about quality without sounding accusatory, negotiate price without losing face, and understand what a supplier means when they say no problem.",
     ctaEyebrow: "Not sure where to start?",
-    ctaTitle: "Start with the $29 diagnostic.",
+    ctaTitle: "Start with the free AI level check.",
     ctaBody: "In 60 minutes, Jane identifies what blocks your supplier communication and maps the fastest path toward usable sourcing Chinese.",
   },
   business: {
@@ -168,7 +168,7 @@ const seoPresets = {
     status: "published",
     slug: "business-chinese-online",
     title: "Business Chinese Lessons Online for Professionals | Mandrix",
-    description: "1-on-1 Business Chinese coaching for professionals. Emails, WeChat, meetings, negotiations. Bring real work materials. Start with a $29 diagnostic.",
+    description: "1-on-1 Business Chinese coaching for professionals. Emails, WeChat, meetings, negotiations. Bring real work materials. Start with the free AI level check.",
     eyebrow: "Business Chinese Online",
     h1: "Sound professional in Chinese, not just grammatically correct.",
     lead: "Business Chinese is not vocabulary. Tone, structure, and cultural context decide whether your message sounds clear and trustworthy or blunt and unprepared.",
@@ -191,7 +191,7 @@ const seoPresets = {
     sectionBody: "Mandrix lessons can work with real emails, WeChat messages, meeting notes, company introductions, proposals, or presentation drafts. You leave with polished, ready-to-use wording and a correction record you can reuse.",
     ctaEyebrow: "Start with diagnosis",
     ctaTitle: "Find the workplace blocker first.",
-    ctaBody: "The $29 diagnostic identifies the exact grammar, tone, or structure gap behind your business communication problem.",
+    ctaBody: "The free AI level check identifies likely grammar, tone, or structure gaps behind your business communication problem.",
   },
   hsk: {
     category: "hsk-prep",
@@ -676,7 +676,7 @@ Thank you for completing your Mandrix diagnostic.
 
 Based on what we saw in class, the next step should not be random practice. I recommend ${recommendation}, with the first lessons focused on the blockers we identified during the diagnostic.
 
-Your $29 diagnostic fee can be used as course credit within 48 hours. If you would like to continue, reply here and I will help you choose the right package.
+Your free AI level check is a starting point. If you would like to continue, reply here and I will help you choose the right paid package.
 
 Best,
 Jane`,
@@ -1736,7 +1736,7 @@ Allowed image values only:
 
 Rules:
 - category must be one of: business-chinese, hsk-prep, daily-chinese, sourcing-chinese, culture-communication, learning-method
-- Do not invent prices except $29 diagnostic.
+- Do not invent prices. Use only the approved course prices and the free AI level check.
 - Do not promise fluency in unrealistic time.
 - Keep title readable, not keyword stuffing.
 - H1 should sound human, not AI startup language.
