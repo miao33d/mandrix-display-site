@@ -30,7 +30,7 @@ const availabilityText = document.querySelector("#availabilityText");
 const lang = form.dataset.lang || "en";
 const copyDefaultText = lang === "zh" ? "复制信息" : "Copy Message";
 const copyDoneText = lang === "zh" ? "已复制" : "Copied";
-const submitDefaultText = lang === "zh" ? "提交付款后预约" : "Submit Paid Booking";
+const submitDefaultText = lang === "zh" ? "提交预约" : "Submit Booking";
 const submittingText = lang === "zh" ? "提交中..." : "Submitting...";
 
 let latestAvailability = null;
@@ -57,7 +57,7 @@ function updateAmountPreview() {
     paymentPageLink.href = "mailto:Jane.Mandrix@outlook.com?subject=Mandrix%20Private%20Intensive%20Consultation";
     paymentPageLink.textContent = "Request Consultation";
     paymentReferenceInput.required = false;
-    paymentAccountInput.required = false;
+    if (paymentAccountInput) paymentAccountInput.required = false;
     dateInput.required = false;
     timeSelect.required = false;
     frequencySelect.required = false;
@@ -65,15 +65,15 @@ function updateAmountPreview() {
     return;
   }
   paymentReferenceInput.required = true;
-  paymentAccountInput.required = true;
+  if (paymentAccountInput) paymentAccountInput.required = false;
   dateInput.required = true;
   timeSelect.required = true;
   frequencySelect.required = true;
   if (!courseSelect.value) {
     amountPreview.hidden = false;
     amountValue.textContent = lang === "zh" ? "请选择课程" : "Select a course";
-    paymentPageLink.href = "#booking";
-    paymentPageLink.textContent = lang === "zh" ? "立即付款" : "Pay Now";
+    paymentPageLink.href = "#paymentReferenceField";
+    paymentPageLink.textContent = lang === "zh" ? "填写付款参考号" : "Add Reference";
     submitButton.textContent = submitDefaultText;
     return;
   }
@@ -87,8 +87,8 @@ function updateAmountPreview() {
   }
   amountPreview.hidden = false;
   amountValue.textContent = `$${amount}`;
-  paymentPageLink.href = `https://paypal.me/mandrixpay/${encodeURIComponent(amount)}`;
-  paymentPageLink.textContent = lang === "zh" ? "立即付款" : "Pay Now";
+  paymentPageLink.href = "#paymentReferenceField";
+  paymentPageLink.textContent = lang === "zh" ? "填写付款参考号" : "Add Reference";
   submitButton.textContent = submitDefaultText;
 }
 
@@ -304,9 +304,9 @@ function buildBookingMessage(data) {
         frequency: "Class Frequency",
         localTime: "Student Local Time",
         schedule: "Auto Lesson Schedule",
-        paymentReference: "Payment Reference / Transaction ID",
-        paymentAccount: "Payment Account / Cardholder Name",
-        paymentProofLink: "Receipt or Screenshot Link",
+        paymentReference: "WorldFirst Payment Reference",
+        paymentAccount: "Payment Account",
+        paymentProofLink: "Receipt Link",
         goal: "Learning Goal",
         amount: "Amount to Pay",
         notes: "Special Requests",
@@ -332,8 +332,8 @@ function buildBookingMessage(data) {
     data.lessonSchedule || labels.none,
     "",
     `${labels.paymentReference}: ${data.paymentReference || labels.none}`,
-    `${labels.paymentAccount}: ${data.paymentAccount || labels.none}`,
-    `${labels.paymentProofLink}: ${data.paymentProofLink || labels.none}`,
+    data.paymentAccount ? `${labels.paymentAccount}: ${data.paymentAccount}` : "",
+    data.paymentProofLink ? `${labels.paymentProofLink}: ${data.paymentProofLink}` : "",
     "",
     `${labels.goal}:`,
     data.goal,
@@ -395,10 +395,10 @@ form.addEventListener("submit", async (event) => {
       date: payload.date,
       time: payload.time,
     });
-    resultTitle.textContent = lang === "zh" ? "你的付款后预约已提交。" : "Your paid booking has been submitted.";
+    resultTitle.textContent = lang === "zh" ? "你的预约已提交。" : "Your booking has been submitted.";
     resultText.textContent = lang === "zh"
-      ? "系统已自动邮件通知 Jane。Jane 核验付款后，会另外发送腾讯会议链接。"
-      : "Jane has been notified by email. After payment is verified, Jane will send your Tencent Meeting link in a separate email within 24 business hours.";
+      ? "系统已生成课表并发送 Google Meet 课程邮件。"
+      : "Mandrix generated your schedule and sent the Google Meet details by email.";
     messageBox.value = buildBookingMessage(payload);
     form.reset();
     timezoneInput.value = getUserTimeZone();

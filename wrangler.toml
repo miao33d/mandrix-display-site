@@ -3,4 +3,9 @@ compatibility_date = "2026-06-09"
 pages_build_output_dir = "dist-cloudflare"
 
 [vars]
-API_ORIGIN = "https://www.mandrix.top"
+GOOGLE_MEET_LINK = ""
+
+[[d1_databases]]
+binding = "MANDRIX_DB"
+database_name = "mandrix-db"
+database_id = "51eb798b-3e99-463c-8319-a25640b73209"

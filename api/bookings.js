@@ -39,7 +39,8 @@ export default async function handler(req, res) {
 
     const rows = await listBookings();
     const { availability, booking } = buildBookingFromPayload(payload, rows, {
-      payment: "Paid - needs verification",
+      payment: "WorldFirst reference received",
+      paymentProvider: "WorldFirst",
     });
     if (!availability.ok) {
       sendJson(res, 409, { error: availability.message, availability });

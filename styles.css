@@ -10557,3 +10557,231 @@ body:has(#level-check:hover) .floating-contact {
     font-size: clamp(38px, 10vw, 52px) !important;
   }
 }
+
+/* Cloudflare migration QA: cleaner centered funnel and shorter payment form. */
+.section > .wrap,
+.programs-section > .wrap,
+#booking .booking-layout,
+.level-check-layout {
+  width: min(1180px, calc(100% - 48px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.programs-section {
+  padding-top: clamp(72px, 8vw, 112px) !important;
+  padding-bottom: clamp(72px, 8vw, 112px) !important;
+}
+
+.programs-section .section-kicker {
+  max-width: 1040px !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+.programs-section h2 {
+  max-width: 920px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  font-size: clamp(48px, 6vw, 86px) !important;
+  line-height: 1.02 !important;
+}
+
+.course-router {
+  width: min(100%, 920px) !important;
+  margin: clamp(40px, 5vw, 64px) auto 34px !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.course-router article {
+  min-height: 230px !important;
+  text-align: left !important;
+}
+
+.course-tabs {
+  width: fit-content !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  justify-content: center !important;
+}
+
+.level-check-layout {
+  grid-template-columns: minmax(300px, 0.34fr) minmax(0, 0.66fr) !important;
+  align-items: start !important;
+  gap: clamp(28px, 4vw, 54px) !important;
+}
+
+.level-check-intro h2 {
+  font-size: clamp(42px, 4.8vw, 68px) !important;
+  max-width: 520px !important;
+}
+
+.level-check-intro .lead,
+.level-check-promise {
+  max-width: 500px !important;
+}
+
+.level-check-card {
+  max-width: 760px !important;
+  margin-left: auto !important;
+}
+
+.level-check-start {
+  grid-template-columns: 1fr !important;
+  min-height: 0 !important;
+}
+
+.level-check-start h3 {
+  max-width: 100% !important;
+  font-size: clamp(28px, 3vw, 38px) !important;
+}
+
+.level-check-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+.level-check-metrics span {
+  color: #ffffff !important;
+  background: rgba(255,255,255,.14) !important;
+  border-color: rgba(255,255,255,.22) !important;
+}
+
+#booking {
+  padding-top: clamp(72px, 8vw, 108px) !important;
+}
+
+#booking .booking-layout {
+  grid-template-columns: minmax(280px, .33fr) minmax(0, .67fr) !important;
+  gap: clamp(28px, 4vw, 54px) !important;
+  align-items: start !important;
+}
+
+#booking .booking-sidebar {
+  position: sticky !important;
+  top: 96px !important;
+}
+
+#booking .booking-sidebar h2 {
+  font-size: clamp(40px, 4.6vw, 64px) !important;
+  line-height: 1.02 !important;
+  max-width: 420px !important;
+}
+
+#booking .booking-sidebar > p:not(.eyebrow) {
+  max-width: 420px !important;
+  font-size: 17px !important;
+  line-height: 1.72 !important;
+}
+
+#booking .booking-guide {
+  gap: 12px !important;
+}
+
+#booking .booking-guide article {
+  padding: 16px !important;
+  min-height: 0 !important;
+}
+
+#booking .booking-form {
+  max-width: 760px !important;
+  margin-left: auto !important;
+  padding: clamp(22px, 3vw, 34px) !important;
+  border-radius: 18px !important;
+}
+
+#booking .booking-form label:nth-of-type(7),
+#booking .booking-form .amount-preview,
+#booking .booking-form .time-preview,
+#booking .booking-form .schedule-preview,
+#booking .booking-form .availability-preview,
+#booking .booking-form > button,
+#booking .booking-form .booking-output {
+  grid-column: 1 / -1 !important;
+}
+
+#booking .booking-form input,
+#booking .booking-form select,
+#booking .booking-form textarea {
+  min-height: 54px !important;
+  border-radius: 13px !important;
+  font-size: 16px !important;
+}
+
+#booking .booking-form textarea {
+  min-height: 92px !important;
+}
+
+#booking .amount-preview {
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  padding: 18px 20px !important;
+  background: #f7f9fd !important;
+  border-color: rgba(104, 167, 209, .28) !important;
+}
+
+#booking .amount-preview strong {
+  color: #2f55d4 !important;
+  font-size: clamp(32px, 4vw, 54px) !important;
+}
+
+#booking .payment-button {
+  min-width: 160px !important;
+}
+
+@media (max-width: 900px) {
+  .section > .wrap,
+  .programs-section > .wrap,
+  #booking .booking-layout,
+  .level-check-layout {
+    width: min(100% - 28px, 720px) !important;
+  }
+
+  .course-router,
+  #booking .booking-layout,
+  .level-check-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .programs-section .section-kicker,
+  .programs-section h2 {
+    text-align: left !important;
+  }
+
+  .course-router {
+    margin-top: 30px !important;
+  }
+
+  .course-router article {
+    min-height: 0 !important;
+  }
+
+  .course-tabs {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    padding: 10px !important;
+  }
+
+  .level-check-card,
+  #booking .booking-form {
+    margin-left: 0 !important;
+    max-width: none !important;
+  }
+
+  .level-check-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  #booking .booking-sidebar {
+    position: static !important;
+  }
+
+  #booking .booking-sidebar h2,
+  #booking .booking-sidebar > p:not(.eyebrow) {
+    max-width: none !important;
+  }
+
+  #booking .booking-form {
+    grid-template-columns: 1fr !important;
+  }
+}

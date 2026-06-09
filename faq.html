@@ -277,7 +277,7 @@
               <span>✓ Every lesson leaves a usable output</span>
               <span>✓ Built for daily life, work, or HSK</span>
             </div>
-            <p class="hero-risk">3-5 minute initial check &nbsp;·&nbsp; Get your level, blockers, and best Mandrix path by email</p>
+            <p class="hero-risk">3–5 minute initial check &nbsp;·&nbsp; Get your level, blockers, and best Mandrix path by email</p>
           </div>
 
           <div class="hero-visual" aria-hidden="true">
@@ -1069,28 +1069,23 @@
       <div class="wrap booking-layout">
         <aside class="booking-sidebar">
           <p class="eyebrow">Booking Form</p>
-          <h2>Pay first, then submit your booking details.</h2>
-          <p>Jane personally reviews every booking within 24 business hours and sends your Tencent Meeting link directly after verification. You are booking time with the founder — not a platform.</p>
-          <div class="booking-guide">
+          <h2>Book once. Get your schedule by email.</h2>
+          <p>Choose a program, submit your details, and use your WorldFirst payment reference for confirmation. Mandrix generates your class schedule and sends the Google Meet details by email.</p>
+          <div class="booking-guide compact-booking-guide">
             <article>
               <span>01</span>
-              <strong>Choose a diagnostic or program</strong>
-              <p>Use a course button or select a program in the form. The diagnostic is the best first step before a full program.</p>
+              <strong>Choose your program</strong>
+              <p>Select the diagnostic or learning path that fits your goal.</p>
             </article>
             <article>
               <span>02</span>
-              <strong>Pay through PayPal</strong>
-              <p>Use the PayPal link shown in the form after selecting a program.</p>
+              <strong>Submit payment reference</strong>
+              <p>Use the WorldFirst order or transfer reference for matching.</p>
             </article>
             <article>
               <span>03</span>
-              <strong>Submit your paid booking form</strong>
-              <p>Enter your payment reference, contact details, and preferred class time.</p>
-            </article>
-            <article>
-              <span>04</span>
-              <strong>Receive your meeting link from Jane directly</strong>
-              <p>Jane receives your paid booking by email and sends your Tencent Meeting link separately after verification.</p>
+              <strong>Receive Google Meet schedule</strong>
+              <p>Your generated schedule and class notes are sent by email.</p>
             </article>
           </div>
           <div class="booking-guarantee">
@@ -1101,9 +1096,9 @@
             </div>
           </div>
           <div class="booking-trust-stack" aria-label="Booking trust and confirmation">
-            <article><strong>PayPal checkout</strong><span>You pay through PayPal, not by sending card details to Mandrix.</span></article>
-            <article><strong>On-screen confirmation</strong><span>After submitting the paid form, you immediately see a confirmation and booking summary.</span></article>
-            <article><strong>Email notice to both sides</strong><span>Jane receives the booking automatically and the student receives a booking email after submission.</span></article>
+            <article><strong>WorldFirst reference</strong><span>No card details are collected on this website.</span></article>
+            <article><strong>Auto schedule</strong><span>The selected date, time, and frequency generate the lesson plan.</span></article>
+            <article><strong>Google Meet email</strong><span>Student and Jane receive the same booking record automatically.</span></article>
           </div>
         </aside>
 
@@ -1177,9 +1172,9 @@
           <div class="amount-preview" id="amountPreview" hidden>
             <span>Amount to pay</span>
             <strong id="amountValue">$0</strong>
-            <small>Pay first, then return here and submit your payment reference with the form.</small>
-            <a class="btn primary payment-button" id="paymentPageLink" href="https://paypal.me/mandrixpay" rel="nofollow noopener" target="_blank">Pay Now</a>
-            <small class="payment-note">After you submit this form, you will see confirmation immediately. Jane verifies the payment and sends the meeting link separately within 24 business hours.</small>
+            <small>Use this amount when paying through WorldFirst. Paste your payment reference below so the order can be matched automatically.</small>
+            <a class="btn primary payment-button" id="paymentPageLink" href="#paymentReferenceField">Add Reference</a>
+            <small class="payment-note">After submission, Mandrix emails the generated class schedule and Google Meet details to both sides.</small>
           </div>
           <label>Preferred Class Date<input name="date" type="date" required></label>
           <label>Preferred Class Time (please note your timezone above)
@@ -1216,22 +1211,20 @@
             <span>Auto lesson schedule</span>
             <strong id="scheduleTitle"></strong>
             <ol id="scheduleList"></ol>
-            <small>This schedule is generated from your selected diagnostic or program, preferred start date, time slot, and frequency. Jane will confirm the final schedule after payment verification.</small>
+            <small>This schedule is generated from your selected program, preferred start date, time slot, and frequency.</small>
           </div>
           <div class="availability-preview" id="availabilityPreview" hidden>
             <span id="availabilityLabel">Checking availability</span>
             <strong id="availabilityTitle"></strong>
             <p id="availabilityText"></p>
           </div>
-          <label>Payment Reference / Transaction ID<input name="paymentReference" placeholder="Required after payment" required></label>
-          <label>Payment Account / Cardholder Name<input name="paymentAccount" placeholder="Name or email used for payment" required></label>
-          <label>Receipt or Screenshot Link<textarea name="paymentProofLink" placeholder="Optional: paste a cloud link to your payment receipt or screenshot"></textarea></label>
+          <label id="paymentReferenceField">WorldFirst Payment Reference<input name="paymentReference" placeholder="Order ID / transfer reference" required></label>
           <label>Learning Goal<textarea name="goal" placeholder="e.g. pass HSK 3, improve work emails, travel to China next year" required></textarea></label>
-          <label>Special Requests<textarea name="notes"></textarea></label>
-          <button class="btn primary" type="submit" id="submitBooking">Submit Paid Booking</button>
+          <label>Special Requests<textarea name="notes" placeholder="Optional: scheduling notes, learning background, or questions"></textarea></label>
+          <button class="btn primary" type="submit" id="submitBooking">Submit Booking</button>
           <div class="booking-output" id="bookingOutput" hidden>
             <p class="price" id="bookingResultTitle">Your paid booking has been submitted.</p>
-            <p id="bookingResultText">Jane has been notified by email and will send your Tencent Meeting link after payment verification.</p>
+            <p id="bookingResultText">Mandrix has generated your schedule and sent the Google Meet details by email.</p>
             <textarea id="bookingMessage" readonly></textarea>
             <div class="actions">
               <button class="btn secondary" type="button" id="copyMessage">Copy Message</button>
