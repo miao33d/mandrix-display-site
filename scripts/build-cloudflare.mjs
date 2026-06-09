@@ -74,33 +74,7 @@ async function copyDirectoryFiltered(relativeDir, filter) {
   }
 }
 
-const redirects = `# Cloudflare Pages clean URL fallbacks
-/api/* /api/:splat 200
-/insights/:category/:slug /insights/:category/:slug.html 200
-/corporate-programs /corporate-programs.html 200
-/business-chinese-online /business-chinese-online.html 200
-/chinese-for-sourcing-agents /chinese-for-sourcing-agents.html 200
-/hsk-preparation-online /hsk-preparation-online.html 200
-/admin /admin.html 200
-/ops /ops.html 200
-/privacy /privacy.html 200
-/terms /terms.html 200
-/zh /zh.html 200
-/about /about.html 200
-/booking /booking.html 200
-/business /business.html 200
-/contact /contact.html 200
-/courses /courses.html 200
-/daily /daily.html 200
-/diagnostic /diagnostic.html 200
-/faq /faq.html 200
-/hsk /hsk.html 200
-/insights /insights.html 200
-/level-check /level-check.html 200
-/method /method.html 200
-/private /private.html 200
-/sourcing-spotlight /sourcing-spotlight.html 200
-/specialty /specialty.html 200
+const redirects = `# Cloudflare Pages handles clean URLs automatically.
 `;
 
 const headers = `/*
