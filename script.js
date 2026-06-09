@@ -45,7 +45,10 @@ let paypalButtonsRendered = false;
 let paidCourseKey = "";
 
 function extractAmount(course) {
-  const match = String(course || "").match(/\$(\d+(?:\.\d{1,2})?)/);
+  const text = String(course || "");
+  const match = text.match(/\$(\d+(?:\.\d{1,2})?)/)
+    || text.match(/USD\s*(\d+(?:\.\d{1,2})?)/i)
+    || text.match(/(\d+(?:\.\d{1,2})?)\s*(?:美元|美金|usd)/i);
   return match ? match[1] : "";
 }
 
@@ -98,7 +101,7 @@ function updateAmountPreview() {
     return;
   }
   amountPreview.hidden = false;
-  amountValue.textContent = `$${amount}`;
+  amountValue.textContent = lang === "zh" ? `${amount} 美元` : `$${amount}`;
   paymentPageLink.href = "#paypalCheckoutPanel";
   paymentPageLink.textContent = lang === "zh" ? "使用 PayPal 付款" : "Pay with PayPal";
   if (paidCourseKey && paidCourseKey !== paymentKey()) resetPayPalPayment();
