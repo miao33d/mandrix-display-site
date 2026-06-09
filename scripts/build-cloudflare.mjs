@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
@@ -96,6 +96,15 @@ const headers = `/*
 
 await rm(outDir, { recursive: true, force: true });
 await mkdir(outDir, { recursive: true });
+
+const css = await readFile(path.join(root, "styles.css"), "utf8");
+const minifiedCss = css
+  .replace(/\/\*[\s\S]*?\*\//g, "")
+  .replace(/\s+/g, " ")
+  .replace(/\s*([{}:;,>])\s*/g, "$1")
+  .replace(/;}/g, "}")
+  .trim();
+await writeFile(path.join(root, "styles.min.css"), minifiedCss);
 
 for (const file of topLevelFiles) await copyFileIfExists(file);
 await copyDirectoryFiltered("assets", (file) => assetExtensions.has(path.extname(file).toLowerCase()));
