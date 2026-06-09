@@ -694,7 +694,7 @@ async function paypalRequest(env, path, options = {}) {
 async function handlePayPalConfig(request, env) {
   if (request.method !== "GET") return json({ error: "Method not allowed" }, 405);
   return json({
-    configured: Boolean(clean(env.PAYPAL_CLIENT_ID)),
+    configured: paypalConfigured(env),
     clientId: clean(env.PAYPAL_CLIENT_ID),
     currency: clean(env.PAYPAL_CURRENCY) || "USD",
     environment: clean(env.PAYPAL_ENV) || "live",
