@@ -826,7 +826,7 @@ async function handleLevelCheck(request, env) {
   });
   const student = await sendEmail(env, {
     to: payload.email,
-    subject: "你的 Mandrix 中文瓶颈诊断报告",
+    subject: "Your Mandrix Chinese Diagnostic Report",
     text: reportText,
     html: levelCheckReportHtml(payload),
     replyTo: adminTo,

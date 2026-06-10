@@ -9,6 +9,7 @@ const excluded = new Set([
   "运营中心.html",
   "激活自动化.html",
   "google74b1d627968a4964.html",
+  "voice-report-demo.html",
 ]);
 
 const sectionRoutes = [
@@ -36,7 +37,7 @@ async function walk(dir) {
     if (entry.name.startsWith(".") || entry.name === "node_modules") continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (["api", "assets", "data", "lib", "scripts"].includes(entry.name)) continue;
+      if (["api", "assets", "data", "lib", "scripts", "dist-cloudflare", "node_modules"].includes(entry.name)) continue;
       files.push(...await walk(full));
     } else if (entry.name.endsWith(".html")) {
       files.push(full);
