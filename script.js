@@ -934,14 +934,16 @@ function estimateLevel(data) {
   if (data.confidence === "medium") score += 1;
   if (data.confidence === "high") score += 2;
   score += answerScore(data.recognition);
+  score += answerScore(data.transferDuration);
   score += answerScore(data.wordOrder);
   score += answerScore(data.grammar);
+  score += answerScore(data.chunking);
   score += answerScore(data.scenario);
   score += textLengthScore(data.sample);
 
-  if (score <= 3) return { label: "Beginner", hsk: "Closest HSK range: Pre-HSK / HSK 1", score };
-  if (score <= 7) return { label: "Elementary", hsk: "Closest HSK range: HSK 1-2", score };
-  if (score <= 11) return { label: "Lower-intermediate", hsk: "Closest HSK range: HSK 2-3", score };
+  if (score <= 4) return { label: "Beginner", hsk: "Closest HSK range: Pre-HSK / HSK 1", score };
+  if (score <= 9) return { label: "Elementary", hsk: "Closest HSK range: HSK 1-2", score };
+  if (score <= 14) return { label: "Lower-intermediate", hsk: "Closest HSK range: HSK 2-3", score };
   return { label: "Intermediate", hsk: "Closest HSK range: HSK 3-4+", score };
 }
 
@@ -998,11 +1000,60 @@ function recommendPath(goal) {
   return map[goal] || map.daily;
 }
 
+function diagnosticEvidence(data) {
+  const evidence = [];
+  if (data.recognition !== "high") {
+    evidence.push({
+      title: "Meaning was not automatic",
+      detail: "The basic sentence 我今天想喝茶 should be recognized immediately. A miss here suggests your brain is still translating instead of retrieving structure directly.",
+    });
+  }
+  if (data.transferDuration !== "high") {
+    evidence.push({
+      title: "English duration pattern interfered",
+      detail: "For “I have been learning Chinese for 3 months,” natural Chinese uses 已经 + duration + 了. Choosing a direct 'have/for' structure is a classic English-transfer signal.",
+    });
+  }
+  if (data.wordOrder !== "high") {
+    evidence.push({
+      title: "Time word placement is unstable",
+      detail: "In 我明天要见一个中国客户, 明天 sits before the action. If this felt uncertain, your word order is probably not automated yet.",
+    });
+  }
+  if (data.chunking !== "high") {
+    evidence.push({
+      title: "Chunking needs work",
+      detail: "能不能 and 提前半小时 should function as reusable chunks. If they moved around awkwardly, the issue is not vocabulary but sentence assembly.",
+    });
+  }
+  if (data.scenario !== "business") {
+    evidence.push({
+      title: "Communication tone needs calibration",
+      detail: "In supplier or client conversations, literal replies can sound abrupt. You need controlled practice with polite pressure, softening, and negotiation structures.",
+    });
+  }
+  if (textLengthScore(data.sample) <= 1) {
+    evidence.push({
+      title: "Output sample was limited",
+      detail: "A short or mixed sample is normal. It suggests the next useful step is guided output, where you build one accurate sentence pattern at a time.",
+    });
+  }
+  return evidence.slice(0, 3);
+}
+
+function automationGap(data) {
+  const structureValues = [data.recognition, data.transferDuration, data.wordOrder, data.grammar, data.chunking];
+  const correct = structureValues.filter((value) => value === "high").length;
+  if (correct >= 4) return "Your structure recognition is relatively strong. The main question is whether you can retrieve these patterns fast enough while speaking.";
+  if (correct >= 2) return "You can often recognize the right structure, but the pattern is not fully automatic. This is where timed retrieval practice matters.";
+  return "Your answers suggest Chinese structure is still being rebuilt through English. That slows speaking and makes errors feel random.";
+}
+
 function buildLevelReport(data) {
   const level = estimateLevel(data);
   const blocker = blockerInsight(data.blocker);
   const path = recommendPath(data.goal);
-  const structureCorrect = [data.recognition, data.wordOrder, data.grammar].filter((value) => value === "high").length;
+  const structureCorrect = [data.recognition, data.transferDuration, data.wordOrder, data.grammar, data.chunking].filter((value) => value === "high").length;
   const grammarNote = structureCorrect >= 2
     ? "You can recognize basic meaning and structure. The next step is making that structure available during real-time speaking."
     : "The structure tasks suggest that meaning, word order, and aspect markers may still feel separate. That is exactly where a pattern-first method helps.";
@@ -1017,12 +1068,14 @@ function buildLevelReport(data) {
     level,
     blocker,
     path,
+    evidence: diagnosticEvidence(data),
+    automationGap: automationGap(data),
     grammarNote,
     scenarioNote,
     sampleNote,
     scores: {
-      structure: Math.min(95, 34 + level.score * 5 + structureCorrect * 9),
-      comprehension: Math.min(94, 38 + answerScore(data.recognition) * 18 + answerScore(data.wordOrder) * 13 + answerScore(data.grammar) * 10),
+      structure: Math.min(95, 28 + level.score * 4 + structureCorrect * 8),
+      comprehension: Math.min(94, 34 + answerScore(data.recognition) * 15 + answerScore(data.transferDuration) * 12 + answerScore(data.wordOrder) * 11 + answerScore(data.grammar) * 8),
       communication: Math.min(92, 35 + answerScore(data.scenario) * 18 + (data.goal === "business" || data.goal === "sourcing" ? 8 : 0)),
       output: Math.min(92, 30 + textLengthScore(data.sample) * 14 + (data.confidence === "high" ? 18 : data.confidence === "medium" ? 8 : 0)),
       confidence: data.confidence === "high" ? 78 : data.confidence === "medium" ? 58 : 38,
@@ -1037,9 +1090,16 @@ function renderScoreBar(label, value) {
 
 function renderLevelReport(data, report) {
   const safeGoal = goalLabels[data.goal] || "Mandrix Path";
+  const evidenceHtml = (report.evidence || []).map((item, index) => `
+    <article>
+      <span>Evidence ${index + 1}</span>
+      <strong>${item.title}</strong>
+      <p>${item.detail}</p>
+    </article>
+  `).join("");
   levelReportContent.innerHTML = `
-    <p class="eyebrow">Initial Report</p>
-    <h3>${data.fullName || "Your"} Chinese Level Check</h3>
+    <p class="eyebrow">Diagnostic Report</p>
+    <h3>${data.fullName || "Your"} Chinese bottleneck report</h3>
     <div class="level-report-summary">
       <article><span>Estimated level</span><strong>${report.level.label}</strong><small>${report.level.hsk}</small></article>
       <article><span>Main blocker</span><strong>${report.blocker.title}</strong><small>${report.blocker.detail}</small></article>
@@ -1054,16 +1114,19 @@ function renderLevelReport(data, report) {
       ${renderScoreBar("Mandrix path fit", report.scores.goalFit)}
     </div>
     <div class="level-report-block">
-      <h4>What this suggests</h4>
+      <h4>Your real operating pattern</h4>
+      <p>${report.automationGap}</p>
       <p>${report.grammarNote}</p>
       <p>${report.scenarioNote}</p>
       <p>${report.sampleNote}</p>
-      <p>${report.blocker.detail}</p>
+    </div>
+    <div class="level-evidence-grid">
+      ${evidenceHtml}
     </div>
     <div class="level-report-block">
       <h4>Helpful next step</h4>
       <p>For the next 30 days, focus on one narrow path: ${report.path.firstStep}</p>
-      <p>This initial check is intentionally short. A Jane consultation can review your actual sentences line by line and turn this into a precise study plan.</p>
+      <p>Before buying a full course, use Mandrix to correct the exact pattern that showed up here. The paid path should solve this bottleneck, not add more random content.</p>
     </div>
     <div class="level-course-recommendation">
       <span>Recommended Mandrix path</span>

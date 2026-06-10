@@ -277,7 +277,7 @@
               <span>✓ Every lesson leaves a usable output</span>
               <span>✓ Built for daily life, work, or HSK</span>
             </div>
-            <p class="hero-risk"><span></span>3-5 minute assessment</p>
+            <p class="hero-risk"><span></span>8-12 minute diagnostic</p>
           </div>
 
           <div class="hero-visual" aria-hidden="true">
@@ -313,8 +313,8 @@
       <div class="wrap level-check-layout">
         <div class="level-check-intro">
           <p class="eyebrow">Free AI Level Check</p>
-          <h2>Find your real Chinese level.</h2>
-          <p class="lead">Answer a few focused questions. Mandrix gives you a branded initial report with your estimated level, likely blocker, and recommended path.</p>
+          <h2>Find what is really blocking your Chinese.</h2>
+          <p class="lead">A research-informed check for adult learners. It looks at automation, English transfer, sentence chunking, and real output, not just vocabulary recognition.</p>
           <div class="level-check-promise">
             <article>
               <strong>Useful first</strong>
@@ -335,15 +335,15 @@
           <form id="levelCheckForm" class="level-check-form">
             <div class="level-check-start">
               <div>
-                <p class="eyebrow">3-5 minute assessment</p>
+                <p class="eyebrow">8-12 minute SLA-informed check</p>
                 <h3>No Chinese keyboard required.</h3>
-                <p>Answer practical questions about recognition, word order, grammar sense, and real communication. If you can type Chinese, pinyin, or even English, add a short sample at the end for a sharper result.</p>
+                <p>Answer structure, transfer, chunking, and output questions. You can type Chinese, pinyin, or English. The report shows evidence from your answers.</p>
               </div>
               <div class="level-check-metrics" aria-label="What this test checks">
-                <span>Level range</span>
-                <span>HSK fit</span>
-                <span>Main blocker</span>
-                <span>Best path</span>
+                <span>Automation</span>
+                <span>L1 transfer</span>
+                <span>Chunking</span>
+                <span>Output path</span>
               </div>
             </div>
 
@@ -390,23 +390,16 @@
             </details>
 
             <details class="level-check-details">
-              <summary>Step 2 · Recognition and structure</summary>
+              <summary>Step 2 · Automation under pressure</summary>
               <fieldset class="level-check-question">
-                <legend>What does this sentence mean? <span>我今天想喝茶。</span></legend>
+                <legend>Quick meaning check. <span>我今天想喝茶。</span></legend>
                 <label><input type="radio" name="recognition" value="high" required> I want to drink tea today.</label>
                 <label><input type="radio" name="recognition" value="low"> I drank tea yesterday.</label>
                 <label><input type="radio" name="recognition" value="low"> Today the tea wants me.</label>
               </fieldset>
 
               <fieldset class="level-check-question">
-                <legend>Choose the most natural Chinese word order.</legend>
-                <label><input type="radio" name="wordOrder" value="high" required> 我明天要见一个中国客户。</label>
-                <label><input type="radio" name="wordOrder" value="medium"> 我见一个中国客户明天要。</label>
-                <label><input type="radio" name="wordOrder" value="low"> 明天客户中国一个见我要。</label>
-              </fieldset>
-
-              <fieldset class="level-check-question">
-                <legend>Choose the most natural sentence.</legend>
+                <legend>Grammar speed check. Which sentence is most natural?</legend>
                 <label><input type="radio" name="grammar" value="medium" required> 我昨天去北京。</label>
                 <label><input type="radio" name="grammar" value="high"> 我昨天去了北京。</label>
                 <label><input type="radio" name="grammar" value="low"> 我昨天是去北京。</label>
@@ -414,7 +407,31 @@
             </details>
 
             <details class="level-check-details">
-              <summary>Step 3 · Real communication</summary>
+              <summary>Step 3 · English transfer traps</summary>
+              <fieldset class="level-check-question">
+                <legend>English: “I have been learning Chinese for 3 months.” Choose the most natural Chinese.</legend>
+                <label><input type="radio" name="transferDuration" value="high" required> 我已经学中文三个月了。</label>
+                <label><input type="radio" name="transferDuration" value="low"> 我学习中文为了三个月。</label>
+                <label><input type="radio" name="transferDuration" value="medium"> 我有学中文三个月。</label>
+              </fieldset>
+
+              <fieldset class="level-check-question">
+                <legend>Choose the most natural Chinese word order for a work situation.</legend>
+                <label><input type="radio" name="wordOrder" value="high" required> 我明天要见一个中国客户。</label>
+                <label><input type="radio" name="wordOrder" value="medium"> 我见一个中国客户明天要。</label>
+                <label><input type="radio" name="wordOrder" value="low"> 明天客户中国一个见我要。</label>
+              </fieldset>
+
+              <fieldset class="level-check-question">
+                <legend>English: “Can we move the meeting 30 minutes earlier tomorrow?” Choose the most natural Chinese.</legend>
+                <label><input type="radio" name="chunking" value="high" required> 我们明天能不能提前半小时开会？</label>
+                <label><input type="radio" name="chunking" value="medium"> 我们能不能明天开会提前半小时？</label>
+                <label><input type="radio" name="chunking" value="low"> 我们明天能不可以开会早三十分钟？</label>
+              </fieldset>
+            </details>
+
+            <details class="level-check-details">
+              <summary>Step 4 · Real communication output</summary>
               <fieldset class="level-check-question">
                 <legend>A supplier says: “这个价格不行。” What is the best reply?</legend>
                 <label><input type="radio" name="scenario" value="business" required> 我明白。那如果数量增加，价格还有空间吗？</label>
@@ -430,8 +447,8 @@
                 <label><input type="radio" name="blocker" value="output"> I understand more than I can say.</label>
               </fieldset>
 
-              <label>Optional sample: type Chinese, pinyin, or English.
-                <textarea name="sample" rows="5" placeholder="Example: wo xiang xue business Chinese because I need to talk with suppliers. / 我想学习商务中文，因为我需要和中国客户开会。"></textarea>
+              <label>Output task: complete this idea in Chinese, pinyin, or English.
+                <textarea name="sample" rows="5" placeholder="Scenario: You want to tell a client, “The price can be discussed, but it cannot go down too much.” Start with: 价格可以..."></textarea>
               </label>
             </details>
 

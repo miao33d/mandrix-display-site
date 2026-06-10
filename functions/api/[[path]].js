@@ -279,6 +279,125 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function pct(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "0%";
+  return `${Math.max(0, Math.min(100, Math.round(number)))}%`;
+}
+
+function levelCheckReportText(payload) {
+  const report = payload.report || {};
+  const evidence = Array.isArray(report.evidence) ? report.evidence : [];
+  return [
+    "Mandrix Free AI Level Check",
+    "",
+    `Name: ${clean(payload.fullName)}`,
+    `Email: ${clean(payload.email)}`,
+    `Goal: ${clean(payload.goal)}`,
+    `Estimated level: ${clean(report.level?.label)}`,
+    `HSK range: ${clean(report.level?.hsk)}`,
+    `Main blocker: ${clean(report.blocker?.title)}`,
+    `Recommended path: ${clean(report.path?.path)}`,
+    "",
+    "Operating pattern:",
+    clean(report.automationGap),
+    clean(report.grammarNote),
+    clean(report.scenarioNote),
+    "",
+    "Evidence:",
+    ...evidence.map((item, index) => `${index + 1}. ${clean(item.title)} - ${clean(item.detail)}`),
+    "",
+    "Student output sample:",
+    clean(payload.sample) || "None",
+  ].join("\n");
+}
+
+function levelCheckReportHtml(payload, { admin = false } = {}) {
+  const report = payload.report || {};
+  const scores = report.scores || {};
+  const evidence = Array.isArray(report.evidence) ? report.evidence : [];
+  const scoreRows = [
+    ["Structure awareness", scores.structure],
+    ["Comprehension", scores.comprehension],
+    ["Real communication", scores.communication],
+    ["Active output", scores.output],
+    ["Speaking confidence", scores.confidence],
+    ["Mandrix path fit", scores.goalFit],
+  ].map(([label, value]) => `
+    <tr>
+      <td style="padding:10px 0;color:#5b6475;font-size:14px;">${escapeHtml(label)}</td>
+      <td style="padding:10px 0;text-align:right;color:#172033;font-weight:700;">${pct(value)}</td>
+    </tr>
+  `).join("");
+  const evidenceCards = evidence.map((item, index) => `
+    <div style="padding:16px;border:1px solid #e7ebf2;border-radius:14px;background:#ffffff;margin-top:12px;">
+      <div style="color:#c06335;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Evidence ${index + 1}</div>
+      <div style="margin-top:8px;color:#172033;font-size:17px;font-weight:700;line-height:1.3;">${escapeHtml(item.title)}</div>
+      <p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(item.detail)}</p>
+    </div>
+  `).join("");
+  const sampleBlock = admin ? `
+    <div style="margin-top:18px;padding:16px;border-radius:14px;background:#fff8f2;border:1px solid #f0d3bf;">
+      <div style="color:#8a4b2a;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">Student output sample</div>
+      <p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;white-space:pre-wrap;">${escapeHtml(payload.sample || "None")}</p>
+    </div>
+  ` : "";
+  const cta = admin ? `
+    <p style="margin:18px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">Reply directly to this email to follow up with the learner.</p>
+  ` : `
+    <div style="margin-top:22px;padding:18px;border-radius:16px;background:#172033;color:#ffffff;">
+      <div style="font-size:18px;font-weight:750;line-height:1.35;">Your next step</div>
+      <p style="margin:8px 0 14px;color:rgba(255,255,255,.78);font-size:14px;line-height:1.65;">Use this report to correct one real pattern first. If you want Jane to review your exact mistakes and build a course path, start with the recommended Mandrix path below.</p>
+      <a href="https://www.mandrix.top/booking" style="display:inline-block;padding:12px 16px;border-radius:10px;background:#ffffff;color:#172033;text-decoration:none;font-weight:750;">View Mandrix options</a>
+    </div>
+  `;
+  return `
+  <div style="margin:0;padding:28px;background:#f5f7fb;font-family:Inter,Arial,sans-serif;color:#172033;">
+    <div style="max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #e7ebf2;border-radius:22px;overflow:hidden;">
+      <div style="padding:28px 28px 22px;border-bottom:1px solid #edf0f5;">
+        <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;">Mandrix · Chinese, decoded.</div>
+        <h1 style="margin:10px 0 0;font-size:30px;line-height:1.12;letter-spacing:0;">${admin ? "New level check lead" : "Your Chinese bottleneck report"}</h1>
+        <p style="margin:12px 0 0;color:#5b6475;font-size:15px;line-height:1.65;">This is an initial AI-assisted diagnosis based on automation, English transfer, sentence chunking, and real output evidence.</p>
+      </div>
+      <div style="padding:26px 28px;">
+        <div style="display:grid;gap:12px;">
+          <div style="padding:16px;border-radius:14px;background:#f7f9fd;border:1px solid #edf0f5;">
+            <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Estimated level</div>
+            <div style="margin-top:6px;font-size:22px;font-weight:800;">${escapeHtml(report.level?.label || "Pending")}</div>
+            <div style="margin-top:4px;color:#5b6475;font-size:14px;">${escapeHtml(report.level?.hsk || "")}</div>
+          </div>
+          <div style="padding:16px;border-radius:14px;background:#f7f9fd;border:1px solid #edf0f5;">
+            <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Main blocker</div>
+            <div style="margin-top:6px;font-size:20px;font-weight:800;">${escapeHtml(report.blocker?.title || "")}</div>
+            <p style="margin:6px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(report.blocker?.detail || "")}</p>
+          </div>
+          <div style="padding:16px;border-radius:14px;background:#f7f9fd;border:1px solid #edf0f5;">
+            <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Recommended path</div>
+            <div style="margin-top:6px;font-size:20px;font-weight:800;">${escapeHtml(report.path?.path || "")}</div>
+            <p style="margin:6px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(report.path?.why || "")}</p>
+          </div>
+        </div>
+        <table role="presentation" style="width:100%;border-collapse:collapse;margin-top:20px;border-top:1px solid #edf0f5;border-bottom:1px solid #edf0f5;">
+          ${scoreRows}
+        </table>
+        <div style="margin-top:20px;padding:18px;border-radius:16px;background:#fbfcff;border:1px solid #edf0f5;">
+          <div style="font-size:18px;font-weight:800;">Your real operating pattern</div>
+          <p style="margin:10px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(report.automationGap || "")}</p>
+          <p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(report.grammarNote || "")}</p>
+          <p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(report.scenarioNote || "")}</p>
+        </div>
+        ${evidenceCards}
+        <div style="margin-top:18px;padding:16px;border-radius:14px;background:#f7f9fd;border:1px solid #edf0f5;">
+          <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">30-day direction</div>
+          <p style="margin:8px 0 0;color:#172033;font-size:15px;line-height:1.65;">${escapeHtml(report.path?.firstStep || "")}</p>
+        </div>
+        ${sampleBlock}
+        ${cta}
+      </div>
+    </div>
+  </div>`;
+}
+
 function scheduleText(schedule) {
   if (!Array.isArray(schedule) || !schedule.length) return "None";
   return schedule.map((lesson) => {
@@ -504,9 +623,22 @@ async function handleLevelCheck(request, env) {
     clean(payload.confidence), clean(payload.recognition), clean(payload.wordOrder), clean(payload.grammar), clean(payload.scenario),
     clean(payload.blocker), clean(payload.sample), JSON.stringify(payload.report || {}),
   ).run();
-  const reportText = `Mandrix Free AI Level Check\n\nName: ${clean(payload.fullName)}\nEmail: ${clean(payload.email)}\nGoal: ${clean(payload.goal)}\nEstimated level: ${payload.report?.level?.label || ""}\nMain blocker: ${payload.report?.blocker?.title || ""}\nRecommended path: ${payload.report?.path?.path || ""}`;
-  const admin = await sendEmail(env, { to: clean(env.ADMIN_EMAIL) || ADMIN_EMAIL, subject: `Free level check: ${clean(payload.fullName)}`, text: reportText, html: `<pre>${escapeHtml(reportText)}</pre>`, replyTo: payload.email });
-  const student = await sendEmail(env, { to: payload.email, subject: "Your Mandrix level check report", text: reportText, html: `<pre>${escapeHtml(reportText)}</pre>` });
+  const reportText = levelCheckReportText(payload);
+  const adminTo = clean(env.ADMIN_EMAIL) || ADMIN_EMAIL;
+  const admin = await sendEmail(env, {
+    to: adminTo,
+    subject: `Free level check: ${clean(payload.fullName)}`,
+    text: reportText,
+    html: levelCheckReportHtml(payload, { admin: true }),
+    replyTo: payload.email,
+  });
+  const student = await sendEmail(env, {
+    to: payload.email,
+    subject: "你的 Mandrix 中文瓶颈诊断报告",
+    text: reportText,
+    html: levelCheckReportHtml(payload),
+    replyTo: adminTo,
+  });
   return json({ levelCheck: { id, ...payload, status: "New" }, saved: true, emailSent: Boolean(admin.ok && student.ok), emailResults: { admin, student } }, 201);
 }
 
