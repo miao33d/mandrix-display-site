@@ -39,6 +39,7 @@ const topLevelFiles = [
   "styles.css",
   "styles.min.css",
   "terms.html",
+  "voice-report-demo.html",
 ];
 
 const assetExtensions = new Set([".jpg", ".jpeg", ".png", ".webp", ".svg", ".ico"]);

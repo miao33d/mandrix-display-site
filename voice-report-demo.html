@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Voice Diagnostic Report Demo | Mandrix</title>
+    <link rel="icon" type="image/png" href="assets/mandrix-logo-128.png">
+    <link rel="stylesheet" href="styles.min.css">
+    <style>
+      body { background: #f5f7fb; }
+      .demo-shell { width: min(980px, calc(100% - 32px)); margin: 0 auto; padding: 42px 0 72px; }
+      .demo-report { display: grid; gap: 18px; padding: clamp(22px, 4vw, 38px); border: 1px solid rgba(23,26,36,.08); border-radius: 24px; background: #fff; box-shadow: 0 24px 70px rgba(31,45,70,.08); }
+      .demo-brand { display: flex; align-items: center; gap: 14px; padding-bottom: 18px; border-bottom: 1px solid rgba(23,26,36,.08); }
+      .demo-brand img { width: 52px; height: 52px; border-radius: 14px; }
+      .demo-brand span, .demo-brand strong { display: block; }
+      .demo-brand span { color: #788196; font-size: 12px; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+      .demo-brand strong { margin-top: 2px; color: #171a24; font-family: "Cormorant Garamond", Georgia, serif; font-size: 30px; line-height: 1; }
+      .demo-report h1 { max-width: 780px; font-size: clamp(38px, 5vw, 66px); }
+      .demo-lead { max-width: 760px; margin: 0; color: #5d687b; font-size: 17px; line-height: 1.7; }
+      .demo-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+      .demo-card, .demo-block, .demo-dimension, .demo-issue { border: 1px solid rgba(23,26,36,.08); border-radius: 16px; background: #f8fbff; padding: 18px; }
+      .demo-card span, .demo-block span, .demo-dimension span, .demo-issue span { display: block; color: #2f55d4; font-size: 11px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+      .demo-card strong { display: block; margin-top: 8px; color: #171a24; font-size: 20px; line-height: 1.2; }
+      .demo-card p, .demo-block p, .demo-dimension p, .demo-issue p { color: #5d687b; line-height: 1.65; }
+      .demo-block h2 { font-size: clamp(28px, 3vw, 40px); margin-bottom: 10px; }
+      .demo-transcript { border-left: 4px solid #2f55d4; background: #f6f9ff; }
+      .demo-dimensions, .demo-issues { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      .demo-dimension, .demo-issue { background: #fff; }
+      .demo-dimension strong, .demo-issue strong { display: block; margin-top: 8px; color: #171a24; font-size: 17px; line-height: 1.3; }
+      .demo-polished { background: linear-gradient(135deg, #171a24, #243047); color: #fff; }
+      .demo-polished h2, .demo-polished p, .demo-polished strong { color: #fff; }
+      .demo-polished p { color: rgba(255,255,255,.78); }
+      .demo-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+      @media (max-width: 760px) {
+        .demo-summary, .demo-dimensions, .demo-issues { grid-template-columns: 1fr; }
+        .demo-shell { width: min(100% - 24px, 720px); padding-top: 24px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="demo-shell">
+      <section class="demo-report">
+        <div class="demo-brand">
+          <img src="assets/mandrix-logo-128.png" alt="Mandrix logo">
+          <div>
+            <span>Mandrix Diagnostic</span>
+            <strong>Chinese, decoded.</strong>
+          </div>
+        </div>
+
+        <p class="eyebrow">Voice Diagnostic Report Demo</p>
+        <h1>Spoken Chinese bottleneck report</h1>
+        <p class="demo-lead">This demo shows how the real report should read after transcription and analysis. It separates grammar, word order, vocabulary, tone, chunking, and fluency instead of giving a vague level label.</p>
+
+        <div class="demo-summary">
+          <article class="demo-card">
+            <span>Estimated level</span>
+            <strong>Lower-intermediate</strong>
+            <p>Closest HSK range: HSK 2-3</p>
+          </article>
+          <article class="demo-card">
+            <span>Primary bottleneck</span>
+            <strong>Sentence assembly under pressure</strong>
+            <p>You know the idea, but the structure is built through English first.</p>
+          </article>
+          <article class="demo-card">
+            <span>Recommended path</span>
+            <strong>Business Chinese</strong>
+            <p>Best for polite requests, pricing, meetings, and professional tone.</p>
+          </article>
+        </div>
+
+        <section class="demo-block demo-transcript">
+          <span>Transcript</span>
+          <h2>What you said</h2>
+          <p>“价格可以 talk 一下，但是不能太 discount. If quantity more, we can see price again.”</p>
+        </section>
+
+        <section class="demo-block">
+          <span>Spoken Output Analysis</span>
+          <h2>What this shows</h2>
+          <p>Your main issue is not vocabulary alone. You can express the commercial intention, but under speaking pressure your sentence structure switches back into English. This creates mixed-language output, unstable word order, and a tone that sounds less professional than your actual meaning.</p>
+        </section>
+
+        <section class="demo-dimensions">
+          <article class="demo-dimension">
+            <span>Grammar & syntax</span>
+            <strong>Chinese structure collapses when the sentence becomes conditional.</strong>
+            <p><b>Evidence:</b> “If quantity more” appears inside the Chinese response.</p>
+            <p><b>What it means:</b> The conditional frame 如果…就… is not automatic yet.</p>
+          </article>
+          <article class="demo-dimension">
+            <span>Word order</span>
+            <strong>The commercial condition is understandable but not naturally sequenced.</strong>
+            <p><b>Evidence:</b> “we can see price again” maps directly from English.</p>
+            <p><b>What it means:</b> You need sentence frames before more vocabulary.</p>
+          </article>
+          <article class="demo-dimension">
+            <span>Vocabulary choice</span>
+            <strong>You insert English when Chinese retrieval slows down.</strong>
+            <p><b>Evidence:</b> “talk” and “discount” replace 商量 and 降价.</p>
+            <p><b>What it means:</b> The words may be known passively, but not ready for speech.</p>
+          </article>
+          <article class="demo-dimension">
+            <span>Pragmatic tone</span>
+            <strong>The message needs a softer business tone.</strong>
+            <p><b>Evidence:</b> “不能太 discount” is clear, but too blunt for supplier negotiation.</p>
+            <p><b>What it means:</b> You need polite pressure structures, not literal translation.</p>
+          </article>
+          <article class="demo-dimension">
+            <span>Chunking</span>
+            <strong>You are not retrieving reusable chunks as whole units yet.</strong>
+            <p><b>Evidence:</b> The response is built word by word.</p>
+            <p><b>What it means:</b> Train chunks like 可以再商量 / 如果数量增加 / 价格还有空间吗.</p>
+          </article>
+          <article class="demo-dimension">
+            <span>Fluency / retrieval</span>
+            <strong>The pauses are probably caused by translation, not lack of intelligence.</strong>
+            <p><b>Evidence:</b> English connectors appear at the exact points where Chinese structure is needed.</p>
+            <p><b>What it means:</b> Timed retrieval drills will help more than memorizing lists.</p>
+          </article>
+        </section>
+
+        <section class="demo-issues">
+          <article class="demo-issue">
+            <span>Specific issue 1</span>
+            <strong>English lexical insertion</strong>
+            <p><b>You said:</b> “价格可以 talk 一下”</p>
+            <p><b>More natural:</b> “价格可以再商量。”</p>
+            <p>This is a retrieval problem: the Chinese chunk was not ready fast enough.</p>
+          </article>
+          <article class="demo-issue">
+            <span>Specific issue 2</span>
+            <strong>Business tone too blunt</strong>
+            <p><b>You said:</b> “不能太 discount”</p>
+            <p><b>More natural:</b> “但降价空间不能太大。”</p>
+            <p>The second version keeps the boundary while sounding more professional.</p>
+          </article>
+        </section>
+
+        <section class="demo-block demo-polished">
+          <span>Suggested polished version</span>
+          <h2>A stronger business response</h2>
+          <p><strong>价格可以再商量，但降价空间不能太大。如果数量增加，我们可以再一起看一下价格。</strong></p>
+          <p>Training focus: structure-first business response drills + timed retrieval practice for conditional sentences.</p>
+        </section>
+
+        <section class="demo-block">
+          <span>Conversion bridge</span>
+          <h2>Recommended next step</h2>
+          <p>This is exactly the type of pattern Jane can correct in a live review: not by giving you more words, but by rebuilding the structure you need for real business conversations.</p>
+          <div class="demo-actions">
+            <a class="btn primary" href="/booking">Book a Jane Review</a>
+            <a class="btn secondary" href="/level-check">Try the Level Check</a>
+          </div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
