@@ -286,10 +286,20 @@ function pct(value) {
   return `${Math.max(0, Math.min(100, Math.round(number)))}%`;
 }
 
+function base64ToBytes(value) {
+  const binary = atob(value);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  return bytes;
+}
+
 function levelCheckReportText(payload) {
   const report = payload.report || {};
   const evidence = Array.isArray(report.evidence) ? report.evidence : [];
   const hasAudio = Boolean(payload.audioSample?.content);
+  const voice = report.voiceAnalysis || {};
+  const voiceIssues = Array.isArray(voice.specificIssues) ? voice.specificIssues : [];
+  const voiceDimensions = Array.isArray(voice.dimensions) ? voice.dimensions : [];
   return [
     "Mandrix Free AI Level Check",
     "",
@@ -301,6 +311,11 @@ function levelCheckReportText(payload) {
     `Main blocker: ${clean(report.blocker?.title)}`,
     `Recommended path: ${clean(report.path?.path)}`,
     `Voice sample: ${hasAudio ? "Attached to this email" : "Not included"}`,
+    voice.transcript ? `Voice transcript: ${clean(voice.transcript)}` : "",
+    voice.primaryBottleneck ? `Voice bottleneck: ${clean(voice.primaryBottleneck)}` : "",
+    voice.summary ? `Voice analysis: ${clean(voice.summary)}` : "",
+    ...voiceDimensions.map((item) => `Voice dimension - ${clean(item.label)}: ${clean(item.finding)} Evidence: ${clean(item.evidence)} Implication: ${clean(item.implication)}`),
+    ...voiceIssues.map((item, index) => `Voice issue ${index + 1}: ${clean(item.issue)} | You said: ${clean(item.quote)} | Better: ${clean(item.betterVersion)} | ${clean(item.diagnosis)}`),
     "",
     "Operating pattern:",
     clean(report.automationGap),
@@ -320,6 +335,26 @@ function levelCheckReportHtml(payload, { admin = false } = {}) {
   const scores = report.scores || {};
   const evidence = Array.isArray(report.evidence) ? report.evidence : [];
   const hasAudio = Boolean(payload.audioSample?.content);
+  const voice = report.voiceAnalysis || {};
+  const voiceIssues = Array.isArray(voice.specificIssues) ? voice.specificIssues : [];
+  const voiceDimensions = Array.isArray(voice.dimensions) ? voice.dimensions : [];
+  const voiceDimensionsHtml = voiceDimensions.map((item) => `
+    <div style="padding:14px;border:1px solid #d8e5f4;border-radius:12px;background:#ffffff;margin-top:10px;">
+      <div style="color:#2f55d4;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">${escapeHtml(item.label || "Diagnostic dimension")}</div>
+      <p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.6;"><strong>Finding:</strong> ${escapeHtml(item.finding || "")}</p>
+      ${item.evidence ? `<p style="margin:6px 0 0;color:#5b6475;font-size:14px;line-height:1.6;"><strong>Evidence:</strong> ${escapeHtml(item.evidence)}</p>` : ""}
+      ${item.implication ? `<p style="margin:6px 0 0;color:#5b6475;font-size:14px;line-height:1.6;"><strong>What it means:</strong> ${escapeHtml(item.implication)}</p>` : ""}
+    </div>
+  `).join("");
+  const voiceIssuesHtml = voiceIssues.map((item) => `
+    <div style="padding:14px;border:1px solid #d8e5f4;border-radius:12px;background:#ffffff;margin-top:10px;">
+      <div style="color:#2f55d4;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">Voice evidence</div>
+      <div style="margin-top:8px;color:#172033;font-size:15px;font-weight:800;">${escapeHtml(item.issue || "Speaking pattern")}</div>
+      ${item.quote ? `<p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.6;"><strong>You said:</strong> ${escapeHtml(item.quote)}</p>` : ""}
+      ${item.betterVersion ? `<p style="margin:6px 0 0;color:#5b6475;font-size:14px;line-height:1.6;"><strong>More natural:</strong> ${escapeHtml(item.betterVersion)}</p>` : ""}
+      <p style="margin:6px 0 0;color:#5b6475;font-size:14px;line-height:1.6;">${escapeHtml(item.diagnosis || "")}</p>
+    </div>
+  `).join("");
   const scoreRows = [
     ["Structure awareness", scores.structure],
     ["Comprehension", scores.comprehension],
@@ -396,6 +431,7 @@ function levelCheckReportHtml(payload, { admin = false } = {}) {
           <p style="margin:8px 0 0;color:#172033;font-size:15px;line-height:1.65;">${escapeHtml(report.path?.firstStep || "")}</p>
         </div>
         ${hasAudio ? `<div style="margin-top:18px;padding:16px;border-radius:14px;background:#f1fbf8;border:1px solid #cfeee5;"><div style="color:#177a62;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Spoken sample included</div><p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;">The optional voice sample is attached to this email for review. Mandrix does not store the audio file on the website.</p></div>` : ""}
+        ${voice.summary || voice.transcript ? `<div style="margin-top:18px;padding:16px;border-radius:14px;background:#f6f9ff;border:1px solid #d8e5f4;"><div style="color:#2f55d4;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Spoken output analysis</div>${voice.transcript ? `<p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;"><strong>Transcript:</strong> ${escapeHtml(voice.transcript)}</p>` : ""}${voice.primaryBottleneck ? `<p style="margin:8px 0 0;color:#172033;font-size:15px;line-height:1.65;"><strong>Primary bottleneck:</strong> ${escapeHtml(voice.primaryBottleneck)}</p>` : ""}<p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;">${escapeHtml(voice.summary || "")}</p>${voice.fluencySignal ? `<p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;"><strong>Fluency signal:</strong> ${escapeHtml(voice.fluencySignal)}</p>` : ""}${voiceDimensionsHtml}${voiceIssuesHtml}${voice.betterVersion ? `<p style="margin:10px 0 0;color:#172033;font-size:14px;line-height:1.65;"><strong>Suggested polished version:</strong> ${escapeHtml(voice.betterVersion)}</p>` : ""}${voice.nextStep ? `<p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;"><strong>Training focus:</strong> ${escapeHtml(voice.nextStep)}</p>` : ""}${voice.conversionBridge ? `<p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(voice.conversionBridge)}</p>` : ""}${admin && voice.adminNote ? `<p style="margin:8px 0 0;color:#8a4b2a;font-size:13px;line-height:1.6;"><strong>Admin note:</strong> ${escapeHtml(voice.adminNote)}</p>` : ""}</div>` : ""}
         ${sampleBlock}
         ${cta}
       </div>
@@ -413,6 +449,136 @@ function levelCheckAudioAttachments(payload) {
   const content = String(audio.content || "").replace(/^data:[^,]+,/, "");
   if (!/^[a-zA-Z0-9+/=]+$/.test(content)) return [];
   return [{ filename, content }];
+}
+
+async function transcribeLevelCheckAudio(env, payload) {
+  if (!env.OPENAI_API_KEY) return null;
+  const audio = payload.audioSample || {};
+  const attachments = levelCheckAudioAttachments(payload);
+  if (!attachments.length) return null;
+  const attachment = attachments[0];
+  const type = clean(audio.type) || "audio/webm";
+  const form = new FormData();
+  form.append("model", env.OPENAI_TRANSCRIBE_MODEL || "gpt-4o-mini-transcribe");
+  form.append("file", new File([base64ToBytes(attachment.content)], attachment.filename, { type }));
+  form.append("prompt", "Mandrix Chinese diagnostic sample. The learner may speak Mandarin, pinyin, English, or mixed Chinese-English about price negotiation, Chinese learning, work, or daily communication.");
+  const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.OPENAI_API_KEY}` },
+    body: form,
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error?.message || "Voice transcription failed.");
+  return clean(data.text || data.transcript || "");
+}
+
+function fallbackVoiceAnalysis(message) {
+  return {
+    status: "manual_review",
+    summary: "Your spoken sample was received. Jane can review it manually to check fluency, hesitation, sentence assembly, and business tone.",
+    adminNote: message || "Automatic voice analysis is not available. Review the attached audio manually.",
+    transcript: "",
+    fluencySignal: "",
+    specificIssues: [],
+  };
+}
+
+async function analyzeLevelCheckVoice(env, payload, transcript) {
+  if (!env.OPENAI_API_KEY || !transcript) return null;
+  const report = payload.report || {};
+  const context = {
+    goal: payload.goal,
+    background: payload.background,
+    confidence: payload.confidence,
+    blocker: payload.blocker,
+    writtenSample: payload.sample,
+    estimatedLevel: report.level?.label,
+    recommendedPath: report.path?.path,
+    transcript,
+  };
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.OPENAI_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: env.OPENAI_TEXT_MODEL || "gpt-4o-mini",
+      response_format: { type: "json_object" },
+      temperature: 0.2,
+      messages: [
+        {
+          role: "system",
+          content: [
+            "You are Mandrix's expert diagnostic assistant for adult learners of Mandarin Chinese.",
+            "Analyze the spoken transcript as second-language output evidence.",
+            "This must feel like a premium diagnostic report, not generic quiz feedback.",
+            "Separate what you can infer from transcript text from what requires human listening.",
+            "Assess grammar/syntax, word order, vocabulary choice, pragmatic tone, sentence chunking, English transfer, and fluency/retrieval signals visible from transcript structure.",
+            "Mention pronunciation only as a limitation unless the transcript explicitly includes pronunciation notes.",
+            "Return only valid JSON with keys: summary, primaryBottleneck, fluencySignal, dimensions, specificIssues, betterVersion, nextStep, conversionBridge.",
+            "dimensions must be 4-6 objects with keys: label, finding, evidence, implication. Include labels such as Grammar & syntax, Word order, Vocabulary choice, Pragmatic tone, Chunking, Fluency/retrieval.",
+            "specificIssues must be an array of 1-3 objects with keys: quote, issue, betterVersion, diagnosis.",
+            "betterVersion should be one polished Chinese version suited to the learner's scenario, with pinyin only if the transcript used pinyin.",
+            "nextStep should name one concrete Mandrix training focus.",
+            "conversionBridge should naturally invite a Jane review without sounding pushy.",
+            "Use clear English. Be specific, high-end, adult, and commercially useful.",
+          ].join(" "),
+        },
+        {
+          role: "user",
+          content: JSON.stringify(context),
+        },
+      ],
+    }),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error?.message || "Voice analysis failed.");
+  const raw = data.choices?.[0]?.message?.content || "{}";
+  let parsed = {};
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    parsed = { summary: clean(raw), specificIssues: [] };
+  }
+  return {
+    status: "analyzed",
+    transcript,
+    summary: clean(parsed.summary),
+    primaryBottleneck: clean(parsed.primaryBottleneck),
+    fluencySignal: clean(parsed.fluencySignal),
+    dimensions: Array.isArray(parsed.dimensions)
+      ? parsed.dimensions.slice(0, 6).map((item) => ({
+        label: clean(item.label),
+        finding: clean(item.finding),
+        evidence: clean(item.evidence),
+        implication: clean(item.implication),
+      }))
+      : [],
+    specificIssues: Array.isArray(parsed.specificIssues)
+      ? parsed.specificIssues.slice(0, 3).map((item) => ({
+        quote: clean(item.quote),
+        issue: clean(item.issue),
+        betterVersion: clean(item.betterVersion),
+        diagnosis: clean(item.diagnosis),
+      }))
+      : [],
+    betterVersion: clean(parsed.betterVersion),
+    nextStep: clean(parsed.nextStep),
+    conversionBridge: clean(parsed.conversionBridge),
+  };
+}
+
+async function buildVoiceAnalysis(env, payload) {
+  if (!payload.audioSample?.content) return null;
+  if (!env.OPENAI_API_KEY) return fallbackVoiceAnalysis("OpenAI API key is not configured. Automatic transcription and voice analysis were skipped.");
+  try {
+    const transcript = await transcribeLevelCheckAudio(env, payload);
+    if (!transcript) return fallbackVoiceAnalysis("The spoken sample was attached, but the transcript came back empty. Jane can still review the audio manually.");
+    return await analyzeLevelCheckVoice(env, payload, transcript);
+  } catch (error) {
+    return fallbackVoiceAnalysis(`The spoken sample was attached. Automatic voice analysis could not complete: ${clean(error.message)}`);
+  }
 }
 
 function scheduleText(schedule) {
@@ -634,9 +800,11 @@ async function handleLevelCheck(request, env) {
   const payload = await request.json();
   const id = randomId();
   const audioAttachments = levelCheckAudioAttachments(payload);
+  const voiceAnalysis = await buildVoiceAnalysis(env, payload);
   const reportForStorage = {
     ...(payload.report || {}),
     voiceSampleAttached: audioAttachments.length > 0,
+    ...(voiceAnalysis ? { voiceAnalysis } : {}),
   };
   await db.prepare(`INSERT INTO level_checks (
     id,status,full_name,email,contact,goal,background,confidence,recognition,word_order,grammar,scenario,blocker,sample,report
@@ -665,7 +833,9 @@ async function handleLevelCheck(request, env) {
     attachments: audioAttachments,
   });
   const { audioSample, ...safePayload } = payload;
-  return json({ levelCheck: { id, ...safePayload, status: "New", voiceSampleAttached: audioAttachments.length > 0 }, saved: true, emailSent: Boolean(admin.ok && student.ok), emailResults: { admin, student } }, 201);
+  const responseReport = JSON.parse(JSON.stringify(safePayload.report || {}));
+  if (responseReport.voiceAnalysis?.adminNote) delete responseReport.voiceAnalysis.adminNote;
+  return json({ levelCheck: { id, ...safePayload, report: responseReport, status: "New", voiceSampleAttached: audioAttachments.length > 0 }, saved: true, emailSent: Boolean(admin.ok && student.ok), emailResults: { admin, student } }, 201);
 }
 
 async function handleAnalytics(request, env) {

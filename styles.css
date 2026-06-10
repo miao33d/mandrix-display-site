@@ -2305,6 +2305,58 @@ html[lang^="zh"] .program-block > .course-credibility {
   color: #fff;
 }
 
+.voice-analysis-block {
+  background: #f6f9ff;
+  border-color: rgba(47, 85, 212, 0.14);
+}
+
+.voice-analysis-block p strong {
+  color: var(--ink);
+}
+
+.voice-dimension-grid,
+.voice-issue-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.voice-dimension-grid article,
+.voice-issue-grid article {
+  border: 1px solid rgba(47, 85, 212, 0.12);
+  border-radius: 12px;
+  background: #fff;
+  padding: 14px;
+}
+
+.voice-dimension-grid span,
+.voice-issue-grid span {
+  display: block;
+  color: #2f55d4;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.voice-dimension-grid strong,
+.voice-issue-grid strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--ink);
+  font-size: 0.96rem;
+  line-height: 1.28;
+}
+
+.voice-dimension-grid p,
+.voice-issue-grid p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.58;
+}
+
 .level-course-recommendation span,
 .level-course-recommendation p {
   color: rgba(255, 255, 255, 0.72);
@@ -2358,7 +2410,9 @@ html[lang^="zh"] .program-block > .course-credibility {
   .level-check-layout,
   .level-check-grid,
   .level-report-summary,
-  .level-evidence-grid {
+  .level-evidence-grid,
+  .voice-dimension-grid,
+  .voice-issue-grid {
     grid-template-columns: 1fr;
   }
 

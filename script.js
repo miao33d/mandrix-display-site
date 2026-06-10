@@ -1113,6 +1113,38 @@ function renderLevelReport(data, report) {
       <p>${item.detail}</p>
     </article>
   `).join("");
+  const voiceAnalysis = report.voiceAnalysis;
+  const voiceDimensionsHtml = voiceAnalysis?.dimensions?.length ? voiceAnalysis.dimensions.map((item) => `
+    <article>
+      <span>${item.label || "Diagnostic dimension"}</span>
+      <strong>${item.finding || "Pattern observed"}</strong>
+      ${item.evidence ? `<p><b>Evidence:</b> ${item.evidence}</p>` : ""}
+      ${item.implication ? `<p><b>What it means:</b> ${item.implication}</p>` : ""}
+    </article>
+  `).join("") : "";
+  const voiceIssuesHtml = voiceAnalysis?.specificIssues?.length ? voiceAnalysis.specificIssues.map((item) => `
+    <article>
+      <span>${item.quote ? "From your speech" : "Voice evidence"}</span>
+      <strong>${item.issue || "Speaking pattern"}</strong>
+      ${item.quote ? `<p><b>You said:</b> ${item.quote}</p>` : ""}
+      ${item.betterVersion ? `<p><b>More natural:</b> ${item.betterVersion}</p>` : ""}
+      <p>${item.diagnosis || ""}</p>
+    </article>
+  `).join("") : "";
+  const voiceAnalysisHtml = voiceAnalysis ? `
+    <div class="level-report-block voice-analysis-block">
+      <h4>Spoken output analysis</h4>
+      ${voiceAnalysis.transcript ? `<p><strong>Transcript:</strong> ${voiceAnalysis.transcript}</p>` : ""}
+      ${voiceAnalysis.primaryBottleneck ? `<p><strong>Primary bottleneck:</strong> ${voiceAnalysis.primaryBottleneck}</p>` : ""}
+      <p>${voiceAnalysis.summary || "Your spoken sample was received for Jane's review."}</p>
+      ${voiceAnalysis.fluencySignal ? `<p><strong>Fluency signal:</strong> ${voiceAnalysis.fluencySignal}</p>` : ""}
+      ${voiceDimensionsHtml ? `<div class="voice-dimension-grid">${voiceDimensionsHtml}</div>` : ""}
+      ${voiceIssuesHtml ? `<div class="voice-issue-grid">${voiceIssuesHtml}</div>` : ""}
+      ${voiceAnalysis.betterVersion ? `<p><strong>Suggested polished version:</strong> ${voiceAnalysis.betterVersion}</p>` : ""}
+      ${voiceAnalysis.nextStep ? `<p><strong>Training focus:</strong> ${voiceAnalysis.nextStep}</p>` : ""}
+      ${voiceAnalysis.conversionBridge ? `<p>${voiceAnalysis.conversionBridge}</p>` : ""}
+    </div>
+  ` : "";
   levelReportContent.innerHTML = `
     <p class="eyebrow">Diagnostic Report</p>
     <h3>${data.fullName || "Your"} Chinese bottleneck report</h3>
@@ -1139,6 +1171,7 @@ function renderLevelReport(data, report) {
     <div class="level-evidence-grid">
       ${evidenceHtml}
     </div>
+    ${voiceAnalysisHtml}
     <div class="level-report-block">
       <h4>What to do with this diagnosis</h4>
       <p>For the next 30 days, focus on one narrow path: ${report.path.firstStep}</p>
@@ -1311,6 +1344,10 @@ if (levelCheckForm) {
     levelCheckSubmit.textContent = "Report Generated";
     try {
       const result = await submitLevelCheck(data, report);
+      if (result.levelCheck?.report?.voiceAnalysis) {
+        report.voiceAnalysis = result.levelCheck.report.voiceAnalysis;
+        renderLevelReport(data, report);
+      }
       const emailText = result.emailSent ? "A copy has been sent to your email." : "Your report is saved. If email is not configured yet, Jane can still see it in admin.";
       levelReportStatus.textContent = emailText;
       window.MandrixAnalytics?.track("level_check_submit_success", {
