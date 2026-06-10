@@ -385,7 +385,7 @@
                 </label>
                 <label class="level-check-consent">
                   <input name="consent" type="checkbox" required>
-                  <span>I agree that Mandrix may use my answers to generate and email this diagnostic report. See the <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+                  <span>I agree that Mandrix may use my answers and optional voice sample to generate and email this diagnostic report. See the <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>.</span>
                 </label>
               </div>
             </details>
@@ -451,6 +451,21 @@
               <label>Output task: complete this idea in Chinese, pinyin, or English.
                 <textarea name="sample" rows="5" placeholder="Scenario: You want to tell a client, “The price can be discussed, but it cannot go down too much.” Start with: 价格可以..."></textarea>
               </label>
+
+              <div class="voice-sample-panel" id="voiceSamplePanel">
+                <div>
+                  <span>Optional spoken sample</span>
+                  <strong>Record up to 30 seconds</strong>
+                  <p>Use Chinese, pinyin, or English. The audio is not stored on the website. It is attached to Jane's lead email for manual review.</p>
+                </div>
+                <div class="voice-controls">
+                  <button class="btn secondary" type="button" id="voiceRecordButton">Record</button>
+                  <button class="btn secondary" type="button" id="voiceStopButton" disabled>Stop</button>
+                  <button class="btn secondary" type="button" id="voiceClearButton" disabled>Clear</button>
+                </div>
+                <audio id="voicePreview" controls hidden></audio>
+                <p class="voice-status" id="voiceStatus">No voice sample recorded.</p>
+              </div>
             </details>
 
             <button class="btn primary" type="submit" id="levelCheckSubmit">Generate My Free Report</button>

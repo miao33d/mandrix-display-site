@@ -901,6 +901,18 @@ const levelReport = document.querySelector("#levelReport");
 const levelReportContent = document.querySelector("#levelReportContent");
 const levelReportStatus = document.querySelector("#levelReportStatus");
 const levelCheckReset = document.querySelector("#levelCheckReset");
+const voiceRecordButton = document.querySelector("#voiceRecordButton");
+const voiceStopButton = document.querySelector("#voiceStopButton");
+const voiceClearButton = document.querySelector("#voiceClearButton");
+const voicePreview = document.querySelector("#voicePreview");
+const voiceStatus = document.querySelector("#voiceStatus");
+let levelMediaRecorder = null;
+let levelAudioChunks = [];
+let levelAudioBlob = null;
+let levelAudioUrl = "";
+let levelAudioTimer = null;
+let levelAudioSeconds = 0;
+let levelAudioStream = null;
 
 const goalLabels = {
   daily: "Daily Chinese",
@@ -1063,6 +1075,9 @@ function buildLevelReport(data) {
   const sampleNote = textLengthScore(data.sample) >= 2
     ? "Your optional sample gives Jane extra material for a sharper follow-up diagnosis."
     : "You did not need a Chinese keyboard to finish this check. For a deeper human diagnosis, you can later send Chinese, pinyin, voice, or English notes.";
+  const voiceNote = data.spokenSampleIncluded
+    ? "You also included a spoken sample. Jane can use it to review fluency, hesitation, tone, and how quickly you retrieve sentence patterns."
+    : "";
 
   return {
     level,
@@ -1072,7 +1087,8 @@ function buildLevelReport(data) {
     automationGap: automationGap(data),
     grammarNote,
     scenarioNote,
-    sampleNote,
+    sampleNote: voiceNote ? `${sampleNote} ${voiceNote}` : sampleNote,
+    voiceSample: Boolean(data.spokenSampleIncluded),
     scores: {
       structure: Math.min(95, 28 + level.score * 4 + structureCorrect * 8),
       comprehension: Math.min(94, 34 + answerScore(data.recognition) * 15 + answerScore(data.transferDuration) * 12 + answerScore(data.wordOrder) * 11 + answerScore(data.grammar) * 8),
@@ -1137,15 +1153,144 @@ function renderLevelReport(data, report) {
 }
 
 async function submitLevelCheck(data, report) {
+  const audioSample = await levelAudioAttachment();
   const response = await fetch("/api/level-check.js", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ...data, report }),
+    body: JSON.stringify({ ...data, report, ...(audioSample ? { audioSample } : {}) }),
   });
   const result = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(result.error || "Could not save level check");
   return result;
 }
+
+function supportedVoiceMimeType() {
+  if (!window.MediaRecorder) return "";
+  const candidates = [
+    "audio/webm;codecs=opus",
+    "audio/webm",
+    "audio/mp4",
+    "audio/ogg;codecs=opus",
+  ];
+  return candidates.find((type) => MediaRecorder.isTypeSupported?.(type)) || "";
+}
+
+function voiceExtension(type = "") {
+  if (type.includes("mp4")) return "m4a";
+  if (type.includes("ogg")) return "ogg";
+  return "webm";
+}
+
+function setVoiceStatus(message) {
+  if (voiceStatus) voiceStatus.textContent = message;
+}
+
+function resetVoiceSample() {
+  if (levelMediaRecorder && levelMediaRecorder.state !== "inactive") levelMediaRecorder.stop();
+  if (levelAudioStream) {
+    levelAudioStream.getTracks().forEach((track) => track.stop());
+    levelAudioStream = null;
+  }
+  if (levelAudioTimer) clearInterval(levelAudioTimer);
+  levelAudioTimer = null;
+  levelAudioSeconds = 0;
+  levelAudioChunks = [];
+  levelAudioBlob = null;
+  if (levelAudioUrl) URL.revokeObjectURL(levelAudioUrl);
+  levelAudioUrl = "";
+  if (voicePreview) {
+    voicePreview.hidden = true;
+    voicePreview.removeAttribute("src");
+  }
+  if (voiceRecordButton) voiceRecordButton.disabled = false;
+  if (voiceStopButton) voiceStopButton.disabled = true;
+  if (voiceClearButton) voiceClearButton.disabled = true;
+  setVoiceStatus("No voice sample recorded.");
+}
+
+async function startVoiceRecording() {
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+    setVoiceStatus("Recording is not supported in this browser. You can still type your sample above.");
+    return;
+  }
+  resetVoiceSample();
+  try {
+    levelAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mimeType = supportedVoiceMimeType();
+    levelMediaRecorder = new MediaRecorder(levelAudioStream, mimeType ? { mimeType } : undefined);
+    levelAudioChunks = [];
+    levelMediaRecorder.addEventListener("dataavailable", (event) => {
+      if (event.data?.size) levelAudioChunks.push(event.data);
+    });
+    levelMediaRecorder.addEventListener("stop", () => {
+      if (levelAudioTimer) clearInterval(levelAudioTimer);
+      levelAudioTimer = null;
+      if (levelAudioStream) {
+        levelAudioStream.getTracks().forEach((track) => track.stop());
+        levelAudioStream = null;
+      }
+      levelAudioBlob = new Blob(levelAudioChunks, { type: levelMediaRecorder.mimeType || "audio/webm" });
+      if (levelAudioUrl) URL.revokeObjectURL(levelAudioUrl);
+      levelAudioUrl = URL.createObjectURL(levelAudioBlob);
+      if (voicePreview) {
+        voicePreview.src = levelAudioUrl;
+        voicePreview.hidden = false;
+      }
+      if (voiceRecordButton) voiceRecordButton.disabled = false;
+      if (voiceStopButton) voiceStopButton.disabled = true;
+      if (voiceClearButton) voiceClearButton.disabled = false;
+      const mb = (levelAudioBlob.size / 1024 / 1024).toFixed(2);
+      setVoiceStatus(`Voice sample ready (${levelAudioSeconds}s, ${mb} MB). It will be attached to both emails.`);
+    });
+    levelMediaRecorder.start();
+    levelAudioSeconds = 0;
+    if (voiceRecordButton) voiceRecordButton.disabled = true;
+    if (voiceStopButton) voiceStopButton.disabled = false;
+    if (voiceClearButton) voiceClearButton.disabled = true;
+    setVoiceStatus("Recording... 0 / 30 seconds");
+    levelAudioTimer = setInterval(() => {
+      levelAudioSeconds += 1;
+      setVoiceStatus(`Recording... ${levelAudioSeconds} / 30 seconds`);
+      if (levelAudioSeconds >= 30 && levelMediaRecorder?.state === "recording") levelMediaRecorder.stop();
+    }, 1000);
+  } catch (error) {
+    setVoiceStatus("Microphone permission was blocked. You can still type your sample above.");
+    if (voiceRecordButton) voiceRecordButton.disabled = false;
+    if (voiceStopButton) voiceStopButton.disabled = true;
+  }
+}
+
+function stopVoiceRecording() {
+  if (levelMediaRecorder?.state === "recording") levelMediaRecorder.stop();
+}
+
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1] || "");
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function levelAudioAttachment() {
+  if (!levelAudioBlob) return null;
+  const maxBytes = 4 * 1024 * 1024;
+  if (levelAudioBlob.size > maxBytes) {
+    throw new Error("Voice sample is too large. Please record a shorter sample.");
+  }
+  const type = levelAudioBlob.type || "audio/webm";
+  return {
+    filename: `mandrix-speaking-sample.${voiceExtension(type)}`,
+    type,
+    size: levelAudioBlob.size,
+    content: await blobToBase64(levelAudioBlob),
+  };
+}
+
+voiceRecordButton?.addEventListener("click", startVoiceRecording);
+voiceStopButton?.addEventListener("click", stopVoiceRecording);
+voiceClearButton?.addEventListener("click", resetVoiceSample);
 
 if (levelCheckForm) {
   levelCheckForm.addEventListener("invalid", (event) => {
@@ -1156,6 +1301,7 @@ if (levelCheckForm) {
   levelCheckForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = Object.fromEntries(new FormData(levelCheckForm).entries());
+    data.spokenSampleIncluded = Boolean(levelAudioBlob);
     const report = buildLevelReport(data);
     renderLevelReport(data, report);
     levelReport.hidden = false;

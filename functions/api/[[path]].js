@@ -249,7 +249,7 @@ function bookingToClient(row) {
   };
 }
 
-async function sendEmail(env, { to, subject, text: bodyText, html, replyTo }) {
+async function sendEmail(env, { to, subject, text: bodyText, html, replyTo, attachments }) {
   if (!env.RESEND_API_KEY) return { ok: false, skipped: true, error: "RESEND_API_KEY is not configured." };
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -264,6 +264,7 @@ async function sendEmail(env, { to, subject, text: bodyText, html, replyTo }) {
       text: bodyText,
       html,
       ...(replyTo ? { reply_to: replyTo } : {}),
+      ...(attachments?.length ? { attachments } : {}),
     }),
   });
   const data = await response.json().catch(() => ({}));
@@ -288,6 +289,7 @@ function pct(value) {
 function levelCheckReportText(payload) {
   const report = payload.report || {};
   const evidence = Array.isArray(report.evidence) ? report.evidence : [];
+  const hasAudio = Boolean(payload.audioSample?.content);
   return [
     "Mandrix Free AI Level Check",
     "",
@@ -298,6 +300,7 @@ function levelCheckReportText(payload) {
     `HSK range: ${clean(report.level?.hsk)}`,
     `Main blocker: ${clean(report.blocker?.title)}`,
     `Recommended path: ${clean(report.path?.path)}`,
+    `Voice sample: ${hasAudio ? "Attached to this email" : "Not included"}`,
     "",
     "Operating pattern:",
     clean(report.automationGap),
@@ -316,6 +319,7 @@ function levelCheckReportHtml(payload, { admin = false } = {}) {
   const report = payload.report || {};
   const scores = report.scores || {};
   const evidence = Array.isArray(report.evidence) ? report.evidence : [];
+  const hasAudio = Boolean(payload.audioSample?.content);
   const scoreRows = [
     ["Structure awareness", scores.structure],
     ["Comprehension", scores.comprehension],
@@ -391,11 +395,24 @@ function levelCheckReportHtml(payload, { admin = false } = {}) {
           <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">30-day direction</div>
           <p style="margin:8px 0 0;color:#172033;font-size:15px;line-height:1.65;">${escapeHtml(report.path?.firstStep || "")}</p>
         </div>
+        ${hasAudio ? `<div style="margin-top:18px;padding:16px;border-radius:14px;background:#f1fbf8;border:1px solid #cfeee5;"><div style="color:#177a62;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Spoken sample included</div><p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;">The optional voice sample is attached to this email for review. Mandrix does not store the audio file on the website.</p></div>` : ""}
         ${sampleBlock}
         ${cta}
       </div>
     </div>
   </div>`;
+}
+
+function levelCheckAudioAttachments(payload) {
+  const audio = payload.audioSample || {};
+  if (!audio.content) return [];
+  const size = Number(audio.size || 0);
+  const maxBytes = 4 * 1024 * 1024;
+  if (!Number.isFinite(size) || size <= 0 || size > maxBytes) return [];
+  const filename = clean(audio.filename || "mandrix-speaking-sample.webm").replace(/[^a-zA-Z0-9._-]/g, "-");
+  const content = String(audio.content || "").replace(/^data:[^,]+,/, "");
+  if (!/^[a-zA-Z0-9+/=]+$/.test(content)) return [];
+  return [{ filename, content }];
 }
 
 function scheduleText(schedule) {
@@ -616,13 +633,19 @@ async function handleLevelCheck(request, env) {
   if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
   const payload = await request.json();
   const id = randomId();
+  const audioAttachments = levelCheckAudioAttachments(payload);
+  const reportForStorage = {
+    ...(payload.report || {}),
+    voiceSampleAttached: audioAttachments.length > 0,
+  };
   await db.prepare(`INSERT INTO level_checks (
     id,status,full_name,email,contact,goal,background,confidence,recognition,word_order,grammar,scenario,blocker,sample,report
   ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(
     id, "New", clean(payload.fullName), clean(payload.email), clean(payload.contact), clean(payload.goal), clean(payload.background),
     clean(payload.confidence), clean(payload.recognition), clean(payload.wordOrder), clean(payload.grammar), clean(payload.scenario),
-    clean(payload.blocker), clean(payload.sample), JSON.stringify(payload.report || {}),
+    clean(payload.blocker), clean(payload.sample), JSON.stringify(reportForStorage),
   ).run();
+  payload.report = reportForStorage;
   const reportText = levelCheckReportText(payload);
   const adminTo = clean(env.ADMIN_EMAIL) || ADMIN_EMAIL;
   const admin = await sendEmail(env, {
@@ -631,6 +654,7 @@ async function handleLevelCheck(request, env) {
     text: reportText,
     html: levelCheckReportHtml(payload, { admin: true }),
     replyTo: payload.email,
+    attachments: audioAttachments,
   });
   const student = await sendEmail(env, {
     to: payload.email,
@@ -638,8 +662,10 @@ async function handleLevelCheck(request, env) {
     text: reportText,
     html: levelCheckReportHtml(payload),
     replyTo: adminTo,
+    attachments: audioAttachments,
   });
-  return json({ levelCheck: { id, ...payload, status: "New" }, saved: true, emailSent: Boolean(admin.ok && student.ok), emailResults: { admin, student } }, 201);
+  const { audioSample, ...safePayload } = payload;
+  return json({ levelCheck: { id, ...safePayload, status: "New", voiceSampleAttached: audioAttachments.length > 0 }, saved: true, emailSent: Boolean(admin.ok && student.ok), emailResults: { admin, student } }, 201);
 }
 
 async function handleAnalytics(request, env) {
