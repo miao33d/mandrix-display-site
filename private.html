@@ -350,14 +350,11 @@
             <details class="level-check-details" open>
               <summary>Step 1 · Your background</summary>
               <div class="level-check-grid">
-                <label>Full name
-                  <input name="fullName" autocomplete="name" required>
+                <label>Name
+                  <input name="fullName" autocomplete="name" placeholder="Optional">
                 </label>
                 <label>Email for your report
                   <input name="email" type="email" autocomplete="email" required>
-                </label>
-                <label>WhatsApp / WeChat / Telegram
-                  <input name="contact" placeholder="Optional, but helpful for follow-up">
                 </label>
                 <label>Main goal
                   <select name="goal" required>
@@ -385,6 +382,10 @@
                     <option value="medium">I can speak, but slowly</option>
                     <option value="high">I can communicate, but want accuracy</option>
                   </select>
+                </label>
+                <label class="level-check-consent">
+                  <input name="consent" type="checkbox" required>
+                  <span>I agree that Mandrix may use my answers to generate and email this diagnostic report. See the <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>.</span>
                 </label>
               </div>
             </details>
@@ -466,7 +467,7 @@
             </div>
             <div id="levelReportContent"></div>
             <div class="level-report-actions">
-              <a class="btn primary" href="/level-check">Start Free AI Level Check</a>
+              <a class="btn primary" href="/booking">Book a Jane Review</a>
               <button class="btn secondary" type="button" id="levelCheckReset">Retake Check</button>
             </div>
             <p class="level-check-note" id="levelReportStatus">Your report is being saved and emailed.</p>

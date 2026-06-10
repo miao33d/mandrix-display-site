@@ -1124,9 +1124,9 @@ function renderLevelReport(data, report) {
       ${evidenceHtml}
     </div>
     <div class="level-report-block">
-      <h4>Helpful next step</h4>
+      <h4>What to do with this diagnosis</h4>
       <p>For the next 30 days, focus on one narrow path: ${report.path.firstStep}</p>
-      <p>Before buying a full course, use Mandrix to correct the exact pattern that showed up here. The paid path should solve this bottleneck, not add more random content.</p>
+      <p>If you want to know how to fix these blockers, book a short conversation with Jane. She can review your answers, explain the pattern behind the mistakes, and show whether Mandrix is the right next step.</p>
     </div>
     <div class="level-course-recommendation">
       <span>Recommended Mandrix path</span>

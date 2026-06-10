@@ -2055,6 +2055,36 @@ html[lang^="zh"] .program-block > .course-credibility {
   box-shadow: 0 0 0 4px rgba(204, 99, 47, 0.12);
 }
 
+.level-check-consent {
+  grid-column: 1 / -1;
+  display: grid !important;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 10px !important;
+  align-items: start;
+  padding: 14px 16px;
+  border: 1px solid rgba(23, 26, 36, 0.08);
+  border-radius: 12px;
+  background: #f7f9fd;
+  color: var(--muted) !important;
+  font-size: 0.86rem !important;
+  font-weight: 500 !important;
+  line-height: 1.55;
+}
+
+.level-check-consent input {
+  width: 18px !important;
+  min-height: 18px !important;
+  margin-top: 2px;
+  padding: 0 !important;
+}
+
+.level-check-consent a {
+  color: #223a67;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .level-check-question {
   border: 1px solid rgba(23, 26, 36, 0.08);
   border-radius: 14px;
