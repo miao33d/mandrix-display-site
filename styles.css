@@ -11378,8 +11378,382 @@ html[lang^="zh"] .hero-risk::before {
     grid-template-columns: 1fr !important;
   }
 
-  .level-evidence-grid article {
+.level-evidence-grid article {
     min-height: 0 !important;
+  }
+}
+
+/* Pricing-system final QA: keep the hero conversion visible and dark cards readable. */
+.hero {
+  padding-top: clamp(46px, 5vw, 62px) !important;
+  padding-bottom: clamp(58px, 6vw, 72px) !important;
+}
+
+html:not([lang^="zh"]) .hero h1 {
+  font-size: clamp(52px, 6vw, 92px) !important;
+  line-height: 0.96 !important;
+}
+
+.hero-method-card {
+  margin-top: 18px !important;
+}
+
+.hero-inner .actions {
+  margin-top: 20px !important;
+}
+
+.core-system-card h3 {
+  color: #fff !important;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    padding-top: 34px !important;
+  }
+
+  html:not([lang^="zh"]) .hero h1,
+  html[lang^="zh"] .hero h1 {
+    font-size: clamp(44px, 14vw, 58px) !important;
+    line-height: 0.98 !important;
+  }
+
+  .hero-method-card {
+    margin-top: 16px !important;
+  }
+
+  .path-price-band {
+    gap: 7px !important;
+  }
+
+  .path-price-band b {
+    white-space: normal !important;
+  }
+
+  .outcomes-section {
+    padding-bottom: 42px !important;
+  }
+
+  .mandrix-system-section {
+    padding-top: 64px !important;
+  }
+}
+
+.floating-contact {
+  left: auto !important;
+  right: 18px !important;
+  bottom: 18px !important;
+  transform: none !important;
+  z-index: 40 !important;
+}
+
+.floating-contact a {
+  min-height: 40px !important;
+  padding: 9px 14px !important;
+  font-size: 12px !important;
+  box-shadow: 0 12px 26px rgba(255, 110, 40, 0.2) !important;
+}
+
+@media (max-width: 900px) {
+  .floating-contact {
+    right: 12px !important;
+    bottom: 12px !important;
+  }
+
+  .floating-contact a {
+    max-width: calc(100vw - 24px) !important;
+    min-height: 38px !important;
+    padding: 9px 12px !important;
+    white-space: normal !important;
+  }
+}
+
+/* Mandrix company-scene course cards: final visual QA lock. */
+.learning-paths-section .paths-header {
+  max-width: 820px !important;
+  margin-bottom: clamp(26px, 4vw, 44px) !important;
+}
+
+.learning-paths-section .paths-header h2 {
+  max-width: 760px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.learning-path-grid {
+  gap: clamp(18px, 2vw, 24px) !important;
+  align-items: stretch !important;
+}
+
+.learning-path-card {
+  gap: 13px !important;
+  padding: 18px !important;
+  border-radius: 20px !important;
+  box-shadow: 0 22px 60px rgba(31, 45, 70, 0.08) !important;
+}
+
+.path-scene,
+.learning-path-card.path-featured .path-scene {
+  margin: 0 0 4px !important;
+  aspect-ratio: 4 / 3 !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(23, 26, 36, 0.07) !important;
+  background: #eef4f8 !important;
+}
+
+.path-scene img {
+  object-fit: cover !important;
+  object-position: center center !important;
+  transform: scale(1.01) !important;
+}
+
+.learning-path-card:nth-child(1) .path-scene img {
+  object-position: center 48% !important;
+}
+
+.learning-path-card:nth-child(2) .path-scene img {
+  object-position: center 50% !important;
+}
+
+.learning-path-card:nth-child(3) .path-scene img {
+  object-position: center 42% !important;
+}
+
+.learning-path-card:nth-child(4) .path-scene img {
+  object-position: center 52% !important;
+}
+
+.learning-path-card:nth-child(5) .path-scene img {
+  object-position: center 50% !important;
+}
+
+.learning-path-card > span {
+  margin-top: 2px !important;
+  color: #cc632f !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
+.learning-path-card h3 {
+  margin: 0 !important;
+  color: #171a24 !important;
+  font-size: clamp(25px, 2.15vw, 34px) !important;
+  line-height: 1.04 !important;
+  letter-spacing: 0 !important;
+}
+
+.learning-path-card p {
+  margin: 0 !important;
+  font-size: 15px !important;
+  line-height: 1.58 !important;
+}
+
+.learning-path-card ul {
+  gap: 8px !important;
+  margin: 2px 0 0 !important;
+}
+
+.learning-path-card li {
+  font-size: 14px !important;
+  line-height: 1.46 !important;
+}
+
+.learning-path-card a {
+  width: 100% !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.mandrix-system-section .eyebrow,
+.mandrix-system-section .system-header .eyebrow,
+.level-check-start .eyebrow {
+  color: #174769 !important;
+  -webkit-text-fill-color: #174769 !important;
+  background: #eaf7ff !important;
+  border-color: rgba(96, 157, 198, 0.42) !important;
+  text-shadow: none !important;
+}
+
+.program-hero img,
+.diagnostic-scene {
+  object-fit: cover !important;
+  object-position: center center !important;
+}
+
+.program-daily .program-hero img {
+  object-position: center 48% !important;
+}
+
+.program-business .program-hero img {
+  object-position: center 52% !important;
+}
+
+.program-hsk .program-hero img {
+  object-position: center 42% !important;
+}
+
+@media (max-width: 900px) {
+  .learning-paths-section {
+    padding: 64px 0 !important;
+  }
+
+  .learning-path-grid {
+    gap: 18px !important;
+  }
+
+  .path-scene,
+  .learning-path-card.path-featured .path-scene {
+    aspect-ratio: 4 / 3 !important;
+  }
+
+  .learning-path-card {
+    padding: 14px !important;
+  }
+
+  .learning-path-card h3 {
+    font-size: clamp(28px, 8vw, 38px) !important;
+    line-height: 1.03 !important;
+  }
+
+  .learning-path-card p,
+  .learning-path-card li {
+    font-size: 14px !important;
+  }
+}
+
+/* Chinese course program layout: keep value + scene visible together on desktop. */
+html[lang^="zh"] .program-hero,
+html[lang^="zh"] .diagnostic-entry {
+  display: grid !important;
+  grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr) !important;
+  gap: 0 !important;
+  align-items: stretch !important;
+  overflow: hidden !important;
+}
+
+html[lang^="zh"] .program-copy,
+html[lang^="zh"] .diagnostic-main {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-height: 360px !important;
+  padding: clamp(34px, 4vw, 58px) !important;
+}
+
+html[lang^="zh"] .program-hero img,
+html[lang^="zh"] .diagnostic-scene {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 360px !important;
+  max-height: 520px !important;
+  aspect-ratio: auto !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  border-radius: 0 !important;
+  background: #eef4f8 !important;
+}
+
+html[lang^="zh"] .program-copy h3,
+html[lang^="zh"] .diagnostic-main h3 {
+  font-size: clamp(40px, 4.4vw, 62px) !important;
+  line-height: 1.04 !important;
+}
+
+html[lang^="zh"] .program-copy p:not(.eyebrow),
+html[lang^="zh"] .diagnostic-main > p:not(.eyebrow):not(.price-help) {
+  max-width: 620px !important;
+}
+
+html[lang^="zh"] .program-daily .program-hero img {
+  object-position: center 48% !important;
+}
+
+html[lang^="zh"] .program-business .program-hero img {
+  object-position: center 52% !important;
+}
+
+html[lang^="zh"] .program-hsk .program-hero img {
+  object-position: center 42% !important;
+}
+
+@media (max-width: 900px) {
+  html[lang^="zh"] .program-hero,
+  html[lang^="zh"] .diagnostic-entry {
+    grid-template-columns: 1fr !important;
+  }
+
+  html[lang^="zh"] .program-copy,
+  html[lang^="zh"] .diagnostic-main {
+    min-height: 0 !important;
+    padding: 26px 22px !important;
+  }
+
+  html[lang^="zh"] .program-hero img,
+  html[lang^="zh"] .diagnostic-scene {
+    min-height: 0 !important;
+    max-height: none !important;
+    aspect-ratio: 4 / 3 !important;
+    height: auto !important;
+  }
+}
+
+/* Final readability pass for translated/dark sections and course cards. */
+.mandrix-system-section .system-header h2,
+.mandrix-system-section h2 {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.18) !important;
+}
+
+.mandrix-system-section .system-header p,
+.mandrix-system-section p {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.mandrix-system-section .eyebrow,
+.level-check-start .eyebrow {
+  width: fit-content !important;
+  max-width: 100% !important;
+  color: #245c82 !important;
+  background: rgba(236, 248, 255, 0.96) !important;
+  border: 1px solid rgba(111, 174, 216, 0.32) !important;
+  text-shadow: none !important;
+  box-shadow: 0 10px 28px rgba(10, 22, 38, 0.16) !important;
+}
+
+.level-check-start h3 {
+  color: #ffffff !important;
+}
+
+.level-check-start p:not(.eyebrow) {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.learning-path-card h3 {
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+@media (max-width: 900px) {
+  .learning-path-card {
+    min-height: 0 !important;
+    padding: 16px !important;
+  }
+
+  .learning-path-card.path-featured .path-scene,
+  .path-scene {
+    aspect-ratio: 16 / 10 !important;
+  }
+
+  .learning-path-card h3 {
+    font-size: clamp(34px, 10vw, 46px) !important;
+  }
+
+  .mandrix-system-section .eyebrow,
+  .level-check-start .eyebrow {
+    white-space: normal !important;
+    line-height: 1.25 !important;
   }
 }
 
@@ -11514,6 +11888,10 @@ html[lang^="zh"] .hero-risk::before {
   line-height: 1.04;
 }
 
+.core-system-card h3 {
+  color: #fff;
+}
+
 .core-system-card p,
 .core-system-card li {
   color: rgba(255, 255, 255, 0.74);
@@ -11580,17 +11958,95 @@ html[lang^="zh"] .hero-risk::before {
   gap: 16px;
 }
 
+.pricing-principle {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0 0 clamp(26px, 4vw, 44px);
+}
+
+.pricing-principle article {
+  display: grid;
+  gap: 8px;
+  padding: 18px 20px;
+  border: 1px solid rgba(23, 26, 36, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 14px 38px rgba(31, 45, 70, 0.05);
+}
+
+.pricing-principle span {
+  color: #cc632f;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.pricing-principle strong {
+  color: #171a24;
+  font-size: clamp(21px, 2vw, 30px);
+  line-height: 1.12;
+}
+
+.pricing-principle p {
+  margin: 0;
+  color: #5d687b;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.lesson-choice-guide {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0 0 clamp(28px, 4vw, 46px);
+}
+
+.lesson-choice-guide article {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 20px 22px;
+  border: 1px solid rgba(104, 167, 209, 0.22);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f2f8fc 100%);
+  box-shadow: 0 18px 48px rgba(31, 45, 70, 0.06);
+}
+
+.lesson-choice-guide span {
+  color: #cc632f;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.lesson-choice-guide strong {
+  color: #171a24;
+  font-size: clamp(22px, 2vw, 30px);
+  line-height: 1.08;
+}
+
+.lesson-choice-guide p {
+  margin: 0;
+  color: #526077;
+  font-size: 14px;
+  line-height: 1.58;
+}
+
 .learning-path-card {
   grid-column: span 2;
   display: grid;
   gap: 14px;
   align-content: start;
-  min-height: 470px;
-  padding: clamp(22px, 2.8vw, 30px);
+  min-height: 560px;
+  padding: clamp(16px, 2vw, 20px);
   border: 1px solid rgba(23, 26, 36, 0.08);
   border-radius: 18px;
   background: #fff;
   box-shadow: 0 18px 54px rgba(31, 45, 70, 0.06);
+  overflow: hidden;
 }
 
 .learning-path-card.path-featured {
@@ -11599,9 +12055,140 @@ html[lang^="zh"] .hero-risk::before {
   border-color: rgba(104, 167, 209, 0.25);
 }
 
+.path-scene {
+  margin: -4px -4px 4px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #edf4fb;
+  aspect-ratio: 16 / 9;
+}
+
+.path-scene img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.9) contrast(1.03);
+}
+
+.learning-path-card.path-featured .path-scene {
+  aspect-ratio: 21 / 9;
+}
+
 .learning-path-card p,
 .learning-path-card li {
   color: #5d687b;
+}
+
+.path-price-band {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.path-price-band b {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 7px 10px;
+  border: 1px solid rgba(204, 99, 47, 0.18);
+  border-radius: 999px;
+  background: #fff8f2;
+  color: #8f3f1e;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.path-tier-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.path-tier-details {
+  margin-top: 2px;
+  border: 1px solid rgba(204, 99, 47, 0.16);
+  border-radius: 14px;
+  background: #fffaf5;
+  overflow: hidden;
+}
+
+.path-tier-details summary {
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+  padding: 12px 38px 12px 13px;
+  color: #913f1f;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.path-tier-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.path-tier-details summary::after {
+  content: "+";
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(204, 99, 47, 0.12);
+  color: #913f1f;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.path-tier-details[open] summary::after {
+  content: "−";
+}
+
+.path-tier-details[open] {
+  background: #fff7ef;
+}
+
+.path-tier-list div {
+  display: grid;
+  gap: 3px;
+  margin: 0 10px 8px;
+  padding: 10px 11px;
+  border: 1px solid rgba(204, 99, 47, 0.14);
+  border-radius: 10px;
+  background: #fffefd;
+}
+
+.path-tier-list b {
+  color: #913f1f;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.18;
+}
+
+.path-tier-list span {
+  color: #526077;
+  font-size: 12.5px;
+  font-weight: 650;
+  line-height: 1.38;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+.learning-path-card .path-tier-list span {
+  color: #526077 !important;
+  font-size: 12.5px !important;
+  font-weight: 650 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 .learning-path-card a {
@@ -11683,6 +12270,8 @@ html[lang^="zh"] .hero-risk::before {
 @media (max-width: 900px) {
   .operating-system-layout,
   .core-system-grid,
+  .pricing-principle,
+  .lesson-choice-guide,
   .learning-path-grid,
   .premium-grid,
   .lesson-assets-layout,
@@ -11699,5 +12288,188 @@ html[lang^="zh"] .hero-risk::before {
 
   .paths-header {
     text-align: left;
+  }
+}
+
+/* Pricing-system final QA overrides. Keep conversion visible and dark cards readable. */
+.hero {
+  padding-top: clamp(46px, 5vw, 62px) !important;
+  padding-bottom: clamp(58px, 6vw, 72px) !important;
+}
+
+html:not([lang^="zh"]) .hero h1 {
+  font-size: clamp(52px, 6vw, 92px) !important;
+  line-height: 0.96 !important;
+}
+
+.hero-method-card {
+  margin-top: 18px !important;
+}
+
+.hero-inner .actions {
+  margin-top: 20px !important;
+}
+
+.core-system-card h3 {
+  color: #fff !important;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    padding-top: 34px !important;
+  }
+
+  html:not([lang^="zh"]) .hero h1,
+  html[lang^="zh"] .hero h1 {
+    font-size: clamp(44px, 14vw, 58px) !important;
+    line-height: 0.98 !important;
+  }
+
+  .hero-method-card {
+    margin-top: 16px !important;
+  }
+
+  .path-price-band {
+    gap: 7px !important;
+  }
+
+  .path-price-band b {
+    white-space: normal !important;
+  }
+
+  .path-tier-list div {
+    padding: 10px !important;
+  }
+
+  .path-tier-list span {
+    font-size: 12.5px !important;
+  }
+}
+
+/* Final course visual/readability lock. */
+.learning-path-card {
+  min-height: 560px !important;
+  padding: clamp(16px, 2vw, 20px) !important;
+  overflow: hidden !important;
+}
+
+.learning-path-card.path-featured {
+  min-height: 540px !important;
+}
+
+.path-scene {
+  display: block !important;
+  margin: -4px -4px 4px !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  background: #edf4fb !important;
+  aspect-ratio: 16 / 9 !important;
+}
+
+.path-scene img {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  filter: saturate(0.92) contrast(1.03) !important;
+}
+
+.learning-path-card:nth-child(1) .path-scene img,
+.learning-path-card:nth-child(3) .path-scene img {
+  object-position: center 44% !important;
+}
+
+.learning-path-card:nth-child(5) .path-scene img {
+  object-position: center 54% !important;
+}
+
+.learning-path-card.path-featured .path-scene {
+  aspect-ratio: 21 / 9 !important;
+}
+
+.mandrix-system-section .system-header h2,
+.mandrix-system-section h2 {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.18) !important;
+}
+
+.mandrix-system-section .system-header p,
+.mandrix-system-section p {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.mandrix-system-section .eyebrow,
+.level-check-start .eyebrow {
+  width: fit-content !important;
+  max-width: 100% !important;
+  color: #245c82 !important;
+  background: rgba(236, 248, 255, 0.96) !important;
+  border: 1px solid rgba(111, 174, 216, 0.32) !important;
+  text-shadow: none !important;
+  box-shadow: 0 10px 28px rgba(10, 22, 38, 0.16) !important;
+}
+
+.level-check-start h3 {
+  color: #ffffff !important;
+}
+
+.level-check-start p:not(.eyebrow) {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.learning-path-card h3 {
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+.floating-contact {
+  left: auto !important;
+  right: 18px !important;
+  bottom: 18px !important;
+  transform: none !important;
+  z-index: 40 !important;
+}
+
+.floating-contact a {
+  min-height: 40px !important;
+  padding: 9px 14px !important;
+  font-size: 12px !important;
+  box-shadow: 0 12px 26px rgba(255, 110, 40, 0.2) !important;
+}
+
+@media (max-width: 900px) {
+  .learning-path-card,
+  .learning-path-card.path-featured {
+    min-height: 0 !important;
+    padding: 16px !important;
+  }
+
+  .learning-path-card.path-featured .path-scene,
+  .path-scene {
+    aspect-ratio: 16 / 10 !important;
+  }
+
+  .learning-path-card h3 {
+    font-size: clamp(34px, 10vw, 46px) !important;
+  }
+
+  .mandrix-system-section .eyebrow,
+  .level-check-start .eyebrow {
+    white-space: normal !important;
+    line-height: 1.25 !important;
+  }
+
+  .floating-contact {
+    right: 12px !important;
+    bottom: 12px !important;
+  }
+
+  .floating-contact a {
+    max-width: calc(100vw - 24px) !important;
+    min-height: 38px !important;
+    padding: 9px 12px !important;
+    white-space: normal !important;
   }
 }

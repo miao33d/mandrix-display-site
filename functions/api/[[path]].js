@@ -28,8 +28,8 @@ function randomId() {
 }
 
 function amountFromCourse(course) {
-  const match = clean(course).match(/\$(\d+(?:\.\d{1,2})?)/);
-  return match ? match[1] : "";
+  const match = clean(course).match(/\$([\d,]+(?:\.\d{1,2})?)/);
+  return match ? match[1].replace(/,/g, "") : "";
 }
 
 function normalizeAmount(value) {
@@ -589,28 +589,36 @@ function scheduleText(schedule) {
   }).join("\n");
 }
 
-async function createGoogleMeet(env, booking) {
-  if (env.GOOGLE_MEET_LINK) return env.GOOGLE_MEET_LINK;
-  if (!env.GOOGLE_CLIENT_EMAIL || !env.GOOGLE_PRIVATE_KEY || !env.GOOGLE_CALENDAR_ID) return "";
-
+async function createGoogleMeetEvent(env, booking, lesson) {
   const token = await googleAccessToken(env);
-  const start = beijingDateTimeToIso(booking.date, booking.time);
+  const start = beijingDateTimeToIso(lesson.date, lesson.time);
   const end = new Date(new Date(start).getTime() + 60 * 60 * 1000).toISOString();
   const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(env.GOOGLE_CALENDAR_ID)}/events?conferenceDataVersion=1&sendUpdates=none`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      summary: `Mandrix · ${booking.course}`,
-      description: `Student: ${booking.fullName}\nEmail: ${booking.email}\nPayment reference: ${booking.paymentReference}`,
+      summary: `Mandrix Lesson ${lesson.lesson} · ${booking.course}`,
+      description: `Student: ${booking.fullName}\nEmail: ${booking.email}\nPayment reference: ${booking.paymentReference}\nLesson: ${lesson.lesson}/${booking.lessonCount}`,
       start: { dateTime: start, timeZone: "Asia/Shanghai" },
       end: { dateTime: end, timeZone: "Asia/Shanghai" },
       attendees: [{ email: booking.email }],
-      conferenceData: { createRequest: { requestId: booking.id, conferenceSolutionKey: { type: "hangoutsMeet" } } },
+      conferenceData: { createRequest: { requestId: `${booking.id}-${lesson.lesson}`, conferenceSolutionKey: { type: "hangoutsMeet" } } },
     }),
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.error?.message || "Google Calendar event failed.");
   return data.hangoutLink || data.conferenceData?.entryPoints?.find((item) => item.entryPointType === "video")?.uri || "";
+}
+
+async function createGoogleMeetSchedule(env, booking, schedule) {
+  if (env.GOOGLE_MEET_LINK) return schedule.map((lesson) => ({ ...lesson, meetingProvider: "Google Meet", meetingLink: env.GOOGLE_MEET_LINK }));
+  if (!env.GOOGLE_CLIENT_EMAIL || !env.GOOGLE_PRIVATE_KEY || !env.GOOGLE_CALENDAR_ID) return schedule;
+  const lessons = [];
+  for (const lesson of schedule) {
+    const meetingLink = await createGoogleMeetEvent(env, booking, lesson);
+    lessons.push({ ...lesson, meetingProvider: "Google Meet", meetingLink });
+  }
+  return lessons;
 }
 
 function beijingDateTimeToIso(date, time) {
@@ -731,11 +739,13 @@ async function handleBookings(request, env) {
     notes: clean(payload.notes),
     meetingLink: "",
   };
-  booking.meetingLink = await createGoogleMeet(env, booking).catch((error) => {
+  booking.lessonSchedule = await createGoogleMeetSchedule(env, booking, schedule).catch((error) => {
     booking.teacherNotes = `Google Meet creation failed: ${error.message}`;
-    return clean(env.GOOGLE_MEET_LINK);
+    return clean(env.GOOGLE_MEET_LINK)
+      ? schedule.map((lesson) => ({ ...lesson, meetingProvider: "Google Meet", meetingLink: clean(env.GOOGLE_MEET_LINK) }))
+      : schedule;
   });
-  booking.lessonSchedule = buildSchedule(booking, booking.meetingLink);
+  booking.meetingLink = booking.lessonSchedule.find((lesson) => clean(lesson.meetingLink))?.meetingLink || "";
 
   await db.prepare(`INSERT INTO bookings (
     id,status,full_name,email,contact,country,timezone,level,course,booking_type,date,time,frequency,frequency_label,
@@ -988,6 +998,10 @@ function paypalConfigured(env) {
   return Boolean(clean(env.PAYPAL_CLIENT_ID) && clean(env.PAYPAL_CLIENT_SECRET));
 }
 
+function paypalTestMode(env) {
+  return clean(env.PAYPAL_TEST_MODE).toLowerCase() === "true";
+}
+
 async function paypalAccessToken(env) {
   if (!paypalConfigured(env)) throw new Error("PayPal Business credentials are not configured.");
   const credentials = btoa(`${clean(env.PAYPAL_CLIENT_ID)}:${clean(env.PAYPAL_CLIENT_SECRET)}`);
@@ -1022,10 +1036,11 @@ async function paypalRequest(env, path, options = {}) {
 async function handlePayPalConfig(request, env) {
   if (request.method !== "GET") return json({ error: "Method not allowed" }, 405);
   return json({
-    configured: paypalConfigured(env),
+    configured: paypalConfigured(env) || paypalTestMode(env),
     clientId: clean(env.PAYPAL_CLIENT_ID),
     currency: clean(env.PAYPAL_CURRENCY) || "USD",
-    environment: clean(env.PAYPAL_ENV) || "live",
+    environment: paypalTestMode(env) ? "test" : (clean(env.PAYPAL_ENV) || "live"),
+    testMode: paypalTestMode(env),
   });
 }
 
@@ -1038,6 +1053,14 @@ async function handlePayPalCreateOrder(request, env) {
   if (!amount || Number(amount) <= 0) return json({ error: "A valid payment amount is required." }, 400);
   const course = clean(payload.course);
   if (!course || /Request Consultation/i.test(course)) return json({ error: "This course requires consultation before payment." }, 400);
+
+  if (paypalTestMode(env)) {
+    const orderId = `TEST-PAYPAL-${randomId()}`;
+    const order = { id: orderId, status: "CREATED", testMode: true, amount, course };
+    await db.prepare("INSERT INTO payment_orders (id,provider,order_id,email,amount,course,raw_payload,status) VALUES (?,?,?,?,?,?,?,?)")
+      .bind(randomId(), "PayPal", orderId, clean(payload.email), amount, course, JSON.stringify(order), "CREATED").run();
+    return json({ orderId, status: "CREATED", amount, testMode: true });
+  }
 
   const order = await paypalRequest(env, "/v2/checkout/orders", {
     method: "POST",
@@ -1072,6 +1095,23 @@ async function handlePayPalCaptureOrder(request, env) {
   const payload = await request.json();
   const orderId = clean(payload.orderId);
   if (!orderId) return json({ error: "PayPal order ID is required." }, 400);
+  if (paypalTestMode(env) && orderId.startsWith("TEST-PAYPAL-")) {
+    const current = await db.prepare("SELECT * FROM payment_orders WHERE provider = ? AND order_id = ? ORDER BY created_at DESC LIMIT 1")
+      .bind("PayPal", orderId).first();
+    if (!current) return json({ error: "Test PayPal order was not found." }, 404);
+    const capture = { id: orderId, status: "COMPLETED", testMode: true, amount: current.amount, course: current.course };
+    await db.prepare("INSERT INTO payment_orders (id,provider,order_id,email,amount,course,raw_payload,status) VALUES (?,?,?,?,?,?,?,?)")
+      .bind(randomId(), "PayPal", orderId, clean(current.email), normalizeAmount(current.amount), clean(current.course), JSON.stringify(capture), "COMPLETED").run();
+    return json({
+      ok: true,
+      orderId,
+      status: "COMPLETED",
+      amount: normalizeAmount(current.amount),
+      payerEmail: clean(current.email),
+      captureId: `TEST-CAPTURE-${orderId}`,
+      testMode: true,
+    });
+  }
   const capture = await paypalRequest(env, `/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`, { method: "POST", body: "{}" });
   const unit = capture.purchase_units?.[0] || {};
   const transaction = unit.payments?.captures?.[0] || {};

@@ -46,10 +46,10 @@ let paidCourseKey = "";
 
 function extractAmount(course) {
   const text = String(course || "");
-  const match = text.match(/\$(\d+(?:\.\d{1,2})?)/)
-    || text.match(/USD\s*(\d+(?:\.\d{1,2})?)/i)
-    || text.match(/(\d+(?:\.\d{1,2})?)\s*(?:美元|美金|usd)/i);
-  return match ? match[1] : "";
+  const match = text.match(/\$([\d,]+(?:\.\d{1,2})?)/)
+    || text.match(/USD\s*([\d,]+(?:\.\d{1,2})?)/i)
+    || text.match(/([\d,]+(?:\.\d{1,2})?)\s*(?:美元|美金|usd)/i);
+  return match ? match[1].replace(/,/g, "") : "";
 }
 
 function extractLessonCount(course) {
@@ -137,6 +137,53 @@ async function loadPayPalCheckout() {
   if (!paypalButtons || paypalReady || paypalButtonsRendered) return;
   try {
     const config = await fetchJson("/api/paypal/config.js");
+    if (config.testMode && !config.clientId) {
+      paypalButtons.innerHTML = `<button class="btn primary paypal-test-button" type="button">${lang === "zh" ? "测试 PayPal 已付款并提交" : "Test PayPal payment and submit"}</button>`;
+      paypalButtons.querySelector("button")?.addEventListener("click", async () => {
+        const amount = extractAmount(courseSelect.value);
+        if (!courseSelect.value || !amount) {
+          setPayPalStatus(lang === "zh" ? "请先选择一个可付款课程。" : "Please choose a paid course first.", "warning");
+          return;
+        }
+        const requiredBeforePayment = ["fullName", "email", "contact", "country", "timezone", "level", "course", "date", "time", "frequency"];
+        const missing = requiredBeforePayment.find((name) => !String(form.elements[name]?.value || "").trim());
+        if (missing) {
+          form.elements[missing]?.focus();
+          setPayPalStatus(lang === "zh" ? "请先填写上方预约信息，再测试付款。" : "Fill in the booking details above before testing payment.", "warning");
+          return;
+        }
+        try {
+          setPayPalStatus(lang === "zh" ? "正在模拟 PayPal 付款..." : "Simulating PayPal payment...", "neutral");
+          const payload = Object.fromEntries(new FormData(form).entries());
+          payload.amount = extractAmount(payload.course);
+          const order = await fetchJson("/api/paypal/create-order.js", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const result = await fetchJson("/api/paypal/capture-order.js", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId: order.orderId }),
+          });
+          paymentReferenceInput.value = result.orderId;
+          if (paypalOrderIdInput) paypalOrderIdInput.value = result.orderId;
+          if (paypalPayerEmailInput) paypalPayerEmailInput.value = result.payerEmail || payload.email || "";
+          paidCourseKey = paymentKey();
+          setPayPalStatus(lang === "zh" ? `测试付款成功：${result.orderId}。正在自动提交预约...` : `Test payment confirmed: ${result.orderId}. Submitting your booking...`, "paid");
+          window.setTimeout(() => {
+            if (form.reportValidity()) submitButton.click();
+          }, 250);
+        } catch (error) {
+          console.error(error);
+          setPayPalStatus(error.message || (lang === "zh" ? "测试付款失败。" : "Test payment failed."), "warning");
+        }
+      });
+      paypalReady = true;
+      paypalButtonsRendered = true;
+      setPayPalStatus(lang === "zh" ? "测试模式已开启。正式上线前请配置 PayPal Client ID / Secret 并关闭测试模式。" : "Test mode is on. Add PayPal Client ID / Secret and turn off test mode before launch.", "warning");
+      return;
+    }
     if (!config.configured || !config.clientId) {
       setPayPalStatus(lang === "zh"
         ? "PayPal 商家收款还差 Client ID 配置。配置后这里会自动显示 PayPal 按钮。"
@@ -197,12 +244,15 @@ async function loadPayPalCheckout() {
         if (paypalOrderIdInput) paypalOrderIdInput.value = result.orderId || data.orderID;
         if (paypalPayerEmailInput) paypalPayerEmailInput.value = result.payerEmail || "";
         paidCourseKey = paymentKey();
-        setPayPalStatus(lang === "zh" ? `付款成功：${paymentReferenceInput.value}` : `Payment confirmed: ${paymentReferenceInput.value}`, "paid");
+        setPayPalStatus(lang === "zh" ? `付款成功：${paymentReferenceInput.value}。正在自动提交预约...` : `Payment confirmed: ${paymentReferenceInput.value}. Submitting your booking...`, "paid");
         window.MandrixAnalytics?.track("paypal_payment_success", {
           course: courseSelect.value,
           amount: extractAmount(courseSelect.value),
           orderId: paymentReferenceInput.value,
         });
+        window.setTimeout(() => {
+          if (form.reportValidity()) submitButton.click();
+        }, 250);
       },
       onError: (error) => {
         console.error(error);
@@ -408,7 +458,7 @@ function buildBookingMessage(data) {
         schedule: "自动生成课表",
         paymentReference: "PayPal 订单号",
         paymentAccount: "付款账户 / 持卡人姓名",
-        paymentProofLink: "付款截图或收据链接",
+        paymentProofLink: "收据链接",
         goal: "学习目标",
         amount: "应付金额",
         notes: "其他需求",
@@ -521,7 +571,7 @@ form.addEventListener("submit", async (event) => {
       }
       throw new Error(error.error || "Booking submission failed");
     }
-    await response.json();
+    const bookingResult = await response.json();
     window.MandrixAnalytics?.track("booking_submit_success", {
       course: payload.course,
       amount: payload.amount,
@@ -530,9 +580,13 @@ form.addEventListener("submit", async (event) => {
       time: payload.time,
     });
     resultTitle.textContent = lang === "zh" ? "你的预约已提交。" : "Your booking has been submitted.";
-    resultText.textContent = lang === "zh"
-      ? "系统已生成课表并发送 Google Meet 课程邮件。"
-      : "Mandrix generated your schedule and sent the Google Meet details by email.";
+    resultText.textContent = bookingResult.emailSent
+      ? (lang === "zh"
+        ? "系统已生成课表并发送 Google Meet 课程邮件。"
+        : "Mandrix generated your schedule and sent the Google Meet details by email.")
+      : (lang === "zh"
+        ? "系统已生成课表。邮件服务还未配置成功，请 Jane 在后台查看预约并手动确认。"
+        : "Mandrix generated your schedule. Email delivery is not configured yet, so Jane should confirm from the admin dashboard.");
     messageBox.value = buildBookingMessage(payload);
     form.reset();
     timezoneInput.value = getUserTimeZone();
@@ -657,6 +711,7 @@ if (courseTabLinks.length && programBlocks.length) {
   const expandedCopyEn = {
     daily: "Hide Daily Chinese plans",
     business: "Hide Business Chinese plans",
+    sourcing: "Hide Sourcing Chinese plans",
     hsk: "Hide HSK plans",
     specialty: "Hide Specialty plans",
     private: "Hide Private Intensive options",
@@ -665,6 +720,7 @@ if (courseTabLinks.length && programBlocks.length) {
   const collapsedCopyEn = {
     daily: "View Daily Chinese plans",
     business: "View Business Chinese plans",
+    sourcing: "View Sourcing Chinese plans",
     hsk: "View HSK plans",
     specialty: "View Specialty plans",
     private: "Show Private Intensive options",
@@ -673,6 +729,7 @@ if (courseTabLinks.length && programBlocks.length) {
   const expandedCopyZh = {
     daily: "收起日常中文课包",
     business: "收起商务中文课包",
+    sourcing: "收起供应链中文课包",
     hsk: "收起 HSK 课包",
     specialty: "收起专项课程",
     private: "收起私人强化课程",
@@ -681,6 +738,7 @@ if (courseTabLinks.length && programBlocks.length) {
   const collapsedCopyZh = {
     daily: "展开日常中文课包",
     business: "展开商务中文课包",
+    sourcing: "展开供应链中文课包",
     hsk: "展开 HSK 课包",
     specialty: "展开专项课程",
     private: "展开私人强化课程",
