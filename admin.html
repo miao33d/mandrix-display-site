@@ -320,22 +320,22 @@
             <div class="seo-image-lab">
               <div class="seo-form-head">
                 <div>
-                  <p class="eyebrow">Image Style</p>
-                  <h3>图片风格固定</h3>
+                  <p class="eyebrow">Image Rule</p>
+                  <h3>不用生成图片，直接点图库</h3>
                 </div>
-                <button class="btn secondary" type="button" id="seoCopyImagePrompt">复制图片生成口令</button>
+                <button class="btn secondary" type="button" id="seoCopyImagePrompt">复制图库选择口令</button>
               </div>
-              <label>AI 图片生成口令
+              <label>AI 图库选择口令
                 <textarea id="seoImagePrompt" rows="7" readonly></textarea>
               </label>
               <div class="seo-field-grid">
                 <label>上传/预览图片
                   <input id="seoImageUpload" type="file" accept="image/png,image/jpeg,image/webp">
-                  <small>上传后这里只做预览；发布时把图片发给我，我会放进 assets。</small>
+                  <small>可忽略。正式 SEO 页面直接点上方图库即可。</small>
                 </label>
                 <label>建议保存路径
                   <input id="seoImageTarget" readonly>
-                  <small>发布包会自动写入这个路径。</small>
+                  <small>上传新图时才需要；内置图库不需要保存。</small>
                 </label>
               </div>
               <img class="seo-image-preview" id="seoImagePreview" alt="Uploaded SEO preview" hidden>

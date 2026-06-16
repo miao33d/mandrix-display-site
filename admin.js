@@ -1487,6 +1487,15 @@ function splitSeoList(value) {
     .slice(0, 6);
 }
 
+function renderSeoParagraphs(value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  return text
+    .split(/\n{2,}/)
+    .map((part) => `<p>${escapeHtml(part)}</p>`)
+    .join("");
+}
+
 function seoImageUrl(path) {
   const value = String(path || "");
   if (/^(https?:|blob:|data:)/i.test(value)) return value;
@@ -1528,26 +1537,22 @@ function seoSuggestedImages(data = seoFields()) {
 }
 
 function seoImageStylePrompt(data = seoFields()) {
-  const topic = data.h1 || data.title || "Mandrix Chinese learning page";
-  const context = data.eyebrow || "Mandrix online Chinese coaching";
-  return `Create one premium website hero image for Mandrix.
+  const category = cleanSeoCategory(data.category);
+  const recommended = seoSuggestedImages(data).slice(0, 12).map((item) => `- ${item.value} (${item.topic})`).join("\n");
+  return `Choose one existing Mandrix SEO library image for this page.
 
-Topic: ${topic}
-Context: ${context}
+Page category: ${category}
+Page topic: ${data.h1 || data.title || "Mandrix Chinese learning page"}
 
-Style requirements:
-- Realistic adult education / professional Chinese learning scene
-- Clean modern desk, online lesson, notes, laptop, subtle Chinese learning materials
-- Warm natural daylight, calm premium atmosphere
-- Editorial website photography, not stock-photo cheesy
-- Minimal composition with generous negative space
-- No cartoon, no childish elements, no exaggerated smiles
-- No text inside the image, no logo, no watermark
-- Avoid clutter, neon colors, fantasy, AI-tech glow, and busy backgrounds
-- Color palette should match Mandrix: warm white, soft blue, charcoal, small natural accents
-- Horizontal 16:9 composition, suitable for a refined education brand landing page
+Rules:
+- Do not generate a new image.
+- Do not ask the user to upload an image.
+- Use only one existing path from the Mandrix SEO library.
+- Output the chosen path in the JSON "image" field.
+- Also write a specific "imageAlt" field.
 
-Output: high-resolution JPG or PNG.`;
+Recommended paths for this page:
+${recommended}`;
 }
 
 function seoCardData(data) {
@@ -1660,7 +1665,7 @@ function buildSeoHtml(rawData = seoFields()) {
       <figure class="article-hero-image"><img src="/${escapeHtml(image).replace(/^\/+/, "")}" alt="${escapeHtml(data.imageAlt || title)}"></figure>
       <div class="article-summary"><strong>In this guide</strong><p>${escapeHtml(lead)}</p></div>
       <div class="article-body">
-        ${renderParagraphs(data.articleBody || lead)}
+        ${renderSeoParagraphs(data.articleBody || lead)}
         ${cardHtml ? `<div class="landing-card-grid">${cardHtml}</div>` : ""}
         ${sectionHtml}
         <div class="article-cta">
@@ -1771,16 +1776,7 @@ function seoAiPrompt() {
   return `你是 Mandrix 官网 SEO 页面文案助手。请只输出一个可复制的 JSON 代码块，不要解释。
 
 品牌：Mandrix，在线中文教学，高级、清楚、专业，面向成年学习者、商务人士、HSK 学生、采购/跨境/企业客户。
-目标：先做轻量选题判断，再生成一个可直接粘贴进 Mandrix 后台的 SEO 页面。语言为英文。不要幼稚、不要夸张、不要长篇大论。
-
-请先在内部完成这 4 步，但不要把分析过程输出：
-1. 根据搜索意图、商业价值、成年学习者痛点、以及下面的 Mandrix 站内数据，选择当前最值得发布的主题。
-2. 判断这个主题应该进入哪个细分 category。不要被固定分类限制，可以生成新的英文 slug 分类，例如 supplier-communication、workplace-mandarin、chinese-for-amazon-sellers、adult-mandarin-learning、professional-chinese、hsk-writing、mandarin-pronunciation。
-3. slug 要面向真实搜索词，而不是品牌自嗨词。
-4. 页面要服务转化：读完自然进入免费 AI level check 或课程页。
-
-Mandrix 当前数据线索：
-${seoDemandSnapshot()}
+目标：生成一个可直接粘贴进 Mandrix 后台的 SEO 页面。语言为英文。不要幼稚、不要夸张、不要长篇大论。格式必须固定，字段一个都不能少，不要额外添加字段。
 
 固定输出格式如下，字段一个都不要少：
 \`\`\`json
@@ -1817,12 +1813,22 @@ ${seoDemandSnapshot()}
 \`\`\`
 
 Allowed image values only:
-- Use only Mandrix SEO library images matching assets/seo-library/[category]-[number].svg
-- Examples: assets/seo-library/business-chinese-01.svg, assets/seo-library/supplier-communication-03.svg, assets/seo-library/hsk-prep-08.svg
-- Do not use homepage course images, Jane photos, or user-provided scene photos.
+- assets/seo-library/business-chinese-01.svg
+- assets/seo-library/supplier-communication-01.svg
+- assets/seo-library/sourcing-chinese-01.svg
+- assets/seo-library/hsk-prep-01.svg
+- assets/seo-library/daily-chinese-01.svg
+- assets/seo-library/workplace-mandarin-01.svg
+- assets/seo-library/adult-mandarin-learning-01.svg
+- assets/seo-library/mandarin-pronunciation-01.svg
+- assets/seo-library/culture-communication-01.svg
+- assets/seo-library/chinese-for-amazon-sellers-01.svg
+- assets/seo-library/professional-chinese-01.svg
+- assets/seo-library/learning-method-01.svg
 
 Rules:
-- category should be the best-fit lowercase English slug. Existing broad options include business-chinese, hsk-prep, daily-chinese, sourcing-chinese, culture-communication, learning-method, but you may create a more precise category if search intent is stronger.
+- category must be one of: business-chinese, hsk-prep, daily-chinese, sourcing-chinese, culture-communication, learning-method, supplier-communication, workplace-mandarin, chinese-for-amazon-sellers, adult-mandarin-learning, mandarin-pronunciation, professional-chinese
+- image must use one of the allowed assets/seo-library paths above. Do not generate images. Do not ask for uploads.
 - Do not invent prices. Use only the approved course prices and the free AI level check.
 - Do not promise fluency in unrealistic time.
 - Keep title readable, not keyword stuffing.
