@@ -109,6 +109,28 @@ const seoImageLibrary = [
   { value: "assets/mandrix-scene-method.jpg", label: "Method scene", topic: "Learning method", alt: "Mandrix learning method visual" },
   { value: "assets/mandrix-scene-reception.jpg", label: "Reception scene", topic: "Corporate / office", alt: "Professional reception and office learning scene" },
   { value: "assets/jane-portrait.jpg", label: "Jane portrait", topic: "Founder / about", alt: "Jane Chen professional portrait" },
+  ...[
+    ["business-chinese", "Business Chinese"],
+    ["supplier-communication", "Supplier Communication"],
+    ["sourcing-chinese", "Sourcing Chinese"],
+    ["hsk-prep", "HSK Prep"],
+    ["daily-chinese", "Daily Chinese"],
+    ["workplace-mandarin", "Workplace Mandarin"],
+    ["adult-mandarin-learning", "Adult Mandarin"],
+    ["mandarin-pronunciation", "Pronunciation"],
+    ["culture-communication", "Culture Communication"],
+    ["chinese-for-amazon-sellers", "Amazon Sellers"],
+    ["professional-chinese", "Professional Chinese"],
+    ["learning-method", "Learning Method"],
+  ].flatMap(([slug, label]) => Array.from({ length: 15 }, (_, index) => {
+    const number = String(index + 1).padStart(2, "0");
+    return {
+      value: `assets/seo-library/${slug}-${number}.svg`,
+      label: `${label} ${number}`,
+      topic: `${label} / SEO visual`,
+      alt: `${label} Mandrix SEO visual ${number}`,
+    };
+  })),
 ];
 
 const seoCategoryLabels = {
@@ -1552,7 +1574,7 @@ function seoCardData(data) {
 
 function seoImageGalleryHtml(data = seoFields()) {
   const current = data.imageUploadTarget || data.image;
-  return seoSuggestedImages(data).map((item) => {
+  return seoSuggestedImages(data).slice(0, 48).map((item) => {
     const used = Boolean(seoUsedImages[item.value]);
     const selected = item.value === current;
     return `
@@ -1887,6 +1909,7 @@ Allowed image values only:
 - assets/mandrix-scene-method.jpg
 - assets/mandrix-scene-reception.jpg
 - assets/jane-portrait.jpg
+- Any generated Mandrix SEO library image path matching assets/seo-library/[category]-[number].svg
 
 Rules:
 - category should be the best-fit lowercase English slug. Existing broad options include business-chinese, hsk-prep, daily-chinese, sourcing-chinese, culture-communication, learning-method, but you may create a more precise category if search intent is stronger.
@@ -1931,7 +1954,10 @@ function normalizeSeoAiData(data) {
   cleaned.primaryHref ||= "/level-check";
   cleaned.secondaryLabel ||= "View Courses";
   cleaned.secondaryHref ||= "/courses";
-  if (!seoForm?.elements.image?.querySelector(`option[value="${CSS.escape(cleaned.image)}"]`)) {
+  const imageField = seoForm?.elements.image;
+  const hasKnownImage = seoImageLibrary.some((item) => item.value === cleaned.image);
+  const hasFormOption = typeof imageField?.querySelector === "function" && imageField.querySelector(`option[value="${CSS.escape(cleaned.image)}"]`);
+  if (!hasKnownImage && !hasFormOption) {
     cleaned.image = seoSuggestedImages(cleaned)[0]?.value || seoPresets.custom.image;
   }
   return cleaned;

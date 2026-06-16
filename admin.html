@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=seo-gallery-20260616">
   </head>
   <body class="admin-page">
     <header class="admin-header">
@@ -286,7 +286,8 @@
 
             <div class="seo-field-grid">
               <label>主图
-                <select name="image">
+                <input name="image" list="seoImageOptions" placeholder="assets/seo-library/business-chinese-01.svg">
+                <datalist id="seoImageOptions">
                   <option value="assets/sourcing-supplier-laptop.jpg">Sourcing: 供应商资料/电脑沟通</option>
                   <option value="assets/backup-business-meeting.jpg">Business: 会议桌/报告</option>
                   <option value="assets/backup-study-desk.jpg">HSK: 线上学习桌面</option>
@@ -301,7 +302,7 @@
                   <option value="assets/mandrix-scene-method.jpg">Method scene: 方法论场景</option>
                   <option value="assets/mandrix-scene-reception.jpg">Office scene: 专业办公场景</option>
                   <option value="assets/jane-portrait.jpg">Jane: 创始人照片</option>
-                </select>
+                </datalist>
               </label>
               <label>主图 alt 文案
                 <input name="imageAlt" placeholder="Business meeting desk with reports and working notes">
@@ -313,7 +314,7 @@
                   <p class="eyebrow">Image Library</p>
                   <h3>SEO 图库</h3>
                 </div>
-                <span>按当前分类自动排序，尽量少用重复图。</span>
+                <span>180+ 内置图，按当前分类自动排序，当前展示最匹配 48 张。</span>
               </div>
               <div class="seo-image-gallery" id="seoImageGallery"></div>
             </div>
@@ -429,6 +430,6 @@
       </section>
     </main>
 
-    <script src="admin.js"></script>
+    <script src="admin.js?v=seo-gallery-20260616"></script>
   </body>
 </html>

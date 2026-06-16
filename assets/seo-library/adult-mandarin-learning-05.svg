@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-label="Adult Mandarin Mandrix SEO visual 05">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbfbf8"/><stop offset="1" stop-color="#e8ece4"/></linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.96"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.72"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#1b2a3a" flood-opacity="0.14"/></filter>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0v48" fill="none" stroke="#252b2f" stroke-opacity="0.045" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+  <circle cx="1235" cy="215" r="168" fill="#7d9b8d" opacity="0.09"/>
+  <circle cx="335" cy="780" r="120" fill="#ca6c48" opacity="0.10"/>
+  <g filter="url(#shadow)">
+    <rect x="60" y="70" width="720" height="520" rx="34" fill="url(#card)" stroke="#252b2f" stroke-opacity="0.07"/>
+    <rect x="106" y="116" width="260" height="18" rx="9" fill="#7d9b8d" opacity="0.42"/>
+    <rect x="106" y="166" width="500" height="30" rx="15" fill="#252b2f" opacity="0.88"/>
+    <rect x="106" y="216" width="430" height="18" rx="9" fill="#252b2f" opacity="0.18"/>
+    <rect x="106" y="250" width="540" height="18" rx="9" fill="#252b2f" opacity="0.12"/>
+    <rect x="106" y="312" width="610" height="130" rx="24" fill="#e8ece4" opacity="0.78"/>
+    <text x="138" y="392" font-family="Arial, 'Noto Sans SC', sans-serif" font-size="42" font-weight="700" fill="#252b2f" opacity="0.86">成人学习 · 结构</text>
+    <rect x="106" y="480" width="180" height="46" rx="23" fill="#ca6c48" opacity="0.92"/>
+    <rect x="306" y="480" width="210" height="46" rx="23" fill="#fff" stroke="#252b2f" stroke-opacity="0.14"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="850" y="170" width="560" height="620" rx="38" fill="#fff" fill-opacity="0.86" stroke="#252b2f" stroke-opacity="0.06"/>
+    <rect x="910" y="230" width="210" height="18" rx="9" fill="#7d9b8d" opacity="0.34"/>
+    <rect x="910" y="286" width="360" height="80" rx="22" fill="#252b2f" opacity="0.08"/>
+    <text x="940" y="340" font-family="Arial, 'Noto Sans SC', sans-serif" font-size="36" font-weight="800" fill="#252b2f" opacity="0.82">输出</text>
+    <rect x="910" y="410" width="420" height="26" rx="13" fill="#252b2f" opacity="0.14"/>
+    <rect x="910" y="466" width="300" height="26" rx="13" fill="#252b2f" opacity="0.10"/>
+    <rect x="910" y="540" width="420" height="150" rx="28" fill="#7d9b8d" opacity="0.12"/>
+    <path d="M950 640c54-76 105-94 154-54 42 34 75 24 132-50 34-44 67-60 98-48" fill="none" stroke="#ca6c48" stroke-width="18" stroke-linecap="round" opacity="0.75"/>
+  </g>
+  <text x="80" y="930" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="3" fill="#252b2f" opacity="0.42">MANDRIX · ADULT MANDARIN</text>
+</svg>
