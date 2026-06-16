@@ -12822,3 +12822,30 @@ html:not([lang^="zh"]) .hero h1 {
     white-space: normal !important;
   }
 }
+
+/* Final hard guard: CTA buttons must never visually touch. */
+.actions,
+.hero-inner .actions,
+.contact .actions,
+.article-cta-actions {
+  column-gap: 32px !important;
+  row-gap: 16px !important;
+}
+
+.actions > .btn,
+.hero-inner .actions > .btn,
+.contact .actions > .btn,
+.article-cta-actions > .btn {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+@media (max-width: 720px) {
+  .actions,
+  .hero-inner .actions,
+  .contact .actions,
+  .article-cta-actions {
+    column-gap: 0 !important;
+    row-gap: 12px !important;
+  }
+}
