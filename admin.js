@@ -95,28 +95,21 @@ const seoUsedImages = {
 };
 
 const seoImageLibrary = [
-  ...[
-    ["business-chinese", "Business Chinese"],
-    ["supplier-communication", "Supplier Communication"],
-    ["sourcing-chinese", "Sourcing Chinese"],
-    ["hsk-prep", "HSK Prep"],
-    ["daily-chinese", "Daily Chinese"],
-    ["workplace-mandarin", "Workplace Mandarin"],
-    ["adult-mandarin-learning", "Adult Mandarin"],
-    ["mandarin-pronunciation", "Pronunciation"],
-    ["culture-communication", "Culture Communication"],
-    ["chinese-for-amazon-sellers", "Amazon Sellers"],
-    ["professional-chinese", "Professional Chinese"],
-    ["learning-method", "Learning Method"],
-  ].flatMap(([slug, label]) => Array.from({ length: 15 }, (_, index) => {
-    const number = String(index + 1).padStart(2, "0");
-    return {
-      value: `assets/seo-library/${slug}-${number}.svg`,
-      label: `${label} ${number}`,
-      topic: `${label} / SEO visual`,
-      alt: `${label} Mandrix SEO visual ${number}`,
-    };
-  })),
+  { value: "assets/backup-business-meeting.jpg", label: "Business meeting", topic: "Business Chinese / meetings", alt: "Business meeting desk with reports and working notes" },
+  { value: "assets/backup-online-lesson.jpg", label: "Online lesson", topic: "Online teaching / class", alt: "Adult online Chinese lesson on screen" },
+  { value: "assets/backup-study-desk.jpg", label: "Study desk", topic: "HSK / study planning", alt: "Online HSK preparation desk with notes and video lesson" },
+  { value: "assets/backup-warehouse.jpg", label: "Warehouse sourcing", topic: "Sourcing / procurement", alt: "Warehouse sourcing and procurement scene" },
+  { value: "assets/corporate-training-hero.png", label: "Corporate training", topic: "Corporate training / office learning", alt: "Corporate Chinese training session" },
+  { value: "assets/course-business.jpg", label: "Business course", topic: "Business Chinese / workspace", alt: "Business Chinese course visual" },
+  { value: "assets/course-daily.jpg", label: "Daily course", topic: "Daily Chinese / conversation", alt: "Daily Chinese learning visual" },
+  { value: "assets/course-diagnostic-online.webp", label: "Diagnostic online", topic: "Free AI check / diagnosis", alt: "Online Chinese diagnostic session" },
+  { value: "assets/course-hsk.jpg", label: "HSK course", topic: "HSK prep / exam planning", alt: "HSK preparation visual" },
+  { value: "assets/mandrix-scene-1on1.jpg", label: "1-on-1 scene", topic: "Private lesson / coaching", alt: "One-on-one Mandarin lesson scene" },
+  { value: "assets/mandrix-scene-daily.jpg", label: "Daily scene", topic: "Daily communication / practice", alt: "Daily Chinese learning scene" },
+  { value: "assets/mandrix-scene-hsk.jpg", label: "HSK scene", topic: "HSK coaching / study", alt: "HSK coaching scene with notes" },
+  { value: "assets/mandrix-scene-method.jpg", label: "Method scene", topic: "Learning method / planning", alt: "Mandrix learning method visual" },
+  { value: "assets/mandrix-scene-reception.jpg", label: "Reception scene", topic: "Corporate / office", alt: "Professional reception and office learning scene" },
+  { value: "assets/sourcing-supplier-laptop.jpg", label: "Supplier laptop", topic: "Supplier communication / sourcing", alt: "Supplier sourcing communication on laptop" },
 ];
 
 const seoCategoryLabels = {
@@ -144,7 +137,7 @@ const seoPresets = {
     h1: "Build Chinese you can actually use.",
     lead: "A focused Mandrix page for adult learners who want Chinese explained through logic, structure, and real output.",
     articleBody: "This guide should explain one clear Chinese learning problem, show how Mandrix diagnoses it, and give the learner a practical next step. Keep the writing specific, grounded, and useful for adults.",
-    image: "assets/seo-library/learning-method-01.svg",
+    image: "assets/mandrix-scene-method.jpg",
     imageAlt: "Reviewing Mandarin learning materials on a laptop",
     chips: "Logic first, Adult learners, Real output, Free AI check",
     primaryLabel: "Start Free AI Level Check",
@@ -174,7 +167,7 @@ const seoPresets = {
     h1: "Stop relying on Google Translate with your suppliers.",
     lead: "For buyers, Amazon sellers, and importers who deal with Chinese factories daily. Learn the Mandarin that actually comes up: MOQ, samples, lead time, quality issues, and price negotiation.",
     articleBody: "Sourcing conversations are different from general Mandarin. The goal is not to sound impressive. The goal is to ask accurate questions, reduce misunderstanding, and protect business decisions.\n\nA strong sourcing Chinese lesson should include supplier WeChat phrases, factory visit questions, 1688 listing language, sample requests, MOQ discussion, payment terms, production timing, and quality issue wording.\n\nMandrix starts by diagnosing the exact sourcing situations you face, then builds reusable Chinese templates around them.",
-    image: "assets/seo-library/sourcing-chinese-01.svg",
+    image: "assets/sourcing-supplier-laptop.jpg",
     imageAlt: "Reviewing supplier details and sourcing messages on a laptop",
     chips: "Factory visits, Supplier WeChat, 1688 listings, MOQ and price terms",
     primaryLabel: "Start Free AI Level Check",
@@ -204,7 +197,7 @@ const seoPresets = {
     h1: "Sound professional in Chinese, not just grammatically correct.",
     lead: "Business Chinese is not vocabulary. Tone, structure, and cultural context decide whether your message sounds clear and trustworthy or blunt and unprepared.",
     articleBody: "Business Chinese requires more than correct grammar. In real work, the same sentence can sound confident, abrupt, vague, or overly casual depending on structure and tone.\n\nMandrix helps professionals work with real materials: WeChat messages, emails, meeting notes, proposals, presentations, and follow-up wording. The focus is to understand why Chinese business communication works the way it does, then build reusable templates.\n\nStart with a diagnostic if you need to know whether your blocker is grammar, vocabulary, tone, pronunciation, or cultural context.",
-    image: "assets/seo-library/business-chinese-01.svg",
+    image: "assets/backup-business-meeting.jpg",
     imageAlt: "Business meeting desk with reports and working notes",
     chips: "WeChat and email, Meetings and calls, Negotiation, Professional tone",
     primaryLabel: "Start Free AI Level Check",
@@ -234,7 +227,7 @@ const seoPresets = {
     h1: "Pass your HSK exam without just drilling vocabulary lists.",
     lead: "Most students struggle with HSK because they never understood the grammar patterns behind the exam questions. Mandrix decodes the logic so the test format has no surprises.",
     articleBody: "HSK preparation works best when vocabulary, grammar, listening, reading, and mock test correction are connected. Memorizing lists may help short term, but it often breaks down when the exam asks the same pattern in a new way.\n\nMandrix starts with a level diagnosis, then builds a study plan around the learner's target level, weak grammar points, listening habits, and reading speed.\n\nThe goal is exam readiness and practical Chinese at the same time.",
-    image: "assets/seo-library/hsk-prep-01.svg",
+    image: "assets/backup-study-desk.jpg",
     imageAlt: "Online HSK preparation desk with notes and video lesson",
     chips: "Level diagnosis, Grammar logic, Mock tests, Correction plan",
     primaryLabel: "Start Free AI Level Check",
@@ -1539,17 +1532,16 @@ function seoSuggestedImages(data = seoFields()) {
 function seoImageStylePrompt(data = seoFields()) {
   const category = cleanSeoCategory(data.category);
   const recommended = seoSuggestedImages(data).slice(0, 12).map((item) => `- ${item.value} (${item.topic})`).join("\n");
-  return `Choose one existing Mandrix SEO library image for this page.
+  return `Choose the best Mandrix scene image for this SEO page.
 
 Page category: ${category}
 Page topic: ${data.h1 || data.title || "Mandrix Chinese learning page"}
 
 Rules:
-- Do not generate a new image.
-- Do not ask the user to upload an image.
-- Use only one existing path from the Mandrix SEO library.
-- Output the chosen path in the JSON "image" field.
-- Also write a specific "imageAlt" field.
+- First choose one existing scene image path from the recommended list.
+- If none matches the topic well, tell Jane to upload one clean professional scene image through the SEO backend upload field.
+- Output the chosen existing path in the JSON "image" field when using the library.
+- Write a specific "imageAlt" field.
 
 Recommended paths for this page:
 ${recommended}`;
@@ -1650,7 +1642,7 @@ function buildSeoHtml(rawData = seoFields()) {
       <header class="nav" translate="no">
         <div class="nav-inner">
           <a class="brand" href="/"><img src="/assets/mandrix-logo-128.png" alt="Mandrix logo" width="128" height="128" decoding="async"><span class="brand-word"><span class="brand-name">Mandrix</span><span class="brand-line">Chinese, decoded.</span></span></a>
-          <nav class="nav-links" id="navLinks"><a href="/method">Method</a><a href="/courses">Courses</a><a href="/corporate">Corporate</a><a href="/about">About</a><a href="/insights">Insights</a><a href="/faq">FAQ</a><a class="nav-cta" href="/level-check">Free AI Level Check</a><a class="lang-switch" href="/zh">中文</a></nav>
+          <nav class="nav-links" id="navLinks"><a href="/method">Method</a><a href="/#core-system">Core System</a><a href="/#learning-paths">Learning Paths</a><a href="/corporate">Corporate</a><a href="/#results">Results</a><a href="/about">About Jane</a><a href="/faq">FAQ</a><a class="nav-cta" href="/level-check">Free AI Check</a><a class="lang-switch" href="/zh">中文</a></nav>
           <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
         </div>
       </header>
@@ -1790,7 +1782,7 @@ function seoAiPrompt() {
   "h1": "Clear page headline.",
   "lead": "2-3 sentence hero paragraph for adult learners.",
   "articleBody": "Full article body. 500-900 words. Include concrete examples, FAQs, and internal link suggestions in natural prose.",
-  "image": "assets/seo-library/business-chinese-01.svg",
+  "image": "assets/backup-business-meeting.jpg",
   "imageAlt": "Short image alt text",
   "chips": "Chip one, Chip two, Chip three, Chip four",
   "primaryLabel": "Start Free AI Level Check",
@@ -1813,22 +1805,25 @@ function seoAiPrompt() {
 \`\`\`
 
 Allowed image values only:
-- assets/seo-library/business-chinese-01.svg
-- assets/seo-library/supplier-communication-01.svg
-- assets/seo-library/sourcing-chinese-01.svg
-- assets/seo-library/hsk-prep-01.svg
-- assets/seo-library/daily-chinese-01.svg
-- assets/seo-library/workplace-mandarin-01.svg
-- assets/seo-library/adult-mandarin-learning-01.svg
-- assets/seo-library/mandarin-pronunciation-01.svg
-- assets/seo-library/culture-communication-01.svg
-- assets/seo-library/chinese-for-amazon-sellers-01.svg
-- assets/seo-library/professional-chinese-01.svg
-- assets/seo-library/learning-method-01.svg
+- assets/backup-business-meeting.jpg
+- assets/backup-online-lesson.jpg
+- assets/backup-study-desk.jpg
+- assets/backup-warehouse.jpg
+- assets/corporate-training-hero.png
+- assets/course-business.jpg
+- assets/course-daily.jpg
+- assets/course-diagnostic-online.webp
+- assets/course-hsk.jpg
+- assets/mandrix-scene-1on1.jpg
+- assets/mandrix-scene-daily.jpg
+- assets/mandrix-scene-hsk.jpg
+- assets/mandrix-scene-method.jpg
+- assets/mandrix-scene-reception.jpg
+- assets/sourcing-supplier-laptop.jpg
 
 Rules:
 - category must be one of: business-chinese, hsk-prep, daily-chinese, sourcing-chinese, culture-communication, learning-method, supplier-communication, workplace-mandarin, chinese-for-amazon-sellers, adult-mandarin-learning, mandarin-pronunciation, professional-chinese
-- image must use one of the allowed assets/seo-library paths above. Do not generate images. Do not ask for uploads.
+- image must use one of the allowed scene image paths above. Do not generate images. Do not ask for uploads.
 - Do not invent prices. Use only the approved course prices and the free AI level check.
 - Do not promise fluency in unrealistic time.
 - Keep title readable, not keyword stuffing.

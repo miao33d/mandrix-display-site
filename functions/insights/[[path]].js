@@ -115,7 +115,7 @@ function renderPage(row) {
       <header class="nav" translate="no">
         <div class="nav-inner">
           <a class="brand" href="/"><img src="/assets/mandrix-logo-128.png" alt="Mandrix logo" width="128" height="128" decoding="async"><span class="brand-word"><span class="brand-name">Mandrix</span><span class="brand-line">Chinese, decoded.</span></span></a>
-          <nav class="nav-links" id="navLinks"><a href="/method">Method</a><a href="/courses">Courses</a><a href="/corporate">Corporate</a><a href="/about">About</a><a href="/insights">Insights</a><a href="/faq">FAQ</a><a class="nav-cta" href="/level-check">Free AI Level Check</a><a class="lang-switch" href="/zh">中文</a></nav>
+          <nav class="nav-links" id="navLinks"><a href="/method">Method</a><a href="/#core-system">Core System</a><a href="/#learning-paths">Learning Paths</a><a href="/corporate">Corporate</a><a href="/#results">Results</a><a href="/about">About Jane</a><a href="/faq">FAQ</a><a class="nav-cta" href="/level-check">Free AI Check</a><a class="lang-switch" href="/zh">中文</a></nav>
           <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
         </div>
       </header>

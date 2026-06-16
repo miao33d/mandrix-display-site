@@ -286,20 +286,23 @@
 
             <div class="seo-field-grid">
               <label>主图
-                <input name="image" list="seoImageOptions" placeholder="assets/seo-library/business-chinese-01.svg">
+                <input name="image" list="seoImageOptions" placeholder="assets/backup-business-meeting.jpg">
                 <datalist id="seoImageOptions">
-                  <option value="assets/seo-library/business-chinese-01.svg">Business Chinese 01</option>
-                  <option value="assets/seo-library/supplier-communication-01.svg">Supplier Communication 01</option>
-                  <option value="assets/seo-library/sourcing-chinese-01.svg">Sourcing Chinese 01</option>
-                  <option value="assets/seo-library/hsk-prep-01.svg">HSK Prep 01</option>
-                  <option value="assets/seo-library/daily-chinese-01.svg">Daily Chinese 01</option>
-                  <option value="assets/seo-library/workplace-mandarin-01.svg">Workplace Mandarin 01</option>
-                  <option value="assets/seo-library/adult-mandarin-learning-01.svg">Adult Mandarin 01</option>
-                  <option value="assets/seo-library/mandarin-pronunciation-01.svg">Pronunciation 01</option>
-                  <option value="assets/seo-library/culture-communication-01.svg">Culture Communication 01</option>
-                  <option value="assets/seo-library/chinese-for-amazon-sellers-01.svg">Amazon Sellers 01</option>
-                  <option value="assets/seo-library/professional-chinese-01.svg">Professional Chinese 01</option>
-                  <option value="assets/seo-library/learning-method-01.svg">Learning Method 01</option>
+                  <option value="assets/backup-business-meeting.jpg">Business meeting</option>
+                  <option value="assets/backup-online-lesson.jpg">Online lesson</option>
+                  <option value="assets/backup-study-desk.jpg">Study desk</option>
+                  <option value="assets/backup-warehouse.jpg">Warehouse sourcing</option>
+                  <option value="assets/corporate-training-hero.png">Corporate training</option>
+                  <option value="assets/course-business.jpg">Business course</option>
+                  <option value="assets/course-daily.jpg">Daily course</option>
+                  <option value="assets/course-diagnostic-online.webp">Diagnostic online</option>
+                  <option value="assets/course-hsk.jpg">HSK course</option>
+                  <option value="assets/mandrix-scene-1on1.jpg">1-on-1 scene</option>
+                  <option value="assets/mandrix-scene-daily.jpg">Daily scene</option>
+                  <option value="assets/mandrix-scene-hsk.jpg">HSK scene</option>
+                  <option value="assets/mandrix-scene-method.jpg">Method scene</option>
+                  <option value="assets/mandrix-scene-reception.jpg">Reception scene</option>
+                  <option value="assets/sourcing-supplier-laptop.jpg">Supplier laptop</option>
                 </datalist>
               </label>
               <label>主图 alt 文案
@@ -312,7 +315,7 @@
                   <p class="eyebrow">Image Library</p>
                   <h3>SEO 图库</h3>
                 </div>
-                <span>180+ 内置图，按当前分类自动排序，当前展示最匹配 48 张。</span>
+                <span>场景图库有限。可直接点图，也可以上传新图做本篇专属主图。</span>
               </div>
               <div class="seo-image-gallery" id="seoImageGallery"></div>
             </div>
@@ -321,7 +324,7 @@
               <div class="seo-form-head">
                 <div>
                   <p class="eyebrow">Image Rule</p>
-                  <h3>不用生成图片，直接点图库</h3>
+                  <h3>图库不够时，上传新图</h3>
                 </div>
                 <button class="btn secondary" type="button" id="seoCopyImagePrompt">复制图库选择口令</button>
               </div>
@@ -331,11 +334,11 @@
               <div class="seo-field-grid">
                 <label>上传/预览图片
                   <input id="seoImageUpload" type="file" accept="image/png,image/jpeg,image/webp">
-                  <small>可忽略。正式 SEO 页面直接点上方图库即可。</small>
+                  <small>图库不合适时用这里。上传后右侧会实时预览，发布包会给出保存路径。</small>
                 </label>
                 <label>建议保存路径
                   <input id="seoImageTarget" readonly>
-                  <small>上传新图时才需要；内置图库不需要保存。</small>
+                  <small>如果上传新图，把图片交给我按这个路径放进 assets 后再发布正式页面。</small>
                 </label>
               </div>
               <img class="seo-image-preview" id="seoImagePreview" alt="Uploaded SEO preview" hidden>
