@@ -712,7 +712,8 @@ function flattenLessons(rows) {
       bookingType: booking.bookingType || (String(booking.course || "").includes("Group") ? "group" : "one-on-one"),
       payment: booking.payment,
       amount: booking.amount,
-      meetingLink: booking.meetingLink,
+      meetingLink: lesson.meetingLink || booking.meetingLink,
+      meetingProvider: lesson.meetingProvider || booking.meetingProvider || "Video classroom",
       groupInfo: booking.groupInfo,
     })))
     .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
@@ -812,13 +813,21 @@ function renderLessons() {
               ? `${t("group")} ${lesson.groupInfo.currentStudentsAfterBooking}/${lesson.groupInfo.maxStudents}`
               : lesson.bookingType;
             const meetingLink = lesson.meetingLink || "";
+            const meetingProvider = lesson.meetingProvider || "Video classroom";
             return `
               <div class="slot-cell booked">
                 <span>${meetingLink ? t("scheduled") : t("booked")}</span>
                 <strong>${escapeHtml(lesson.fullName)}</strong>
                 <small>${escapeHtml(lesson.course)}</small>
                 <em>${escapeHtml(groupText || "")}</em>
-                ${meetingLink ? `<a href="${escapeHtml(meetingLink)}" target="_blank" rel="noopener">${t("openMeeting")}</a>` : ""}
+                ${meetingLink ? `
+                  <div class="slot-meeting">
+                    <b>${escapeHtml(meetingProvider)}</b>
+                    <code title="${escapeHtml(meetingLink)}">${escapeHtml(meetingLink)}</code>
+                    <a href="${escapeHtml(meetingLink)}" target="_blank" rel="noopener">${t("openMeeting")}</a>
+                    <button type="button" class="copy-meeting" data-meeting="${escapeHtml(meetingLink)}">${adminLang === "zh" ? "复制链接" : "Copy link"}</button>
+                  </div>
+                ` : `<i>${adminLang === "zh" ? "暂无会议链接" : "No meeting link yet"}</i>`}
               </div>
             `;
           }).join("")}
@@ -876,7 +885,14 @@ function renderBookings() {
       <div class="booking-schedule">
         <strong>${t("schedule")}</strong>
         <ol>
-          ${lessonScheduleFor(booking).map((lesson) => `<li>Lesson ${escapeHtml(lesson.lesson)} · ${escapeHtml(lesson.date)} · ${escapeHtml(lesson.time)} ${t("beijingTime")}</li>`).join("")}
+          ${lessonScheduleFor(booking).map((lesson) => {
+            const meetingLink = lesson.meetingLink || booking.meetingLink || "";
+            const meetingProvider = lesson.meetingProvider || "Video classroom";
+            return `<li>
+              <span>Lesson ${escapeHtml(lesson.lesson)} · ${escapeHtml(lesson.date)} · ${escapeHtml(lesson.time)} ${t("beijingTime")}</span>
+              ${meetingLink ? `<a href="${escapeHtml(meetingLink)}" target="_blank" rel="noopener">${escapeHtml(meetingProvider)}</a><button type="button" class="copy-meeting" data-meeting="${escapeHtml(meetingLink)}">${adminLang === "zh" ? "复制链接" : "Copy link"}</button>` : `<em>${adminLang === "zh" ? "暂无会议链接" : "No meeting link yet"}</em>`}
+            </li>`;
+          }).join("")}
         </ol>
       </div>
       ${renewal ? `
@@ -1968,9 +1984,9 @@ async function saveBooking(card) {
 }
 
 list.addEventListener("click", (event) => {
-  const sendButton = event.target.closest(".send-renewal");
-  if (sendButton) {
-    sendRenewalEmail(sendButton.closest(".booking-card"));
+  const meetingButton = event.target.closest(".copy-meeting");
+  if (meetingButton) {
+    copyMeetingLink(meetingButton);
     return;
   }
   const copyButton = event.target.closest(".copy-renewal");
@@ -1991,40 +2007,30 @@ list.addEventListener("click", (event) => {
 });
 
 renewalPanel?.addEventListener("click", (event) => {
-  const sendButton = event.target.closest(".send-renewal");
-  if (sendButton) {
-    sendRenewalEmail(sendButton.closest("[data-id]"));
-    return;
-  }
   const copyButton = event.target.closest(".copy-renewal");
   if (!copyButton) return;
   copyRenewalEmail(copyButton.closest("[data-id]"));
 });
 
-async function sendRenewalEmail(card) {
-  const booking = bookings.find((row) => String(row.id) === String(card?.dataset.id));
-  if (!booking) return;
-  const button = card.querySelector(".send-renewal");
-  const original = button?.textContent || t("sendRenewal");
-  if (button) {
-    button.disabled = true;
-    button.textContent = t("sendingRenewal");
-  }
-  const response = await fetch("/api/reminders.js?job=renewals", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "x-admin-token": adminToken },
-    body: JSON.stringify({ bookingId: booking.id }),
-  });
-  if (!response.ok) {
-    alert(t("renewalSendFailed"));
-    if (button) {
-      button.disabled = false;
+lessonList?.addEventListener("click", (event) => {
+  const meetingButton = event.target.closest(".copy-meeting");
+  if (!meetingButton) return;
+  copyMeetingLink(meetingButton);
+});
+
+async function copyMeetingLink(button) {
+  const link = button?.dataset.meeting || "";
+  if (!link) return;
+  const original = button.textContent;
+  try {
+    await navigator.clipboard.writeText(link);
+    button.textContent = adminLang === "zh" ? "已复制" : "Copied";
+    setTimeout(() => {
       button.textContent = original;
-    }
-    return;
+    }, 1600);
+  } catch (error) {
+    window.prompt(adminLang === "zh" ? "复制失败，请手动复制会议链接：" : "Copy failed. Copy the meeting link manually:", link);
   }
-  if (button) button.textContent = t("renewalSent");
-  await loadBookings();
 }
 
 async function copyRenewalEmail(card) {

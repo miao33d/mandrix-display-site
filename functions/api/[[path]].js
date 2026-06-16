@@ -617,11 +617,14 @@ function scheduleText(schedule) {
 function createVideoClassroomLink(env, booking, lesson) {
   const base = clean(env.VIDEO_ROOM_BASE_URL) || "https://meet.jit.si";
   const safeBase = base.replace(/\/+$/, "");
+  const dateCode = clean(lesson.date).replaceAll("-", "") || "date";
+  const timeCode = (clean(lesson.time).split(" - ")[0] || "class").replace(/[^\dA-Za-z]/g, "") || "class";
   const seed = [
     "Mandrix",
+    dateCode,
+    timeCode,
     booking.id.slice(0, 8),
     `L${lesson.lesson}`,
-    lesson.date.replaceAll("-", ""),
   ].join("-");
   return `${safeBase}/${encodeURIComponent(seed)}`;
 }
