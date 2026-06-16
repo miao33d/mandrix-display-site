@@ -56,6 +56,7 @@ const seoCopyImagePrompt = document.querySelector("#seoCopyImagePrompt");
 const seoImageUpload = document.querySelector("#seoImageUpload");
 const seoImagePreview = document.querySelector("#seoImagePreview");
 const seoImageTarget = document.querySelector("#seoImageTarget");
+const seoImageGallery = document.querySelector("#seoImageGallery");
 const levelChecksStatus = document.querySelector("#levelChecksStatus");
 const levelChecksList = document.querySelector("#levelChecksList");
 
@@ -92,6 +93,23 @@ const seoUsedImages = {
   "assets/jane.png": "首页/中文页 Jane 头像",
   "assets/corporate-training-hero.png": "Corporate 企业培训页",
 };
+
+const seoImageLibrary = [
+  { value: "assets/sourcing-supplier-laptop.jpg", label: "Sourcing supplier laptop", topic: "Sourcing / supplier communication", alt: "Supplier sourcing communication on laptop" },
+  { value: "assets/backup-business-meeting.jpg", label: "Business meeting desk", topic: "Business Chinese / meetings", alt: "Business meeting desk with reports and working notes" },
+  { value: "assets/backup-study-desk.jpg", label: "Study desk", topic: "HSK / study planning", alt: "Online HSK preparation desk with notes and video lesson" },
+  { value: "assets/course-daily.jpg", label: "Daily Chinese", topic: "Daily Chinese / conversations", alt: "Adult learner practice for daily Chinese conversation" },
+  { value: "assets/course-diagnostic-online.webp", label: "Diagnostic online", topic: "Free AI check / diagnosis", alt: "Online Chinese diagnostic session on a laptop" },
+  { value: "assets/corporate-training-hero.png", label: "Corporate training", topic: "Corporate training", alt: "Corporate Chinese training session" },
+  { value: "assets/backup-online-lesson.jpg", label: "Online lesson", topic: "Flexible online lesson", alt: "Adult online Chinese lesson on screen" },
+  { value: "assets/backup-warehouse.jpg", label: "Warehouse sourcing", topic: "Sourcing / procurement", alt: "Warehouse sourcing and procurement scene" },
+  { value: "assets/mandrix-scene-1on1.jpg", label: "1-on-1 lesson", topic: "Private lesson", alt: "One-on-one Mandarin lesson scene" },
+  { value: "assets/mandrix-scene-daily.jpg", label: "Daily scene", topic: "Daily communication", alt: "Daily Chinese learning scene" },
+  { value: "assets/mandrix-scene-hsk.jpg", label: "HSK scene", topic: "HSK coaching", alt: "HSK coaching scene with notes" },
+  { value: "assets/mandrix-scene-method.jpg", label: "Method scene", topic: "Learning method", alt: "Mandrix learning method visual" },
+  { value: "assets/mandrix-scene-reception.jpg", label: "Reception scene", topic: "Corporate / office", alt: "Professional reception and office learning scene" },
+  { value: "assets/jane-portrait.jpg", label: "Jane portrait", topic: "Founder / about", alt: "Jane Chen professional portrait" },
+];
 
 const seoCategoryLabels = {
   "business-chinese": "Business Chinese",
@@ -1471,6 +1489,36 @@ function seoImageAssetPath(data = seoFields()) {
   return `assets/${cleanSeoSlug(data.slug)}-hero.jpg`;
 }
 
+function seoSuggestedImages(data = seoFields()) {
+  const category = cleanSeoCategory(data.category);
+  const seen = new Set(Object.keys(seoUsedImages));
+  const topicHints = {
+    "business-chinese": ["business", "meeting", "corporate"],
+    "hsk-prep": ["hsk", "study", "diagnostic"],
+    "daily-chinese": ["daily", "conversation"],
+    "sourcing-chinese": ["sourcing", "supplier", "warehouse"],
+    "culture-communication": ["reception", "business", "daily"],
+    "learning-method": ["method", "diagnostic", "study"],
+    "supplier-communication": ["sourcing", "supplier", "warehouse"],
+    "workplace-mandarin": ["business", "meeting", "corporate"],
+    "chinese-for-amazon-sellers": ["sourcing", "warehouse", "business"],
+    "adult-mandarin-learning": ["study", "lesson", "method"],
+    "professional-chinese": ["business", "meeting", "lesson"],
+  };
+  const hints = topicHints[category] || [];
+  const rank = (item) => {
+    const haystack = `${item.value} ${item.label} ${item.topic} ${item.alt}`.toLowerCase();
+    let score = 0;
+    if (!seen.has(item.value)) score += 4;
+    if (hints.some((hint) => haystack.includes(hint))) score += 3;
+    if (category.includes("sourcing") && /sourcing|supplier|warehouse/.test(haystack)) score += 4;
+    if (category.includes("business") && /business|meeting|corporate/.test(haystack)) score += 4;
+    if (category.includes("hsk") && /hsk|study|diagnostic/.test(haystack)) score += 4;
+    return score;
+  };
+  return [...seoImageLibrary].sort((a, b) => rank(b) - rank(a));
+}
+
 function seoImageStylePrompt(data = seoFields()) {
   const topic = data.h1 || data.title || "Mandrix Chinese learning page";
   const context = data.eyebrow || "Mandrix online Chinese coaching";
@@ -1500,6 +1548,22 @@ function seoCardData(data) {
     { title: data.card2Title, text: data.card2Text },
     { title: data.card3Title, text: data.card3Text },
   ];
+}
+
+function seoImageGalleryHtml(data = seoFields()) {
+  const current = data.imageUploadTarget || data.image;
+  return seoSuggestedImages(data).map((item) => {
+    const used = Boolean(seoUsedImages[item.value]);
+    const selected = item.value === current;
+    return `
+      <button type="button" class="seo-image-card ${used ? "used" : ""} ${selected ? "selected" : ""}" data-seo-image="${escapeHtml(item.value)}" data-seo-alt="${escapeHtml(item.alt)}" title="${escapeHtml(item.topic)}">
+        <img src="${escapeHtml(item.value)}" alt="${escapeHtml(item.alt)}">
+        <span>${escapeHtml(item.label)}</span>
+        <small>${escapeHtml(item.topic)}</small>
+        ${used ? "<em>核心页已使用</em>" : "<i>推荐使用</i>"}
+      </button>
+    `;
+  }).join("");
 }
 
 function buildSeoHtml(rawData = seoFields()) {
@@ -1815,6 +1879,14 @@ Allowed image values only:
 - assets/course-daily.jpg
 - assets/course-diagnostic-online.webp
 - assets/corporate-training-hero.png
+- assets/backup-online-lesson.jpg
+- assets/backup-warehouse.jpg
+- assets/mandrix-scene-1on1.jpg
+- assets/mandrix-scene-daily.jpg
+- assets/mandrix-scene-hsk.jpg
+- assets/mandrix-scene-method.jpg
+- assets/mandrix-scene-reception.jpg
+- assets/jane-portrait.jpg
 
 Rules:
 - category should be the best-fit lowercase English slug. Existing broad options include business-chinese, hsk-prep, daily-chinese, sourcing-chinese, culture-communication, learning-method, but you may create a more precise category if search intent is stronger.
@@ -1860,7 +1932,7 @@ function normalizeSeoAiData(data) {
   cleaned.secondaryLabel ||= "View Courses";
   cleaned.secondaryHref ||= "/courses";
   if (!seoForm?.elements.image?.querySelector(`option[value="${CSS.escape(cleaned.image)}"]`)) {
-    cleaned.image = seoPresets.custom.image;
+    cleaned.image = seoSuggestedImages(cleaned)[0]?.value || seoPresets.custom.image;
   }
   return cleaned;
 }
@@ -1941,6 +2013,7 @@ function updateSeoBuilder() {
       </div>
     `).join("");
   }
+  if (seoImageGallery) seoImageGallery.innerHTML = seoImageGalleryHtml(data);
 }
 
 async function copySeoText(text, button, doneText = "已复制") {
@@ -2172,6 +2245,15 @@ seoImageUpload?.addEventListener("change", () => {
   seoUploadedImagePreviewUrl = URL.createObjectURL(file);
   seoImagePreview.src = seoUploadedImagePreviewUrl;
   seoImagePreview.hidden = false;
+  updateSeoBuilder();
+});
+seoImageGallery?.addEventListener("click", (event) => {
+  const card = event.target.closest("[data-seo-image]");
+  if (!card || !seoForm) return;
+  const imageField = seoForm.elements.image;
+  const altField = seoForm.elements.imageAlt;
+  if (imageField) imageField.value = card.dataset.seoImage || "";
+  if (altField && !altField.value.trim()) altField.value = card.dataset.seoAlt || "";
   updateSeoBuilder();
 });
 seoCopyPackage?.addEventListener("click", () => copySeoText(seoPublishPackage(), seoCopyPackage));
