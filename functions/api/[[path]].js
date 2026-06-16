@@ -75,7 +75,7 @@ function buildSchedule(payload, meetingLink = "") {
       date,
       time: clean(payload.time),
       status: "Scheduled",
-      meetingProvider: "Google Meet",
+      meetingProvider: meetingLink ? "Video classroom" : "",
       meetingLink,
     });
   }
@@ -584,9 +584,22 @@ async function buildVoiceAnalysis(env, payload) {
 function scheduleText(schedule) {
   if (!Array.isArray(schedule) || !schedule.length) return "None";
   return schedule.map((lesson) => {
-    const meet = lesson.meetingLink ? ` · Google Meet: ${lesson.meetingLink}` : "";
+    const provider = clean(lesson.meetingProvider) || "Video classroom";
+    const meet = lesson.meetingLink ? ` · ${provider}: ${lesson.meetingLink}` : "";
     return `Lesson ${lesson.lesson}: ${lesson.date} · ${lesson.time} Beijing Time${meet}`;
   }).join("\n");
+}
+
+function createVideoClassroomLink(env, booking, lesson) {
+  const base = clean(env.VIDEO_ROOM_BASE_URL) || "https://meet.jit.si";
+  const safeBase = base.replace(/\/+$/, "");
+  const seed = [
+    "Mandrix",
+    booking.id.slice(0, 8),
+    `L${lesson.lesson}`,
+    lesson.date.replaceAll("-", ""),
+  ].join("-");
+  return `${safeBase}/${encodeURIComponent(seed)}`;
 }
 
 async function createGoogleMeetEvent(env, booking, lesson) {
@@ -611,8 +624,13 @@ async function createGoogleMeetEvent(env, booking, lesson) {
 }
 
 async function createGoogleMeetSchedule(env, booking, schedule) {
-  if (env.GOOGLE_MEET_LINK) return schedule.map((lesson) => ({ ...lesson, meetingProvider: "Google Meet", meetingLink: env.GOOGLE_MEET_LINK }));
-  if (!env.GOOGLE_CLIENT_EMAIL || !env.GOOGLE_PRIVATE_KEY || !env.GOOGLE_CALENDAR_ID) return schedule;
+  if (!env.GOOGLE_CLIENT_EMAIL || !env.GOOGLE_PRIVATE_KEY || !env.GOOGLE_CALENDAR_ID) {
+    return schedule.map((lesson) => ({
+      ...lesson,
+      meetingProvider: "Video classroom",
+      meetingLink: createVideoClassroomLink(env, booking, lesson),
+    }));
+  }
   const lessons = [];
   for (const lesson of schedule) {
     const meetingLink = await createGoogleMeetEvent(env, booking, lesson);
@@ -740,10 +758,12 @@ async function handleBookings(request, env) {
     meetingLink: "",
   };
   booking.lessonSchedule = await createGoogleMeetSchedule(env, booking, schedule).catch((error) => {
-    booking.teacherNotes = `Google Meet creation failed: ${error.message}`;
-    return clean(env.GOOGLE_MEET_LINK)
-      ? schedule.map((lesson) => ({ ...lesson, meetingProvider: "Google Meet", meetingLink: clean(env.GOOGLE_MEET_LINK) }))
-      : schedule;
+    booking.teacherNotes = `Google Meet creation failed, fallback video classroom links were generated: ${error.message}`;
+    return schedule.map((lesson) => ({
+      ...lesson,
+      meetingProvider: "Video classroom",
+      meetingLink: createVideoClassroomLink(env, booking, lesson),
+    }));
   });
   booking.meetingLink = booking.lessonSchedule.find((lesson) => clean(lesson.meetingLink))?.meetingLink || "";
 
@@ -771,7 +791,7 @@ async function sendBookingEmails(env, booking) {
     `Course: ${booking.course}`,
     `Amount: $${booking.amount}`,
     `${booking.paymentProvider} reference: ${booking.paymentReference}`,
-    `Google Meet: ${booking.meetingLink || "Not configured"}`,
+    `Video classroom: ${booking.meetingLink || "Not configured"}`,
     "",
     schedule,
     "",
@@ -785,7 +805,7 @@ async function sendBookingEmails(env, booking) {
     `Course: ${booking.course}`,
     `Amount: $${booking.amount}`,
     `${booking.paymentProvider} reference: ${booking.paymentReference}`,
-    booking.meetingLink ? `Google Meet: ${booking.meetingLink}` : "Google Meet: Jane will confirm the class link by email.",
+    booking.meetingLink ? `Video classroom: ${booking.meetingLink}` : "Video classroom: Jane will confirm the class link by email.",
     "",
     schedule,
     "",
@@ -879,7 +899,7 @@ async function handleBookingUpdate(request, env) {
   if (!current) return json({ error: "Booking not found" }, 404);
   const meetingLink = clean(payload.meetingLink || current.meeting_link);
   let schedule = parseJson(current.lesson_schedule, []);
-  if (meetingLink) schedule = schedule.map((lesson) => ({ ...lesson, meetingProvider: "Google Meet", meetingLink }));
+  if (meetingLink) schedule = schedule.map((lesson) => ({ ...lesson, meetingProvider: "Video classroom", meetingLink }));
   await db.prepare(`UPDATE bookings SET
     status = COALESCE(?, status),
     payment = COALESCE(?, payment),

@@ -582,8 +582,8 @@ form.addEventListener("submit", async (event) => {
     resultTitle.textContent = lang === "zh" ? "你的预约已提交。" : "Your booking has been submitted.";
     resultText.textContent = bookingResult.emailSent
       ? (lang === "zh"
-        ? "系统已生成课表并发送 Google Meet 课程邮件。"
-        : "Mandrix generated your schedule and sent the Google Meet details by email.")
+        ? "系统已生成课表并发送视频教室课程邮件。"
+        : "Mandrix generated your schedule and sent the video classroom link by email.")
       : (lang === "zh"
         ? "系统已生成课表。邮件服务还未配置成功，请 Jane 在后台查看预约并手动确认。"
         : "Mandrix generated your schedule. Email delivery is not configured yet, so Jane should confirm from the admin dashboard.");

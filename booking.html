@@ -175,7 +175,7 @@
                 "name": "How does booking work at Mandrix?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Students choose a diagnostic or program, pay through PayPal Business checkout, submit the booking form after payment, and receive the generated class schedule and Google Meet details by email."
+                  "text": "Students choose a diagnostic or program, pay through PayPal Business checkout, submit the booking form after payment, and receive the generated class schedule and video classroom link by email."
                 }
               },
               {
@@ -880,7 +880,7 @@
           </details>
           <details>
             <summary>How does payment work?</summary>
-            <p>Choose your program, complete PayPal Business checkout, then submit the booking form. Mandrix attaches the PayPal order ID automatically and sends your class schedule and Google Meet details by email.</p>
+            <p>Choose your program, complete PayPal Business checkout, then submit the booking form. Mandrix attaches the PayPal order ID automatically and sends your class schedule and video classroom link by email.</p>
           </details>
           <details>
             <summary>Can I reschedule?</summary>
@@ -915,7 +915,7 @@
         <aside class="booking-sidebar">
           <p class="eyebrow">Booking Form</p>
           <h2>Book once. Get your schedule by email.</h2>
-          <p>Choose a program, pay securely through PayPal Business checkout, and receive your generated schedule and Google Meet details by email.</p>
+          <p>Choose a program, pay securely through PayPal Business checkout, and receive your generated schedule and video classroom link by email.</p>
           <div class="booking-guide compact-booking-guide">
             <article>
               <span>01</span>
@@ -929,7 +929,7 @@
             </article>
             <article>
               <span>03</span>
-              <strong>Receive Google Meet schedule</strong>
+              <strong>Receive video classroom schedule</strong>
               <p>Your generated schedule and class notes are sent by email.</p>
             </article>
           </div>
@@ -943,7 +943,7 @@
           <div class="booking-trust-stack" aria-label="Booking trust and confirmation">
             <article><strong>PayPal Business checkout</strong><span>Mandrix never stores your card details.</span></article>
             <article><strong>Auto schedule</strong><span>The selected date, time, and frequency generate the lesson plan.</span></article>
-            <article><strong>Google Meet email</strong><span>Student and Jane receive the same booking record automatically.</span></article>
+            <article><strong>Video classroom email</strong><span>Student and Jane receive the same booking record automatically.</span></article>
           </div>
         </aside>
 
@@ -1003,7 +1003,7 @@
             <strong id="amountValue">$0</strong>
             <small>Pay securely through PayPal Business checkout. After payment, your PayPal order ID is attached to this booking automatically.</small>
             <a class="btn primary payment-button" id="paymentPageLink" href="#paypalCheckoutPanel">Pay with PayPal</a>
-            <small class="payment-note">After submission, Mandrix emails the generated class schedule and Google Meet details to both sides.</small>
+            <small class="payment-note">After submission, Mandrix emails the generated class schedule and video classroom link to both sides.</small>
           </div>
           <label>Preferred Class Date<input name="date" type="date" required></label>
           <label>Preferred Class Time (please note your timezone above)
@@ -1062,7 +1062,7 @@
           <button class="btn primary" type="submit" id="submitBooking">Submit Booking</button>
           <div class="booking-output" id="bookingOutput" hidden>
             <p class="price" id="bookingResultTitle">Your paid booking has been submitted.</p>
-            <p id="bookingResultText">Mandrix has generated your schedule and sent the Google Meet details by email.</p>
+            <p id="bookingResultText">Mandrix has generated your schedule and sent the video classroom link by email.</p>
             <textarea id="bookingMessage" readonly></textarea>
             <div class="actions">
               <button class="btn secondary" type="button" id="copyMessage">Copy Message</button>
