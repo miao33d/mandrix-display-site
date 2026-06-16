@@ -82,7 +82,7 @@
     </div>
 
     <section class="section insights-index">
-      <div class="wrap insight-grid">
+      <div class="wrap insight-grid" id="dynamicInsightsGrid">
         <article class="insight-card">
           <span>Business Chinese</span>
           <h2>How to Politely Say "No" in a Chinese Business Meeting</h2>
@@ -146,6 +146,41 @@
           navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
         });
       }
+      const dynamicInsightsGrid = document.querySelector("#dynamicInsightsGrid");
+      const categoryLabels = {
+        "business-chinese": "Business Chinese",
+        "hsk-prep": "HSK Prep",
+        "daily-chinese": "Daily Chinese",
+        "sourcing-chinese": "Sourcing Chinese",
+        "culture-communication": "Culture & Communication",
+        "learning-method": "Learning Method",
+      };
+      const escapeHtml = (value) => String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+      async function loadDynamicInsights() {
+        if (!dynamicInsightsGrid) return;
+        try {
+          const response = await fetch("/api/seo-pages.js");
+          const data = await response.json();
+          if (!response.ok || !Array.isArray(data.pages) || !data.pages.length) return;
+          const cards = data.pages.slice(0, 24).map((page) => `
+            <article class="insight-card dynamic-insight-card">
+              <span>${escapeHtml(categoryLabels[page.category] || page.category || "Mandrix Insight")}</span>
+              <h2>${escapeHtml(page.title || "Mandrix Insight")}</h2>
+              <p>${escapeHtml(page.excerpt || page.description || "")}</p>
+              <a class="program-cta" href="/insights/${encodeURIComponent(page.category)}/${encodeURIComponent(page.slug)}">Read guide</a>
+            </article>
+          `).join("");
+          dynamicInsightsGrid.insertAdjacentHTML("afterbegin", cards);
+        } catch (error) {
+          console.info("Dynamic insights unavailable", error);
+        }
+      }
+      loadDynamicInsights();
     </script>
   </body>
 </html>

@@ -33,7 +33,6 @@ const topLevelFiles = [
   "analytics.js",
   "admin.html",
   "admin.js",
-  "sitemap.xml",
   "sourcing-spotlight.html",
   "specialty.html",
   "styles.css",
@@ -75,10 +74,7 @@ async function copyDirectoryFiltered(relativeDir, filter) {
   }
 }
 
-const redirects = `# Canonical domain for SEO.
-https://mandrix.top/* https://www.mandrix.top/:splat 301
-
-# Cloudflare Pages handles clean URLs automatically.
+const redirects = `# Cloudflare Pages handles clean URLs automatically.
 `;
 
 const headers = `/*
