@@ -100,6 +100,11 @@ const seoCategoryLabels = {
   "sourcing-chinese": "Sourcing Chinese",
   "culture-communication": "Culture & Communication",
   "learning-method": "Learning Method",
+  "supplier-communication": "Supplier Communication",
+  "workplace-mandarin": "Workplace Mandarin",
+  "chinese-for-amazon-sellers": "Chinese for Amazon Sellers",
+  "adult-mandarin-learning": "Adult Mandarin Learning",
+  "professional-chinese": "Professional Chinese",
 };
 
 const seoPresets = {
@@ -1431,7 +1436,16 @@ function cleanSeoSlug(value) {
 
 function cleanSeoCategory(value) {
   const category = cleanSeoSlug(value);
-  return seoCategoryLabels[category] ? category : "learning-method";
+  return category || "learning-method";
+}
+
+function seoCategoryLabel(value) {
+  const category = cleanSeoCategory(value);
+  return seoCategoryLabels[category] || category
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 function seoUrl(slug) {
@@ -1703,11 +1717,62 @@ function fillSeoForm(values) {
   updateSeoBuilder();
 }
 
+function seoRowsForPrompt(rows = [], label = "No data yet") {
+  if (!Array.isArray(rows) || !rows.length) return `- ${label}`;
+  return rows.slice(0, 8).map((row, index) => {
+    const name = row.label || row.path || row.title || "Unknown";
+    const metrics = [
+      row.count != null ? `${row.count} events` : "",
+      row.visitors != null ? `${row.visitors} visitors` : "",
+      row.ctaClicks != null ? `${row.ctaClicks} CTA clicks` : "",
+      row.paymentClicks != null ? `${row.paymentClicks} payment clicks` : "",
+      row.bookingSubmits != null ? `${row.bookingSubmits} submits` : "",
+      row.conversionRate != null ? `${row.conversionRate}% conversion` : "",
+    ].filter(Boolean).join(", ");
+    return `${index + 1}. ${name}${metrics ? ` — ${metrics}` : ""}`;
+  }).join("\n");
+}
+
+function seoDemandSnapshot() {
+  if (!analytics) {
+    return `No live Mandrix analytics loaded in this admin tab yet.
+Use general SEO demand, commercial intent, and likely buyer urgency for adult online Mandarin learners.
+Prefer topics that connect to a paid Mandrix path: business communication, supplier communication, HSK preparation, daily communication, workplace Mandarin, pronunciation/output blockers, or adult learning method.`;
+  }
+  return `Mandrix internal demand signals from the current analytics range:
+
+Course interest:
+${seoRowsForPrompt(analytics.courseInterest, "No course-interest data yet")}
+
+Content / article performance:
+${seoRowsForPrompt(analytics.articlePerformance?.length ? analytics.articlePerformance : analytics.pageGroups, "No content data yet")}
+
+Top pages:
+${seoRowsForPrompt(analytics.topPages, "No page data yet")}
+
+Article assists:
+${seoRowsForPrompt(analytics.contentAttribution, "No article-assist data yet")}
+
+CTA labels:
+${seoRowsForPrompt(analytics.ctaLabels, "No CTA data yet")}
+
+Use this data as directional evidence only. If data is thin, rely on search intent and conversion potential.`;
+}
+
 function seoAiPrompt() {
   return `你是 Mandrix 官网 SEO 页面文案助手。请只输出一个可复制的 JSON 代码块，不要解释。
 
 品牌：Mandrix，在线中文教学，高级、清楚、专业，面向成年学习者、商务人士、HSK 学生、采购/跨境/企业客户。
-目标：生成一个可直接粘贴进 Mandrix 后台的 SEO 页面。语言为英文。不要幼稚、不要夸张、不要长篇大论。
+目标：先做轻量选题判断，再生成一个可直接粘贴进 Mandrix 后台的 SEO 页面。语言为英文。不要幼稚、不要夸张、不要长篇大论。
+
+请先在内部完成这 4 步，但不要把分析过程输出：
+1. 根据搜索意图、商业价值、成年学习者痛点、以及下面的 Mandrix 站内数据，选择当前最值得发布的主题。
+2. 判断这个主题应该进入哪个细分 category。不要被固定分类限制，可以生成新的英文 slug 分类，例如 supplier-communication、workplace-mandarin、chinese-for-amazon-sellers、adult-mandarin-learning、professional-chinese、hsk-writing、mandarin-pronunciation。
+3. slug 要面向真实搜索词，而不是品牌自嗨词。
+4. 页面要服务转化：读完自然进入免费 AI level check 或课程页。
+
+Mandrix 当前数据线索：
+${seoDemandSnapshot()}
 
 固定输出格式如下，字段一个都不要少：
 \`\`\`json
@@ -1752,7 +1817,7 @@ Allowed image values only:
 - assets/corporate-training-hero.png
 
 Rules:
-- category must be one of: business-chinese, hsk-prep, daily-chinese, sourcing-chinese, culture-communication, learning-method
+- category should be the best-fit lowercase English slug. Existing broad options include business-chinese, hsk-prep, daily-chinese, sourcing-chinese, culture-communication, learning-method, but you may create a more precise category if search intent is stronger.
 - Do not invent prices. Use only the approved course prices and the free AI level check.
 - Do not promise fluency in unrealistic time.
 - Keep title readable, not keyword stuffing.
@@ -1826,8 +1891,8 @@ function seoValidation(data) {
     text: slug === data.slug?.replace(/\.html$/i, "") ? `URL OK: /insights/${cleanSeoCategory(data.category)}/${slug}` : `URL 会自动修正为 /insights/${cleanSeoCategory(data.category)}/${slug}`,
   });
   checks.push({
-    ok: Boolean(seoCategoryLabels[cleanSeoCategory(data.category)]),
-    text: `分区：${seoCategoryLabels[cleanSeoCategory(data.category)]}`,
+    ok: cleanSeoCategory(data.category).length >= 3,
+    text: `分区：${seoCategoryLabel(data.category)}`,
   });
   checks.push({
     ok: data.title.length >= 35 && data.title.length <= 65,

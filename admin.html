@@ -233,15 +233,21 @@
 
             <div class="seo-field-grid">
               <label>内容分区
-                <select name="category">
+                <input name="category" list="seoCategorySuggestions" placeholder="ai-will-suggest-category">
+                <datalist id="seoCategorySuggestions">
                   <option value="business-chinese">Business Chinese</option>
                   <option value="hsk-prep">HSK Prep</option>
                   <option value="daily-chinese">Daily Chinese</option>
                   <option value="sourcing-chinese">Sourcing Chinese</option>
                   <option value="culture-communication">Culture & Communication</option>
                   <option value="learning-method">Learning Method</option>
-                </select>
-                <small>前台会自动收进 Insights 对应分区。</small>
+                  <option value="supplier-communication">Supplier Communication</option>
+                  <option value="workplace-mandarin">Workplace Mandarin</option>
+                  <option value="chinese-for-amazon-sellers">Chinese for Amazon Sellers</option>
+                  <option value="adult-mandarin-learning">Adult Mandarin Learning</option>
+                  <option value="professional-chinese">Professional Chinese</option>
+                </datalist>
+                <small>AI 可按搜索需求和站内点击自动生成细分分区，例如 supplier-communication。</small>
               </label>
               <label>发布状态
                 <select name="status">

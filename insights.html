@@ -155,6 +155,11 @@
         "culture-communication": "Culture & Communication",
         "learning-method": "Learning Method",
       };
+      const categoryLabel = (value) => categoryLabels[value] || String(value || "Mandrix Insight")
+        .split("-")
+        .filter(Boolean)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
       const escapeHtml = (value) => String(value || "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -169,7 +174,7 @@
           if (!response.ok || !Array.isArray(data.pages) || !data.pages.length) return;
           const cards = data.pages.slice(0, 24).map((page) => `
             <article class="insight-card dynamic-insight-card">
-              <span>${escapeHtml(categoryLabels[page.category] || page.category || "Mandrix Insight")}</span>
+              <span>${escapeHtml(categoryLabel(page.category))}</span>
               <h2>${escapeHtml(page.title || "Mandrix Insight")}</h2>
               <p>${escapeHtml(page.excerpt || page.description || "")}</p>
               <a class="program-cta" href="/insights/${encodeURIComponent(page.category)}/${encodeURIComponent(page.slug)}">Read guide</a>

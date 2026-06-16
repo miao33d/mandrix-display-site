@@ -1132,7 +1132,7 @@ async function handleSeoPages(request, env) {
   if (!isAdmin(request, env)) return json({ error: "Admin password required" }, 401);
   const body = await request.json().catch(() => ({}));
   const payload = body.payload && typeof body.payload === "object" ? body.payload : body;
-  const category = clean(body.category || payload.category || "mandarin-learning");
+  const category = cleanSlug(body.category || payload.category || "mandarin-learning");
   const slug = cleanSlug(body.slug || payload.slug || payload.title || body.title);
   const title = clean(body.title || payload.title).slice(0, 140);
   const description = clean(body.description || payload.description).slice(0, 240);
