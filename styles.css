@@ -9556,6 +9556,104 @@ body:has(.insights-index) {
   background: #fff8ef;
 }
 
+/* Final SEO article CTA polish: keep the closing card premium, not poster-like. */
+.insight-article .article-cta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 230px);
+  align-items: center;
+  gap: clamp(22px, 4vw, 46px);
+  max-width: 780px;
+  margin-top: 48px;
+  padding: clamp(26px, 4vw, 38px);
+  background:
+    linear-gradient(135deg, #203447 0%, #2b5269 58%, #8a6136 100%);
+  border-radius: 18px;
+}
+
+.insight-article .article-cta-copy {
+  display: grid;
+  gap: 10px;
+}
+
+.insight-article .article-cta-kicker {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.insight-article .article-cta h2 {
+  max-width: 560px;
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(30px, 3.2vw, 46px);
+  line-height: 1.14;
+  text-align: left;
+}
+
+.insight-article .article-cta p {
+  max-width: 600px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(16px, 1.35vw, 19px);
+  line-height: 1.72;
+  text-align: left;
+}
+
+.insight-article .article-cta-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-self: end;
+  align-self: center;
+  width: 100%;
+  gap: 10px;
+  margin-top: 0;
+}
+
+.insight-article .article-cta .btn {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 11px 18px;
+  border-radius: 12px;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.insight-article .article-cta .btn.secondary {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 720px) {
+  .insight-article .article-cta {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .insight-article .article-cta-copy {
+    gap: 8px;
+  }
+
+  .insight-article .article-cta h2 {
+    font-size: clamp(28px, 8vw, 36px);
+  }
+
+  .insight-article .article-cta-actions {
+    justify-self: stretch;
+  }
+
+  .insight-article .article-cta .btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
 .related-insights {
   max-width: 780px;
   margin-top: 42px;

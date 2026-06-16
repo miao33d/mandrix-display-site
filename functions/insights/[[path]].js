@@ -140,8 +140,11 @@ function renderPage(row) {
         ${cardHtml ? `<div class="landing-card-grid">${cardHtml}</div>` : ""}
         ${sectionHtml}
         <div class="article-cta">
-          <h2>${escapeHtml(payload.ctaTitle || "Start with diagnosis")}</h2>
-          <p>${escapeHtml(payload.ctaBody || "Start with the free AI level check before choosing a paid program.")}</p>
+          <div class="article-cta-copy">
+            <p class="article-cta-kicker">${escapeHtml(payload.ctaEyebrow || "Start with diagnosis")}</p>
+            <h2>${escapeHtml(payload.ctaTitle || "Find the blocker before choosing a course.")}</h2>
+            <p>${escapeHtml(payload.ctaBody || "Use the free AI level check to identify your likely level, main blocker, and recommended Mandrix path before choosing a paid program.")}</p>
+          </div>
           <div class="article-cta-actions"><a class="btn primary" href="${escapeHtml(primaryHref)}">${escapeHtml(primaryLabel)}</a>${secondaryButton}</div>
         </div>
       </article>
