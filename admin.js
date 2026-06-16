@@ -116,8 +116,8 @@ const seoPresets = {
     image: "assets/sourcing-supplier-laptop.jpg",
     imageAlt: "Reviewing Mandarin learning materials on a laptop",
     chips: "Logic first, Adult learners, Real output, Free AI check",
-    primaryLabel: "Book $29 Diagnostic",
-    primaryHref: "/booking",
+    primaryLabel: "Start Free AI Level Check",
+    primaryHref: "/level-check",
     secondaryLabel: "View Courses",
     secondaryHref: "/courses",
     card1Title: "Diagnose the blocker",
@@ -146,8 +146,8 @@ const seoPresets = {
     image: "assets/sourcing-supplier-laptop.jpg",
     imageAlt: "Reviewing supplier details and sourcing messages on a laptop",
     chips: "Factory visits, Supplier WeChat, 1688 listings, MOQ and price terms",
-    primaryLabel: "Book $29 Diagnostic",
-    primaryHref: "/booking",
+    primaryLabel: "Start Free AI Level Check",
+    primaryHref: "/level-check",
     secondaryLabel: "View Sourcing Program",
     secondaryHref: "/specialty",
     card1Title: "Factory and market visits",
@@ -176,8 +176,8 @@ const seoPresets = {
     image: "assets/backup-business-meeting.jpg",
     imageAlt: "Business meeting desk with reports and working notes",
     chips: "WeChat and email, Meetings and calls, Negotiation, Professional tone",
-    primaryLabel: "Book $29 Diagnostic",
-    primaryHref: "/booking",
+    primaryLabel: "Start Free AI Level Check",
+    primaryHref: "/level-check",
     secondaryLabel: "View Business Programs",
     secondaryHref: "/courses",
     card1Title: "WeChat and professional email",
@@ -206,8 +206,8 @@ const seoPresets = {
     image: "assets/backup-study-desk.jpg",
     imageAlt: "Online HSK preparation desk with notes and video lesson",
     chips: "Level diagnosis, Grammar logic, Mock tests, Correction plan",
-    primaryLabel: "Book $29 HSK Diagnostic",
-    primaryHref: "/booking",
+    primaryLabel: "Start Free AI Level Check",
+    primaryHref: "/level-check",
     secondaryLabel: "View HSK Programs",
     secondaryHref: "/courses",
     card1Title: "Level diagnosis first",
@@ -259,11 +259,7 @@ const i18n = {
     renewalPanelTitle: "Renewal Follow-ups",
     renewalPanelIntro: "Students who need a continuation message before momentum drops.",
     noRenewals: "No renewal follow-ups due right now.",
-    copyRenewal: "Copy Renewal Email",
-    sendRenewal: "Send Renewal Email",
-    sendingRenewal: "Sending...",
-    renewalSent: "Renewal Sent",
-    renewalSendFailed: "Renewal email was not sent. It may have already been sent or email service may need checking.",
+    copyRenewal: "Copy Follow-up Email",
     clearAnalytics: "Clear analytics",
     clearAnalyticsConfirm: "Clear all website analytics events? This will not delete booking records.",
     clearingAnalytics: "Clearing...",
@@ -336,11 +332,7 @@ const i18n = {
     renewalPanelTitle: "续课漏斗提醒",
     renewalPanelIntro: "这些学员需要现在跟进，避免课包结束后自然流失。",
     noRenewals: "当前没有需要跟进的续课提醒。",
-    copyRenewal: "复制续课邮件",
-    sendRenewal: "发送续课邮件",
-    sendingRenewal: "发送中...",
-    renewalSent: "已发送续课邮件",
-    renewalSendFailed: "续课邮件未发送，可能已发送过或邮件服务需要检查。",
+    copyRenewal: "复制跟进邮件",
     clearAnalytics: "清空浏览数据",
     clearAnalyticsConfirm: "确定清空所有浏览统计吗？此操作不会删除预约订单。",
     clearingAnalytics: "清空中...",
@@ -750,11 +742,11 @@ function renderSummary(rows) {
   const todayRows = lessons.filter((row) => row.date === todayIso()).length;
   const renewalCount = renewalRows(rows).length;
   summary.innerHTML = `
-    <div><strong>${rows.length}</strong><span>${t("total")}</span></div>
-    <div><strong>${active}</strong><span>${t("active")}</span></div>
-    <div><strong>${paidPending || rows.filter(isPaidLike).length}</strong><span>${t("paidPending")}</span></div>
-    <div><strong>${todayRows}</strong><span>${t("lessonsToday")}</span></div>
-    <div><strong>${renewalCount}</strong><span>${t("renewalDue")}</span></div>
+    <div><span>${t("total")}</span><strong>${rows.length}</strong><small>${adminLang === "zh" ? "全部预约记录" : "All booking records"}</small></div>
+    <div><span>${t("active")}</span><strong>${active}</strong><small>${adminLang === "zh" ? "未完成课程" : "Open programs"}</small></div>
+    <div><span>${t("paidPending")}</span><strong>${paidPending || rows.filter(isPaidLike).length}</strong><small>${adminLang === "zh" ? "需核验/已付款" : "Paid or pending check"}</small></div>
+    <div><span>${t("lessonsToday")}</span><strong>${todayRows}</strong><small>${adminLang === "zh" ? "北京时间今日" : "Beijing time today"}</small></div>
+    <div><span>${t("renewalDue")}</span><strong>${renewalCount}</strong><small>${adminLang === "zh" ? "建议跟进" : "Recommended follow-ups"}</small></div>
   `;
 }
 
@@ -765,7 +757,7 @@ function renderRenewalPanel(rows) {
     <div class="renewal-panel-head">
       <div>
         <p class="eyebrow">${t("renewalPanelTitle")}</p>
-        <h2>${adminLang === "zh" ? "先把现有学员的钱收好" : "Protect current student revenue first"}</h2>
+        <h2>${adminLang === "zh" ? "维护现有学员续课节奏" : "Protect current student momentum"}</h2>
       </div>
       <p>${t("renewalPanelIntro")}</p>
     </div>
@@ -778,7 +770,6 @@ function renderRenewalPanel(rows) {
             <p>${escapeHtml(booking.course)}</p>
             <small>${escapeHtml(renewal.timing)}</small>
             <button class="btn secondary copy-renewal" type="button">${t("copyRenewal")}</button>
-            <button class="btn primary send-renewal" type="button">${t("sendRenewal")}</button>
           </article>
         `).join("")}
       </div>
@@ -843,7 +834,14 @@ function renderBookings() {
   renderRenewalPanel(bookings);
   renderLessons();
   if (!rows.length) {
-    list.innerHTML = `<p>${t("noBookings")}</p>`;
+    list.innerHTML = `
+      <div class="admin-empty-state">
+        <span>${adminLang === "zh" ? "暂无预约" : "No bookings yet"}</span>
+        <strong>${t("noBookings")}</strong>
+        <p>${adminLang === "zh" ? "正式预约会在学生完成 PayPal 付款并提交表单后出现在这里。测试记录已清理，不会影响运营判断。" : "Real bookings will appear here after a student completes PayPal checkout and submits the booking form. Test records have been removed."}</p>
+        <a class="btn secondary" href="/booking" target="_blank" rel="noopener">${adminLang === "zh" ? "查看预约页" : "View booking page"}</a>
+      </div>
+    `;
     return;
   }
   list.innerHTML = rows.map((booking) => {
@@ -890,7 +888,6 @@ function renderBookings() {
           </div>
           <div class="renewal-actions">
             <button class="btn secondary copy-renewal" type="button">${t("copyRenewal")}</button>
-            <button class="btn primary send-renewal" type="button">${t("sendRenewal")}</button>
           </div>
         </div>
       ` : ""}
@@ -906,7 +903,7 @@ function renderBookings() {
           </select>
         </label>
         <label>${t("meeting")}
-          <input data-field="meetingLink" value="${escapeHtml(booking.meetingLink || "")}" placeholder="Tencent Meeting / Google Meet link">
+          <input data-field="meetingLink" value="${escapeHtml(booking.meetingLink || "")}" placeholder="Video classroom link">
         </label>
         <label>${t("teacherNotes")}
           <textarea data-field="teacherNotes" placeholder="${t("teacherNotes")}">${escapeHtml(booking.teacherNotes || "")}</textarea>
@@ -928,7 +925,14 @@ function renderLevelChecks() {
     ? `${levelChecks.length} AI level check lead${levelChecks.length === 1 ? "" : "s"} loaded.`
     : "No AI level checks yet.";
   if (!levelChecks.length) {
-    levelChecksList.innerHTML = "<p>No AI level checks yet.</p>";
+    levelChecksList.innerHTML = `
+      <div class="admin-empty-state">
+        <span>AI Level Check</span>
+        <strong>${adminLang === "zh" ? "暂无测评线索" : "No level-check leads yet"}</strong>
+        <p>${adminLang === "zh" ? "用户提交免费 AI 测评后，会在这里看到邮箱、目标、报告摘要和输出样本。" : "When a learner submits the free AI level check, their email, goal, report summary, and output sample appear here."}</p>
+        <a class="btn secondary" href="/level-check" target="_blank" rel="noopener">${adminLang === "zh" ? "查看测评页" : "View level check"}</a>
+      </div>
+    `;
     return;
   }
   levelChecksList.innerHTML = levelChecks.map((item) => {
@@ -978,7 +982,7 @@ async function loadLevelChecks() {
     return;
   }
   if (!response.ok) {
-    levelChecksStatus.textContent = "AI level checks could not load. Make sure the Supabase table has been created.";
+    levelChecksStatus.textContent = "AI level checks could not load. Please check the Cloudflare D1 setup.";
     levelChecksList.innerHTML = "<p>Load failed.</p>";
     return;
   }
@@ -1545,7 +1549,7 @@ ${jsonLd}
             <a href="/about">About</a>
             <a href="/insights">Insights</a>
             <a href="/faq">FAQ</a>
-            <a class="nav-cta" href="/booking">Book $29 Diagnostic</a>
+            <a class="nav-cta" href="/level-check">Free AI Level Check</a>
             <a class="lang-switch" href="/zh">中文</a>
           </nav>
           <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -1562,7 +1566,7 @@ ${jsonLd}
               <h1>${escapeHtml(data.h1)}</h1>
               <p class="lead">${escapeHtml(data.lead)}</p>
               <div class="actions">
-                <a class="btn primary" href="${escapeHtml(data.primaryHref || "/booking")}">${escapeHtml(data.primaryLabel || "Book $29 Diagnostic")}</a>
+                <a class="btn primary" href="${escapeHtml(data.primaryHref || "/level-check")}">${escapeHtml(data.primaryLabel || "Start Free AI Level Check")}</a>
 ${secondaryButton}
               </div>
               <div class="landing-proof">
@@ -1598,7 +1602,7 @@ ${cardHtml}
           <h2>${escapeHtml(data.ctaTitle)}</h2>
           <p>${escapeHtml(data.ctaBody)}</p>
         </div>
-        <a class="btn primary" href="${escapeHtml(data.primaryHref || "/booking")}">${escapeHtml(data.primaryLabel || "Book $29 Diagnostic")}</a>
+        <a class="btn primary" href="${escapeHtml(data.primaryHref || "/level-check")}">${escapeHtml(data.primaryLabel || "Start Free AI Level Check")}</a>
       </div>
     </section>
 
@@ -1660,12 +1664,9 @@ function seoPublishPackage() {
 ${imageNote}
 
 请 Codex 执行：
-1. 如果后台发布按钮无法使用，再用这个 HTML 手动创建页面。
-2. 正常情况下请优先使用“发布到 Insights”，它会自动写入 Supabase，并进入动态 sitemap。
-3. 运行 node --check、JSON-LD 校验、npx vercel build --yes。
-4. 用 Playwright 截桌面和手机图，确认排版不挤、不重图。
-5. npx vercel --prod 部署正式站。
-6. 部署后清空 analytics，并保持我的电脑不记录。
+1. 后台发布按钮会写入 Cloudflare D1，并自动进入 Insights 与动态 sitemap。
+2. 发布后复制正式链接，到 Google Search Console 做 URL 检查。
+3. 检查标题、描述、主图、CTA 是否符合 Mandrix 品牌风格。
 
 Sitemap 条目：
 ${buildSeoSitemapEntry(data)}
@@ -1707,8 +1708,8 @@ function seoAiPrompt() {
   "image": "assets/backup-business-meeting.jpg",
   "imageAlt": "Short image alt text",
   "chips": "Chip one, Chip two, Chip three, Chip four",
-  "primaryLabel": "Book $29 Diagnostic",
-  "primaryHref": "/booking",
+  "primaryLabel": "Start Free AI Level Check",
+  "primaryHref": "/level-check",
   "secondaryLabel": "View Courses",
   "secondaryHref": "/courses",
   "card1Title": "Card 1 title",
@@ -1773,8 +1774,8 @@ function normalizeSeoAiData(data) {
   cleaned.slug = cleanSeoSlug(cleaned.slug);
   cleaned.category = cleanSeoCategory(cleaned.category);
   cleaned.status = cleaned.status === "draft" ? "draft" : "published";
-  cleaned.primaryLabel ||= "Book $29 Diagnostic";
-  cleaned.primaryHref ||= "/booking";
+  cleaned.primaryLabel ||= "Start Free AI Level Check";
+  cleaned.primaryHref ||= "/level-check";
   cleaned.secondaryLabel ||= "View Courses";
   cleaned.secondaryHref ||= "/courses";
   if (!seoForm?.elements.image?.querySelector(`option[value="${CSS.escape(cleaned.image)}"]`)) {
@@ -1932,7 +1933,7 @@ async function publishSeoLive() {
       seoLiveStatus.innerHTML = `已发布：<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(url)}</a><br>下一步：复制这个地址，到 Google Search Console 做 URL 检查。`;
     }
   } catch (error) {
-    if (seoLiveStatus) seoLiveStatus.textContent = `发布失败：${error.message}。如果提示 seo_pages 不存在，需要先执行我给你的 Supabase SQL。`;
+    if (seoLiveStatus) seoLiveStatus.textContent = `发布失败：${error.message}。请检查 Cloudflare D1 和后台密码配置。`;
     alert(`发布失败：${error.message}`);
   } finally {
     if (seoPublishLive) {

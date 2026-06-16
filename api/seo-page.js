@@ -64,7 +64,7 @@ function renderArticle(page) {
           <h2>${escapeHtml(payload.ctaTitle || "Start with the right diagnosis")}</h2>
           <p>${escapeHtml(payload.ctaBody || "The fastest way to improve is to locate the exact blocker first, then build a learning path around it.")}</p>
           <div class="actions">
-            <a class="btn primary" href="${escapeHtml(payload.primaryHref || "/booking")}">${escapeHtml(payload.primaryLabel || "Book $29 Diagnostic")}</a>
+            <a class="btn primary" href="${escapeHtml(payload.primaryHref || "/level-check")}">${escapeHtml(payload.primaryLabel || "Start Free AI Level Check")}</a>
             <a class="btn secondary" href="${escapeHtml(payload.secondaryHref || "/courses")}">${escapeHtml(payload.secondaryLabel || "View Courses")}</a>
           </div>
         </section>

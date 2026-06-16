@@ -1091,6 +1091,53 @@ p {
   font-weight: 800;
 }
 
+.admin-summary small {
+  display: block;
+  margin-top: 8px;
+  color: #7b8799;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.admin-empty-state {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  padding: 28px;
+  border: 1px solid rgba(32, 40, 58, 0.1);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(247, 251, 255, 0.84));
+  box-shadow: 0 16px 42px rgba(31, 45, 70, 0.06);
+}
+
+.admin-empty-state span {
+  width: fit-content;
+  padding: 5px 9px;
+  color: #42536b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(235, 244, 252, 0.9);
+  border: 1px solid #d7e8f6;
+  border-radius: 999px;
+}
+
+.admin-empty-state strong {
+  color: #171a24;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.1;
+}
+
+.admin-empty-state p {
+  max-width: 720px;
+  margin: 0;
+  color: #60708e;
+  line-height: 1.6;
+}
+
 .booking-list {
   display: grid;
   gap: 18px;
