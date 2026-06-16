@@ -75,7 +75,10 @@ async function copyDirectoryFiltered(relativeDir, filter) {
   }
 }
 
-const redirects = `# Cloudflare Pages handles clean URLs automatically.
+const redirects = `# Canonical domain for SEO.
+https://mandrix.top/* https://www.mandrix.top/:splat 301
+
+# Cloudflare Pages handles clean URLs automatically.
 `;
 
 const headers = `/*
