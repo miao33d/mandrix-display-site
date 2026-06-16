@@ -73,6 +73,7 @@ function renderPage(row) {
     image: absoluteAssetUrl(image),
     datePublished: row.created_at,
     dateModified: row.updated_at || row.created_at,
+    mainEntityOfPage: url,
     author: { "@type": "Person", name: "Jane Chen" },
     publisher: { "@type": "EducationalOrganization", name: "Mandrix", url: SITE_URL },
     inLanguage: "en",
