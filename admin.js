@@ -95,20 +95,6 @@ const seoUsedImages = {
 };
 
 const seoImageLibrary = [
-  { value: "assets/sourcing-supplier-laptop.jpg", label: "Sourcing supplier laptop", topic: "Sourcing / supplier communication", alt: "Supplier sourcing communication on laptop" },
-  { value: "assets/backup-business-meeting.jpg", label: "Business meeting desk", topic: "Business Chinese / meetings", alt: "Business meeting desk with reports and working notes" },
-  { value: "assets/backup-study-desk.jpg", label: "Study desk", topic: "HSK / study planning", alt: "Online HSK preparation desk with notes and video lesson" },
-  { value: "assets/course-daily.jpg", label: "Daily Chinese", topic: "Daily Chinese / conversations", alt: "Adult learner practice for daily Chinese conversation" },
-  { value: "assets/course-diagnostic-online.webp", label: "Diagnostic online", topic: "Free AI check / diagnosis", alt: "Online Chinese diagnostic session on a laptop" },
-  { value: "assets/corporate-training-hero.png", label: "Corporate training", topic: "Corporate training", alt: "Corporate Chinese training session" },
-  { value: "assets/backup-online-lesson.jpg", label: "Online lesson", topic: "Flexible online lesson", alt: "Adult online Chinese lesson on screen" },
-  { value: "assets/backup-warehouse.jpg", label: "Warehouse sourcing", topic: "Sourcing / procurement", alt: "Warehouse sourcing and procurement scene" },
-  { value: "assets/mandrix-scene-1on1.jpg", label: "1-on-1 lesson", topic: "Private lesson", alt: "One-on-one Mandarin lesson scene" },
-  { value: "assets/mandrix-scene-daily.jpg", label: "Daily scene", topic: "Daily communication", alt: "Daily Chinese learning scene" },
-  { value: "assets/mandrix-scene-hsk.jpg", label: "HSK scene", topic: "HSK coaching", alt: "HSK coaching scene with notes" },
-  { value: "assets/mandrix-scene-method.jpg", label: "Method scene", topic: "Learning method", alt: "Mandrix learning method visual" },
-  { value: "assets/mandrix-scene-reception.jpg", label: "Reception scene", topic: "Corporate / office", alt: "Professional reception and office learning scene" },
-  { value: "assets/jane-portrait.jpg", label: "Jane portrait", topic: "Founder / about", alt: "Jane Chen professional portrait" },
   ...[
     ["business-chinese", "Business Chinese"],
     ["supplier-communication", "Supplier Communication"],
@@ -158,7 +144,7 @@ const seoPresets = {
     h1: "Build Chinese you can actually use.",
     lead: "A focused Mandrix page for adult learners who want Chinese explained through logic, structure, and real output.",
     articleBody: "This guide should explain one clear Chinese learning problem, show how Mandrix diagnoses it, and give the learner a practical next step. Keep the writing specific, grounded, and useful for adults.",
-    image: "assets/sourcing-supplier-laptop.jpg",
+    image: "assets/seo-library/learning-method-01.svg",
     imageAlt: "Reviewing Mandarin learning materials on a laptop",
     chips: "Logic first, Adult learners, Real output, Free AI check",
     primaryLabel: "Start Free AI Level Check",
@@ -188,7 +174,7 @@ const seoPresets = {
     h1: "Stop relying on Google Translate with your suppliers.",
     lead: "For buyers, Amazon sellers, and importers who deal with Chinese factories daily. Learn the Mandarin that actually comes up: MOQ, samples, lead time, quality issues, and price negotiation.",
     articleBody: "Sourcing conversations are different from general Mandarin. The goal is not to sound impressive. The goal is to ask accurate questions, reduce misunderstanding, and protect business decisions.\n\nA strong sourcing Chinese lesson should include supplier WeChat phrases, factory visit questions, 1688 listing language, sample requests, MOQ discussion, payment terms, production timing, and quality issue wording.\n\nMandrix starts by diagnosing the exact sourcing situations you face, then builds reusable Chinese templates around them.",
-    image: "assets/sourcing-supplier-laptop.jpg",
+    image: "assets/seo-library/sourcing-chinese-01.svg",
     imageAlt: "Reviewing supplier details and sourcing messages on a laptop",
     chips: "Factory visits, Supplier WeChat, 1688 listings, MOQ and price terms",
     primaryLabel: "Start Free AI Level Check",
@@ -218,7 +204,7 @@ const seoPresets = {
     h1: "Sound professional in Chinese, not just grammatically correct.",
     lead: "Business Chinese is not vocabulary. Tone, structure, and cultural context decide whether your message sounds clear and trustworthy or blunt and unprepared.",
     articleBody: "Business Chinese requires more than correct grammar. In real work, the same sentence can sound confident, abrupt, vague, or overly casual depending on structure and tone.\n\nMandrix helps professionals work with real materials: WeChat messages, emails, meeting notes, proposals, presentations, and follow-up wording. The focus is to understand why Chinese business communication works the way it does, then build reusable templates.\n\nStart with a diagnostic if you need to know whether your blocker is grammar, vocabulary, tone, pronunciation, or cultural context.",
-    image: "assets/backup-business-meeting.jpg",
+    image: "assets/seo-library/business-chinese-01.svg",
     imageAlt: "Business meeting desk with reports and working notes",
     chips: "WeChat and email, Meetings and calls, Negotiation, Professional tone",
     primaryLabel: "Start Free AI Level Check",
@@ -248,7 +234,7 @@ const seoPresets = {
     h1: "Pass your HSK exam without just drilling vocabulary lists.",
     lead: "Most students struggle with HSK because they never understood the grammar patterns behind the exam questions. Mandrix decodes the logic so the test format has no surprises.",
     articleBody: "HSK preparation works best when vocabulary, grammar, listening, reading, and mock test correction are connected. Memorizing lists may help short term, but it often breaks down when the exam asks the same pattern in a new way.\n\nMandrix starts with a level diagnosis, then builds a study plan around the learner's target level, weak grammar points, listening habits, and reading speed.\n\nThe goal is exam readiness and practical Chinese at the same time.",
-    image: "assets/backup-study-desk.jpg",
+    image: "assets/seo-library/hsk-prep-01.svg",
     imageAlt: "Online HSK preparation desk with notes and video lesson",
     chips: "Level diagnosis, Grammar logic, Mock tests, Correction plan",
     primaryLabel: "Start Free AI Level Check",
@@ -1595,30 +1581,42 @@ function buildSeoHtml(rawData = seoFields()) {
   const image = data.imageUploadTarget || data.image || seoPresets.custom.image;
   const title = data.title || seoPresets.custom.title;
   const description = data.description || seoPresets.custom.description;
-  const chips = splitSeoList(data.chips);
-  const cards = seoCardData(data);
+  const category = cleanSeoCategory(data.category);
+  const h1 = data.h1 || title.replace(/\s*\|\s*Mandrix\s*$/i, "");
+  const lead = data.lead || description;
+  const chips = splitSeoList(data.chips || category);
+  const cards = seoCardData(data).filter((card) => card.title || card.text);
+  const primaryLabel = data.primaryLabel || "Start Free AI Level Check";
+  const primaryHref = data.primaryHref || "/level-check";
+  const secondaryLabel = data.secondaryLabel || "View Courses";
+  const secondaryHref = data.secondaryHref || "/courses";
   const schema = {
     "@context": "https://schema.org",
-    "@type": "Course",
-    name: title.replace(/\s*\|\s*Mandrix\s*$/i, ""),
+    "@type": "BlogPosting",
+    headline: title.replace(/\s*\|\s*Mandrix\s*$/i, ""),
     description,
-    provider: {
-      "@type": "EducationalOrganization",
-      name: "Mandrix",
-      url: "https://www.mandrix.top/",
-    },
     url: pageUrl,
+    image: seoImageUrl(image),
+    datePublished: new Date().toISOString(),
+    dateModified: new Date().toISOString(),
+    mainEntityOfPage: pageUrl,
+    author: { "@type": "Person", name: "Jane Chen" },
+    publisher: { "@type": "EducationalOrganization", name: "Mandrix", url: "https://www.mandrix.top" },
     inLanguage: "en",
   };
-  const jsonLd = JSON.stringify(schema, null, 8);
-  const chipHtml = chips.map((chip) => `                <span>${escapeHtml(chip)}</span>`).join("\n");
-  const cardHtml = cards.map((card, index) => `        <article class="landing-card">
-          <span>${String(index + 1).padStart(2, "0")}</span>
-          <h3>${escapeHtml(card.title)}</h3>
-          <p>${escapeHtml(card.text)}</p>
-        </article>`).join("\n");
-  const secondaryButton = data.secondaryLabel && data.secondaryHref
-    ? `                <a class="btn secondary" href="${escapeHtml(data.secondaryHref)}">${escapeHtml(data.secondaryLabel)}</a>`
+  const jsonLd = JSON.stringify(schema);
+  const chipHtml = chips.map((chip) => `<span>${escapeHtml(chip)}</span>`).join("");
+  const cardHtml = cards.map((card, index) => `
+          <article class="landing-card">
+            <span>${String(index + 1).padStart(2, "0")}</span>
+            <h2>${escapeHtml(card.title || "Mandrix focus")}</h2>
+            <p>${escapeHtml(card.text || "")}</p>
+          </article>`).join("");
+  const secondaryButton = secondaryLabel && secondaryHref
+    ? `<a class="btn secondary" href="${escapeHtml(secondaryHref)}">${escapeHtml(secondaryLabel)}</a>`
+    : "";
+  const sectionHtml = data.sectionTitle || data.sectionBody
+    ? `<h2>${escapeHtml(data.sectionTitle || "Mandrix note")}</h2>${data.sectionBody ? `<p>${escapeHtml(data.sectionBody)}</p>` : ""}`
     : "";
 
   return `<!doctype html>
@@ -1628,131 +1626,55 @@ function buildSeoHtml(rawData = seoFields()) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${escapeHtml(title)}</title>
     <meta name="description" content="${escapeHtml(description)}">
-    <link rel="canonical" href="${pageUrl}">
+    <link rel="canonical" href="${escapeHtml(pageUrl)}">
     <meta property="og:title" content="${escapeHtml(title)}">
     <meta property="og:description" content="${escapeHtml(description)}">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="${pageUrl}">
-    <meta property="og:image" content="${seoImageUrl(image)}">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="${escapeHtml(pageUrl)}">
+    <meta property="og:image" content="${escapeHtml(seoImageUrl(image))}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${escapeHtml(title)}">
     <meta name="twitter:description" content="${escapeHtml(description)}">
-    <meta name="twitter:image" content="${seoImageUrl(image)}">
-    <link rel="icon" type="image/png" href="assets/mandrix-logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <script type="application/ld+json">
-${jsonLd}
-    </script>
+    <meta name="twitter:image" content="${escapeHtml(seoImageUrl(image))}">
+    <link rel="icon" type="image/png" href="/assets/mandrix-logo-128.png">
+    <link rel="stylesheet" href="/styles.min.css">
+    <script type="application/ld+json">${jsonLd}<\/script>
   </head>
-  <body class="landing-page">
-    <div class="shell">
+  <body>
+    <div class="shell insight-shell">
       <header class="nav" translate="no">
         <div class="nav-inner">
-          <a class="brand" href="/">
-            <img src="assets/mandrix-logo.png" alt="Mandrix logo">
-            <span class="brand-word">
-              <span class="brand-name">Mandrix</span>
-              <span class="brand-line">Chinese, decoded.</span>
-            </span>
-          </a>
-          <nav class="nav-links" id="navLinks">
-            <a href="/method">Method</a>
-            <a href="/courses">Courses</a>
-            <a href="/corporate">Corporate</a>
-            <a href="/about">About</a>
-            <a href="/insights">Insights</a>
-            <a href="/faq">FAQ</a>
-            <a class="nav-cta" href="/level-check">Free AI Level Check</a>
-            <a class="lang-switch" href="/zh">中文</a>
-          </nav>
-          <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
-            <span></span><span></span><span></span>
-          </button>
+          <a class="brand" href="/"><img src="/assets/mandrix-logo-128.png" alt="Mandrix logo" width="128" height="128" decoding="async"><span class="brand-word"><span class="brand-name">Mandrix</span><span class="brand-line">Chinese, decoded.</span></span></a>
+          <nav class="nav-links" id="navLinks"><a href="/method">Method</a><a href="/courses">Courses</a><a href="/corporate">Corporate</a><a href="/about">About</a><a href="/insights">Insights</a><a href="/faq">FAQ</a><a class="nav-cta" href="/level-check">Free AI Level Check</a><a class="lang-switch" href="/zh">中文</a></nav>
+          <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
         </div>
       </header>
-
-      <main id="top">
-        <section class="landing-hero">
-          <div class="wrap landing-hero-grid">
-            <div class="landing-copy">
-              <p class="eyebrow">${escapeHtml(data.eyebrow)}</p>
-              <h1>${escapeHtml(data.h1)}</h1>
-              <p class="lead">${escapeHtml(data.lead)}</p>
-              <div class="actions">
-                <a class="btn primary" href="${escapeHtml(data.primaryHref || "/level-check")}">${escapeHtml(data.primaryLabel || "Start Free AI Level Check")}</a>
-${secondaryButton}
-              </div>
-              <div class="landing-proof">
-${chipHtml}
-              </div>
-            </div>
-            <div class="landing-visual">
-              <img src="${escapeHtml(image)}" alt="${escapeHtml(data.imageAlt)}">
-            </div>
-          </div>
-        </section>
-      </main>
     </div>
-
-    <section class="section">
-      <div class="wrap landing-card-grid">
-${cardHtml}
-      </div>
-    </section>
-
-    <section class="section alt">
-      <div class="wrap landing-content">
-        <p class="eyebrow">${escapeHtml(data.sectionEyebrow)}</p>
-        <h2>${escapeHtml(data.sectionTitle)}</h2>
-        <p>${escapeHtml(data.sectionBody)}</p>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="wrap landing-cta-panel">
-        <div>
-          <p class="eyebrow">${escapeHtml(data.ctaEyebrow)}</p>
-          <h2>${escapeHtml(data.ctaTitle)}</h2>
-          <p>${escapeHtml(data.ctaBody)}</p>
+    <main class="wrap insight-article dynamic-insight-article">
+      <a class="back-link" href="/insights">← All insights</a>
+      <p class="eyebrow">${escapeHtml(data.eyebrow || category)}</p>
+      <div class="article-meta"><span>Mandrix Insights</span><span>${escapeHtml(category.replace(/-/g, " "))}</span><span>4 min read</span></div>
+      <h1>${escapeHtml(h1)}</h1>
+      <p class="article-dek">${escapeHtml(lead)}</p>
+      <div class="landing-proof">${chipHtml}</div>
+      <figure class="article-hero-image"><img src="/${escapeHtml(image).replace(/^\/+/, "")}" alt="${escapeHtml(data.imageAlt || title)}"></figure>
+      <div class="article-summary"><strong>In this guide</strong><p>${escapeHtml(lead)}</p></div>
+      <div class="article-body">
+        ${renderParagraphs(data.articleBody || lead)}
+        ${cardHtml ? `<div class="landing-card-grid">${cardHtml}</div>` : ""}
+        ${sectionHtml}
+        <div class="article-cta">
+          <h2>${escapeHtml(data.ctaTitle || "Start with diagnosis")}</h2>
+          <p>${escapeHtml(data.ctaBody || "Start with the free AI level check before choosing a paid program.")}</p>
+          <div class="article-cta-actions"><a class="btn primary" href="${escapeHtml(primaryHref)}">${escapeHtml(primaryLabel)}</a>${secondaryButton}</div>
         </div>
-        <a class="btn primary" href="${escapeHtml(data.primaryHref || "/level-check")}">${escapeHtml(data.primaryLabel || "Start Free AI Level Check")}</a>
       </div>
-    </section>
-
-    <footer class="footer">
-      <div class="wrap">
-        <div class="footer-brand">
-          <strong>Mandrix</strong>
-          <span>Chinese, decoded.</span>
-          <p>Clearer Chinese for adult learners.</p>
-        </div>
-        <nav class="footer-links" aria-label="Contact links">
-          <a href="/method">Method</a>
-          <a href="/courses">Courses</a>
-          <a href="/corporate">Corporate</a>
-          <a href="/insights">Insights</a>
-          <a href="/booking">Booking</a>
-          <a href="mailto:Jane.Mandrix@outlook.com">Jane.Mandrix@outlook.com</a>
-          <a href="https://wa.me/message/S6GHIZYKAV4ZH1" translate="no">WhatsApp</a>
-        </nav>
-        <span>© 2026 Mandrix | Jane Chen. All Rights Reserved.</span>
-      </div>
-    </footer>
-    <script src="analytics.js"></script>
-    <script>
-      const navToggle = document.querySelector("#navToggle");
-      const navLinks = document.querySelector("#navLinks");
-      navToggle?.addEventListener("click", () => {
-        const isOpen = navLinks.classList.toggle("nav-open");
-        navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-      });
-    </script>
+    </main>
+    <footer class="footer"><div class="wrap"><div class="footer-brand"><strong>Mandrix</strong><span>Chinese, decoded.</span><p>Clearer Chinese for adult learners.</p></div><nav class="footer-links" aria-label="Contact links"><a href="/method">Method</a><a href="/courses">Courses</a><a href="/corporate">Corporate</a><a href="/insights">Insights</a><a href="/booking">Booking</a><a href="mailto:Jane.Mandrix@outlook.com">Jane.Mandrix@outlook.com</a></nav><span>© 2026 Mandrix | Jane Chen. All Rights Reserved.</span></div></footer>
+    <script src="/analytics.js" defer><\/script>
+    <script>const navToggle=document.querySelector("#navToggle");const navLinks=document.querySelector("#navLinks");navToggle?.addEventListener("click",()=>{const isOpen=navLinks.classList.toggle("nav-open");navToggle.setAttribute("aria-expanded",isOpen?"true":"false")});<\/script>
   </body>
-</html>
-`;
+</html>`;
 }
 
 function buildSeoSitemapEntry(data = seoFields()) {
@@ -1872,7 +1794,7 @@ ${seoDemandSnapshot()}
   "h1": "Clear page headline.",
   "lead": "2-3 sentence hero paragraph for adult learners.",
   "articleBody": "Full article body. 500-900 words. Include concrete examples, FAQs, and internal link suggestions in natural prose.",
-  "image": "assets/backup-business-meeting.jpg",
+  "image": "assets/seo-library/business-chinese-01.svg",
   "imageAlt": "Short image alt text",
   "chips": "Chip one, Chip two, Chip three, Chip four",
   "primaryLabel": "Start Free AI Level Check",
@@ -1895,21 +1817,9 @@ ${seoDemandSnapshot()}
 \`\`\`
 
 Allowed image values only:
-- assets/sourcing-supplier-laptop.jpg
-- assets/backup-business-meeting.jpg
-- assets/backup-study-desk.jpg
-- assets/course-daily.jpg
-- assets/course-diagnostic-online.webp
-- assets/corporate-training-hero.png
-- assets/backup-online-lesson.jpg
-- assets/backup-warehouse.jpg
-- assets/mandrix-scene-1on1.jpg
-- assets/mandrix-scene-daily.jpg
-- assets/mandrix-scene-hsk.jpg
-- assets/mandrix-scene-method.jpg
-- assets/mandrix-scene-reception.jpg
-- assets/jane-portrait.jpg
-- Any generated Mandrix SEO library image path matching assets/seo-library/[category]-[number].svg
+- Use only Mandrix SEO library images matching assets/seo-library/[category]-[number].svg
+- Examples: assets/seo-library/business-chinese-01.svg, assets/seo-library/supplier-communication-03.svg, assets/seo-library/hsk-prep-08.svg
+- Do not use homepage course images, Jane photos, or user-provided scene photos.
 
 Rules:
 - category should be the best-fit lowercase English slug. Existing broad options include business-chinese, hsk-prep, daily-chinese, sourcing-chinese, culture-communication, learning-method, but you may create a more precise category if search intent is stronger.
