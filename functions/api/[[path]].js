@@ -995,6 +995,11 @@ function renderParagraphs(value) {
     .join("");
 }
 
+function readingMinutes(value) {
+  const words = clean(value).split(/\s+/).filter(Boolean).length;
+  return Math.max(4, Math.ceil(words / 170));
+}
+
 function renderDynamicSeoPage(row) {
   const page = seoPageToClient(row);
   const payload = page.payload || {};
@@ -1005,7 +1010,6 @@ function renderDynamicSeoPage(row) {
   const lead = clean(payload.lead || page.excerpt || description);
   const image = clean(payload.imageUploadTarget || page.image || payload.image || "assets/backup-study-desk.jpg");
   const imageAlt = clean(page.imageAlt || payload.imageAlt || title);
-  const chips = splitList(payload.chips || page.category, 6);
   const cards = [
     { title: payload.card1Title, text: payload.card1Text },
     { title: payload.card2Title, text: payload.card2Text },
@@ -1029,7 +1033,7 @@ function renderDynamicSeoPage(row) {
     publisher: { "@type": "EducationalOrganization", name: "Mandrix", url: SITE_URL },
     inLanguage: "en",
   };
-  const chipHtml = chips.map((chip) => `<span>${escapeHtml(chip)}</span>`).join("");
+  const readTime = readingMinutes(payload.articleBody || lead);
   const cardHtml = cards.map((card, index) => `
           <article class="landing-card">
             <span>${String(index + 1).padStart(2, "0")}</span>
@@ -1038,6 +1042,9 @@ function renderDynamicSeoPage(row) {
           </article>`).join("");
   const secondaryButton = secondaryLabel && secondaryHref
     ? `<a class="btn secondary" href="${escapeHtml(secondaryHref)}">${escapeHtml(secondaryLabel)}</a>`
+    : "";
+  const sectionHtml = payload.sectionTitle || payload.sectionBody
+    ? `${payload.sectionTitle ? `<h2>${escapeHtml(payload.sectionTitle)}</h2>` : ""}${payload.sectionBody ? `<p>${escapeHtml(payload.sectionBody)}</p>` : ""}`
     : "";
 
   return `<!doctype html>
@@ -1085,22 +1092,27 @@ function renderDynamicSeoPage(row) {
       </header>
     </div>
 
-    <main class="wrap insight-article dynamic-insight-article">
-      <p class="eyebrow">${escapeHtml(payload.eyebrow || page.category)}</p>
-      <h1>${escapeHtml(h1)}</h1>
-      <p class="lead">${escapeHtml(lead)}</p>
-      <div class="landing-proof">${chipHtml}</div>
-      <figure><img src="/${escapeHtml(image).replace(/^\/+/, "")}" alt="${escapeHtml(imageAlt)}"></figure>
-      <section class="article-body">
+    <main>
+      <article class="wrap insight-article">
+        <a class="back-link" href="/insights">← All insights</a>
+        <p class="eyebrow">${escapeHtml(payload.eyebrow || page.category.replace(/-/g, " "))}</p>
+        <div class="article-meta"><span>Mandrix Insights</span><span>${escapeHtml(page.category.replace(/-/g, " "))}</span><span>${readTime} min read</span></div>
+        <h1>${escapeHtml(h1)}</h1>
+        <p class="article-dek">${escapeHtml(lead)}</p>
+        <figure class="article-hero-image"><img src="/${escapeHtml(image).replace(/^\/+/, "")}" alt="${escapeHtml(imageAlt)}"></figure>
+        <div class="article-summary"><strong>In this guide</strong><p>${escapeHtml(payload.sectionBody || lead)}</p></div>
         ${renderParagraphs(payload.articleBody || lead)}
         ${cardHtml ? `<div class="landing-card-grid">${cardHtml}</div>` : ""}
-        ${payload.sectionTitle ? `<h2>${escapeHtml(payload.sectionTitle)}</h2>` : ""}
-        ${payload.sectionBody ? `<p>${escapeHtml(payload.sectionBody)}</p>` : ""}
-        <div class="actions">
-          <a class="btn primary" href="${escapeHtml(primaryHref)}">${escapeHtml(primaryLabel)}</a>
-          ${secondaryButton}
+        ${sectionHtml}
+        <div class="article-cta">
+          <h2>${escapeHtml(payload.ctaTitle || "Start with diagnosis")}</h2>
+          <p>${escapeHtml(payload.ctaBody || "Start with the free AI level check before choosing a paid program.")}</p>
+          <div class="article-cta-actions">
+            <a class="btn primary" href="${escapeHtml(primaryHref)}">${escapeHtml(primaryLabel)}</a>
+            ${secondaryButton}
+          </div>
         </div>
-      </section>
+      </article>
     </main>
 
     <footer class="footer">

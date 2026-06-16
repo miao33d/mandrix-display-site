@@ -1489,6 +1489,11 @@ function renderSeoParagraphs(value) {
     .join("");
 }
 
+function seoReadingMinutes(value) {
+  const words = String(value || "").trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(4, Math.ceil(words / 170));
+}
+
 function seoImageUrl(path) {
   const value = String(path || "");
   if (/^(https?:|blob:|data:)/i.test(value)) return value;
@@ -1581,7 +1586,6 @@ function buildSeoHtml(rawData = seoFields()) {
   const category = cleanSeoCategory(data.category);
   const h1 = data.h1 || title.replace(/\s*\|\s*Mandrix\s*$/i, "");
   const lead = data.lead || description;
-  const chips = splitSeoList(data.chips || category);
   const cards = seoCardData(data).filter((card) => card.title || card.text);
   const primaryLabel = data.primaryLabel || "Start Free AI Level Check";
   const primaryHref = data.primaryHref || "/level-check";
@@ -1602,7 +1606,7 @@ function buildSeoHtml(rawData = seoFields()) {
     inLanguage: "en",
   };
   const jsonLd = JSON.stringify(schema);
-  const chipHtml = chips.map((chip) => `<span>${escapeHtml(chip)}</span>`).join("");
+  const readTime = seoReadingMinutes(data.articleBody || lead);
   const cardHtml = cards.map((card, index) => `
           <article class="landing-card">
             <span>${String(index + 1).padStart(2, "0")}</span>
@@ -1647,16 +1651,15 @@ function buildSeoHtml(rawData = seoFields()) {
         </div>
       </header>
     </div>
-    <main class="wrap insight-article dynamic-insight-article">
-      <a class="back-link" href="/insights">← All insights</a>
-      <p class="eyebrow">${escapeHtml(data.eyebrow || category)}</p>
-      <div class="article-meta"><span>Mandrix Insights</span><span>${escapeHtml(category.replace(/-/g, " "))}</span><span>4 min read</span></div>
-      <h1>${escapeHtml(h1)}</h1>
-      <p class="article-dek">${escapeHtml(lead)}</p>
-      <div class="landing-proof">${chipHtml}</div>
-      <figure class="article-hero-image"><img src="/${escapeHtml(image).replace(/^\/+/, "")}" alt="${escapeHtml(data.imageAlt || title)}"></figure>
-      <div class="article-summary"><strong>In this guide</strong><p>${escapeHtml(lead)}</p></div>
-      <div class="article-body">
+    <main>
+      <article class="wrap insight-article">
+        <a class="back-link" href="/insights">← All insights</a>
+        <p class="eyebrow">${escapeHtml(data.eyebrow || category.replace(/-/g, " "))}</p>
+        <div class="article-meta"><span>Mandrix Insights</span><span>${escapeHtml(category.replace(/-/g, " "))}</span><span>${readTime} min read</span></div>
+        <h1>${escapeHtml(h1)}</h1>
+        <p class="article-dek">${escapeHtml(lead)}</p>
+        <figure class="article-hero-image"><img src="/${escapeHtml(image).replace(/^\/+/, "")}" alt="${escapeHtml(data.imageAlt || title)}"></figure>
+        <div class="article-summary"><strong>In this guide</strong><p>${escapeHtml(data.sectionBody || lead)}</p></div>
         ${renderSeoParagraphs(data.articleBody || lead)}
         ${cardHtml ? `<div class="landing-card-grid">${cardHtml}</div>` : ""}
         ${sectionHtml}
@@ -1665,7 +1668,7 @@ function buildSeoHtml(rawData = seoFields()) {
           <p>${escapeHtml(data.ctaBody || "Start with the free AI level check before choosing a paid program.")}</p>
           <div class="article-cta-actions"><a class="btn primary" href="${escapeHtml(primaryHref)}">${escapeHtml(primaryLabel)}</a>${secondaryButton}</div>
         </div>
-      </div>
+      </article>
     </main>
     <footer class="footer"><div class="wrap"><div class="footer-brand"><strong>Mandrix</strong><span>Chinese, decoded.</span><p>Clearer Chinese for adult learners.</p></div><nav class="footer-links" aria-label="Contact links"><a href="/method">Method</a><a href="/courses">Courses</a><a href="/corporate">Corporate</a><a href="/insights">Insights</a><a href="/booking">Booking</a><a href="mailto:Jane.Mandrix@outlook.com">Jane.Mandrix@outlook.com</a></nav><span>© 2026 Mandrix | Jane Chen. All Rights Reserved.</span></div></footer>
     <script src="/analytics.js" defer><\/script>
