@@ -1203,6 +1203,20 @@ function renderLevelReport(data, report) {
       ${voiceAnalysis.conversionBridge ? `<p>${voiceAnalysis.conversionBridge}</p>` : ""}
     </div>
   ` : "";
+  const costlyErrors = [];
+  if ((report.blocker?.title || "").includes("Translation")) {
+    costlyErrors.push("You are converting too much of Chinese through English before speaking.");
+  }
+  if ((report.blocker?.title || "").includes("Sentence order")) {
+    costlyErrors.push("Your sentence frames are not stable enough to produce under pressure.");
+  }
+  if ((report.blocker?.title || "").includes("grammar") || (report.blocker?.title || "").includes("Grammar")) {
+    costlyErrors.push("Grammar feels like separate facts instead of reusable patterns.");
+  }
+  if (report.voiceAnalysis?.primaryBottleneck) {
+    costlyErrors.push(report.voiceAnalysis.primaryBottleneck);
+  }
+  const topErrors = costlyErrors.slice(0, 3);
   levelReportContent.innerHTML = `
     <p class="eyebrow">Diagnostic Report</p>
     <h3>${data.fullName || "Your"} Chinese bottleneck report</h3>
@@ -1231,14 +1245,16 @@ function renderLevelReport(data, report) {
     </div>
     ${voiceAnalysisHtml}
     <div class="level-report-block">
-      <h4>What to do with this diagnosis</h4>
-      <p>For the next 30 days, focus on one narrow path: ${report.path.firstStep}</p>
-      <p>If you want to know how to fix these blockers, book a short conversation with Jane. She can review your answers, explain the pattern behind the mistakes, and show whether Mandrix is the right next step.</p>
+      <h4>The three most expensive mistakes</h4>
+      ${topErrors.length ? `<ol>${topErrors.map((item) => `<li>${item}</li>`).join("")}</ol>` : `<p>Your current answers do not show a single dramatic breakdown. The real issue is that several smaller gaps are slowing retrieval.</p>`}
+      <p>Fixing these by yourself is possible, but it usually takes longer because you cannot always see which mistake is structural and which one is just a one-off answer.</p>
     </div>
     <div class="level-course-recommendation">
-      <span>Recommended Mandrix path</span>
-      <strong>${report.path.path}</strong>
-      <p>${report.path.why}</p>
+      <span>Jane's next step for you</span>
+      <strong>Book a short review with Jane</strong>
+      <p>She will read your answers with you, identify the one pattern that is costing you the most, and give you a concrete 30-day fix plan before you choose a course.</p>
+      <p>After that review, Mandrix can recommend the right path with much higher confidence: ${report.path.path}.</p>
+      <a class="btn primary" href="#booking">Book Jane Review</a>
     </div>
   `;
 }

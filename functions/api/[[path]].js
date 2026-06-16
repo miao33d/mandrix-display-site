@@ -381,13 +381,32 @@ function levelCheckReportHtml(payload, { admin = false } = {}) {
       <p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;white-space:pre-wrap;">${escapeHtml(payload.sample || "None")}</p>
     </div>
   ` : "";
+  const costlyErrors = [];
+  if (clean(report.blocker?.title).includes("Translation")) costlyErrors.push("You are converting too much of Chinese through English before speaking.");
+  if (clean(report.blocker?.title).includes("Sentence order")) costlyErrors.push("Your sentence frames are not stable enough to produce under pressure.");
+  if (clean(report.blocker?.title).toLowerCase().includes("grammar")) costlyErrors.push("Grammar feels like separate facts instead of reusable patterns.");
+  if (voice.primaryBottleneck) costlyErrors.push(clean(voice.primaryBottleneck));
+  const costlyErrorHtml = costlyErrors.slice(0, 3).length
+    ? `<ol style="margin:10px 0 0;padding-left:20px;color:#172033;font-size:14px;line-height:1.7;">${costlyErrors.slice(0, 3).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ol>`
+    : `<p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">Your answers do not show a single dramatic breakdown. The real issue is that several smaller gaps are slowing retrieval.</p>`;
   const cta = admin ? `
     <p style="margin:18px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">Reply directly to this email to follow up with the learner.</p>
   ` : `
     <div style="margin-top:22px;padding:18px;border-radius:16px;background:#172033;color:#ffffff;">
-      <div style="font-size:18px;font-weight:750;line-height:1.35;">Your next step</div>
-      <p style="margin:8px 0 14px;color:rgba(255,255,255,.78);font-size:14px;line-height:1.65;">Use this report to correct one real pattern first. If you want Jane to review your exact mistakes and build a course path, start with the recommended Mandrix path below.</p>
-      <a href="https://www.mandrix.top/booking" style="display:inline-block;padding:12px 16px;border-radius:10px;background:#ffffff;color:#172033;text-decoration:none;font-weight:750;">View Mandrix options</a>
+      <div style="font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.64);">Your conversion point</div>
+      <div style="margin-top:8px;font-size:22px;font-weight:800;line-height:1.25;">Book a short review with Jane</div>
+      <p style="margin:10px 0 0;color:rgba(255,255,255,.8);font-size:14px;line-height:1.65;">This free report shows where the pattern is likely breaking. The Jane review is where the diagnosis becomes usable.</p>
+      <div style="margin-top:14px;padding:14px;border:1px solid rgba(255,255,255,.18);border-radius:12px;background:rgba(255,255,255,.06);">
+        <div style="font-size:14px;font-weight:800;">What Jane will do in the review</div>
+        <ul style="margin:8px 0 0;padding-left:18px;color:rgba(255,255,255,.78);font-size:14px;line-height:1.7;">
+          <li>Review your exact answers and optional voice sample.</li>
+          <li>Identify the one pattern currently costing you the most progress.</li>
+          <li>Show how to fix it through a 30-day structure-first plan.</li>
+          <li>Recommend the right Mandrix path only if it fits your goal.</li>
+        </ul>
+      </div>
+      <p style="margin:14px 0 14px;color:rgba(255,255,255,.72);font-size:14px;line-height:1.65;">Likely path after review: <strong style="color:#ffffff;">${escapeHtml(report.path?.path || "Mandrix structured coaching")}</strong>.</p>
+      <a href="https://www.mandrix.top/booking" style="display:inline-block;padding:12px 16px;border-radius:10px;background:#ffffff;color:#172033;text-decoration:none;font-weight:750;">Book Jane Review</a>
     </div>
   `;
   return `
@@ -432,6 +451,11 @@ function levelCheckReportHtml(payload, { admin = false } = {}) {
         </div>
         ${hasAudio ? `<div style="margin-top:18px;padding:16px;border-radius:14px;background:#f1fbf8;border:1px solid #cfeee5;"><div style="color:#177a62;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Spoken sample included</div><p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;">The optional voice sample is attached to this email for review. Mandrix does not store the audio file on the website.</p></div>` : ""}
         ${voice.summary || voice.transcript ? `<div style="margin-top:18px;padding:16px;border-radius:14px;background:#f6f9ff;border:1px solid #d8e5f4;"><div style="color:#2f55d4;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Spoken output analysis</div>${voice.transcript ? `<p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;"><strong>Transcript:</strong> ${escapeHtml(voice.transcript)}</p>` : ""}${voice.primaryBottleneck ? `<p style="margin:8px 0 0;color:#172033;font-size:15px;line-height:1.65;"><strong>Primary bottleneck:</strong> ${escapeHtml(voice.primaryBottleneck)}</p>` : ""}<p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;">${escapeHtml(voice.summary || "")}</p>${voice.fluencySignal ? `<p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;"><strong>Fluency signal:</strong> ${escapeHtml(voice.fluencySignal)}</p>` : ""}${voiceDimensionsHtml}${voiceIssuesHtml}${voice.betterVersion ? `<p style="margin:10px 0 0;color:#172033;font-size:14px;line-height:1.65;"><strong>Suggested polished version:</strong> ${escapeHtml(voice.betterVersion)}</p>` : ""}${voice.nextStep ? `<p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;"><strong>Training focus:</strong> ${escapeHtml(voice.nextStep)}</p>` : ""}${voice.conversionBridge ? `<p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(voice.conversionBridge)}</p>` : ""}${admin && voice.adminNote ? `<p style="margin:8px 0 0;color:#8a4b2a;font-size:13px;line-height:1.6;"><strong>Admin note:</strong> ${escapeHtml(voice.adminNote)}</p>` : ""}</div>` : ""}
+        <div style="margin-top:18px;padding:16px;border-radius:14px;background:#fff8f2;border:1px solid #f0d3bf;">
+          <div style="color:#8a4b2a;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">The expensive mistakes</div>
+          ${costlyErrorHtml}
+          <p style="margin:10px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">These are the mistakes that usually keep adult learners stuck even when they keep studying vocabulary.</p>
+        </div>
         ${sampleBlock}
         ${cta}
       </div>

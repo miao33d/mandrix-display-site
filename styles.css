@@ -2305,6 +2305,22 @@ html[lang^="zh"] .program-block > .course-credibility {
   color: #fff;
 }
 
+.level-report-block ol {
+  margin: 10px 0 0;
+  padding-left: 20px;
+  color: var(--ink);
+  line-height: 1.68;
+}
+
+.level-report-block li + li {
+  margin-top: 8px;
+}
+
+.level-course-recommendation .btn {
+  width: fit-content;
+  margin-top: 10px;
+}
+
 .voice-analysis-block {
   background: #f6f9ff;
   border-color: rgba(47, 85, 212, 0.14);
@@ -2422,6 +2438,11 @@ html[lang^="zh"] .program-block > .course-credibility {
 
   .level-check-card {
     padding: 20px;
+  }
+
+  .level-course-recommendation .btn {
+    width: 100%;
+    text-align: center;
   }
 }
 
@@ -11378,7 +11399,7 @@ html[lang^="zh"] .hero-risk::before {
     grid-template-columns: 1fr !important;
   }
 
-.level-evidence-grid article {
+  .level-evidence-grid article {
     min-height: 0 !important;
   }
 }
