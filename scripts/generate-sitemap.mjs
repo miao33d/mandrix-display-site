@@ -13,21 +13,16 @@ const excluded = new Set([
 ]);
 
 const sectionRoutes = [
-  "/method",
+  "/",
+  "/level-check",
   "/courses",
   "/about",
-  "/level-check",
-  "/faq",
-  "/booking",
-  "/contact",
-  "/diagnostic",
-  "/daily",
   "/business",
   "/hsk",
-  "/specialty",
-  "/private",
   "/sourcing-spotlight",
-  "/corporate-programs",
+  "/corporate",
+  "/insights",
+  "/zh",
 ];
 
 async function walk(dir) {
@@ -65,7 +60,7 @@ const htmlFiles = await walk(root);
 const urls = new Set();
 for (const file of htmlFiles) {
   const url = urlFor(file);
-  if (url) urls.add(url);
+  if (url && url.includes("/insights/")) urls.add(url);
 }
 sectionRoutes.forEach((url) => urls.add(url));
 

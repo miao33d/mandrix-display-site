@@ -19,34 +19,23 @@ function xmlEscape(value) {
 
 const staticUrls = [
   "/",
-  "/about",
-  "/booking",
-  "/business",
-  "/business-chinese-online",
-  "/chinese-for-sourcing-agents",
-  "/contact",
-  "/corporate",
-  "/corporate-programs",
+  "/level-check",
   "/courses",
-  "/daily",
-  "/diagnostic",
-  "/faq",
+  "/about",
+  "/business",
   "/hsk",
-  "/hsk-preparation-online",
+  "/sourcing-spotlight",
+  "/corporate",
   "/insights",
   "/insights/polite-no-chinese-business",
   "/insights/hsk-for-professionals",
   "/insights/logic-based-business-chinese",
-  "/level-check",
-  "/method",
-  "/private",
-  "/sourcing-spotlight",
-  "/specialty",
   "/zh",
 ];
 
 function priorityFor(path) {
   if (path === "/") return "1.0";
+  if (path === "/level-check" || path === "/courses") return "0.9";
   if (path.startsWith("/insights/")) return "0.7";
   if (path === "/privacy" || path === "/terms") return "0.3";
   return "0.8";
