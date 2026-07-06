@@ -11893,6 +11893,107 @@ html:not([lang^="zh"]) .hero h1 {
   box-shadow: 0 14px 34px rgba(20, 31, 43, 0.08);
 }
 
+.pricing-principle .tier-free {
+  border-color: rgba(56, 142, 190, 0.24) !important;
+  background: linear-gradient(135deg, rgba(238, 249, 255, 0.96), rgba(255, 255, 255, 0.82)) !important;
+}
+
+.pricing-principle .tier-core {
+  border-color: rgba(38, 135, 122, 0.22) !important;
+  background: linear-gradient(135deg, rgba(239, 250, 246, 0.96), rgba(255, 255, 255, 0.84)) !important;
+}
+
+.pricing-principle .tier-flagship {
+  border-color: rgba(186, 138, 45, 0.34) !important;
+  background: linear-gradient(135deg, rgba(255, 249, 232, 0.98), rgba(255, 255, 255, 0.84)) !important;
+  box-shadow: 0 22px 52px rgba(80, 58, 18, 0.08) !important;
+}
+
+.pricing-principle .tier-free span {
+  color: #1f6f99 !important;
+}
+
+.pricing-principle .tier-core span {
+  color: #22776b !important;
+}
+
+.pricing-principle .tier-flagship span {
+  color: #9a6d16 !important;
+}
+
+.learning-path-card.path-core {
+  border-top: 5px solid #72b7a8 !important;
+}
+
+.learning-path-card.path-business {
+  border-top: 5px solid #4d8fbb !important;
+}
+
+.learning-path-card.path-flagship {
+  border-top: 5px solid #c9952b !important;
+  background:
+    linear-gradient(135deg, rgba(255, 250, 237, 0.96), rgba(255, 255, 255, 0.92)),
+    #ffffff !important;
+  box-shadow: 0 30px 70px rgba(91, 62, 13, 0.14) !important;
+}
+
+.learning-path-card.path-flagship > span {
+  color: #8d6416 !important;
+  background: rgba(255, 244, 213, 0.9) !important;
+  border-color: rgba(181, 129, 28, 0.28) !important;
+}
+
+.learning-path-card.path-flagship a {
+  background: #1f2a33 !important;
+  color: #fff8e8 !important;
+  border-color: rgba(31, 42, 51, 0.22) !important;
+}
+
+/* Trade-positioning pass: keep the stronger hero inside the first viewport. */
+html:not([lang^="zh"]) .hero h1 {
+  font-size: clamp(48px, 5.1vw, 62px) !important;
+  line-height: 1 !important;
+  max-width: 660px !important;
+}
+
+.hero {
+  padding-top: 52px !important;
+  padding-bottom: 62px !important;
+}
+
+.hero-inner {
+  gap: 42px !important;
+}
+
+.hero-inner .hero-copy .lead {
+  margin-top: 16px !important;
+  font-size: 19px !important;
+  line-height: 1.42 !important;
+}
+
+.hero-support {
+  margin-top: 12px !important;
+  font-size: 15px !important;
+  line-height: 1.62 !important;
+}
+
+.hero-method-card {
+  margin-top: 18px !important;
+  padding: 15px 18px !important;
+}
+
+.hero-method-card strong {
+  font-size: clamp(19px, 2.1vw, 25px) !important;
+}
+
+.hero-inner .actions {
+  margin-top: 22px !important;
+}
+
+.hero-points {
+  margin-top: 18px !important;
+}
+
 @media (max-width: 900px) {
   .floating-contact {
     right: 12px !important;
@@ -12952,5 +13053,42 @@ html:not([lang^="zh"]) .hero h1 {
   .article-cta-actions {
     column-gap: 0 !important;
     row-gap: 12px !important;
+  }
+}
+
+/* Final hero conversion lock: the primary CTA should appear inside ordinary desktop viewports. */
+html:not([lang^="zh"]) .hero h1 {
+  max-width: 760px !important;
+  font-size: clamp(46px, 5vw, 60px) !important;
+  line-height: 1.02 !important;
+}
+
+.hero {
+  padding-top: 44px !important;
+  padding-bottom: 54px !important;
+}
+
+.hero-support {
+  max-width: 610px !important;
+  font-size: 15px !important;
+  line-height: 1.55 !important;
+}
+
+.hero-method-card {
+  margin-top: 14px !important;
+  padding: 14px 18px !important;
+}
+
+.hero-inner .actions {
+  margin-top: 18px !important;
+}
+
+.hero-points {
+  margin-top: 14px !important;
+}
+
+@media (max-width: 900px) {
+  html:not([lang^="zh"]) .hero h1 {
+    font-size: clamp(42px, 12vw, 54px) !important;
   }
 }
