@@ -1162,8 +1162,115 @@ function renderScoreBar(label, value) {
   return `<div class="level-score-row"><span>${label}</span><b>${value}%</b><i style="--score:${value}%"></i></div>`;
 }
 
+function speakingDrillsFor(data, report) {
+  const base = [
+    {
+      label: "Drill 1",
+      title: "Say it without translating",
+      prompt: "Say: “I want to move tomorrow's meeting 30 minutes earlier.”",
+      structure: "我想 + time + action / 我们能不能 + time + action",
+      check: "Put time before the action. Do not copy English word order.",
+    },
+    {
+      label: "Drill 2",
+      title: "Build one reusable sentence",
+      prompt: "Say one sentence about your real goal: work, HSK, daily life, or suppliers.",
+      structure: "我现在需要练习 + situation + because + reason",
+      check: "Use one clear structure. Avoid listing words without a sentence frame.",
+    },
+    {
+      label: "Drill 3",
+      title: "Repair the sentence",
+      prompt: "Take your written sample and say a cleaner version out loud twice.",
+      structure: "Short sentence first. Add details after the main idea.",
+      check: "If you pause for more than 3 seconds, the pattern is not automatic yet.",
+    },
+  ];
+
+  if (data.goal === "sourcing") {
+    return [
+      {
+        label: "Supplier drill",
+        title: "Ask for price without sounding abrupt",
+        prompt: "Say: “If we order more units, is there room to adjust the price?”",
+        structure: "如果数量增加，价格还有空间吗？",
+        check: "Use 条件 + 结果. Do not say only “便宜一点”.",
+      },
+      {
+        label: "Sample drill",
+        title: "Request a sample clearly",
+        prompt: "Say: “Can you send one sample first? I want to check the material and packaging.”",
+        structure: "可以先寄一个样品吗？我想确认材质和包装。",
+        check: "Ask for action first, then explain why.",
+      },
+      {
+        label: "Follow-up drill",
+        title: "Follow up without pressure",
+        prompt: "Say: “I want to confirm whether the delivery date is still next Friday.”",
+        structure: "我想确认一下，交期还是下周五吗？",
+        check: "Use 确认一下 to sound professional, not demanding.",
+      },
+    ];
+  }
+
+  if (data.goal === "business") {
+    return [
+      {
+        label: "Meeting drill",
+        title: "Give a short work update",
+        prompt: "Say: “This part is finished. The next step is to confirm the timeline.”",
+        structure: "这部分已经完成了。下一步是确认时间安排。",
+        check: "Separate status and next step. Do not pack everything into one long sentence.",
+      },
+      {
+        label: "Soft refusal drill",
+        title: "Disagree without sounding harsh",
+        prompt: "Say: “This may be difficult, but we can discuss another option.”",
+        structure: "这个可能有点困难，不过我们可以讨论另一个方案。",
+        check: "Use 可能 / 有点 / 不过 to soften business tone.",
+      },
+      {
+        label: "Follow-up drill",
+        title: "Write a professional WeChat follow-up",
+        prompt: "Say: “Thank you for today's meeting. I will send the updated version tomorrow.”",
+        structure: "谢谢今天的会议。我明天发更新版给您。",
+        check: "Keep it short, polite, and action-oriented.",
+      },
+    ];
+  }
+
+  if (data.goal === "hsk") {
+    return [
+      {
+        label: "HSK drill",
+        title: "Turn vocabulary into a sentence",
+        prompt: "Choose one HSK word and say a sentence about your real life.",
+        structure: "我最近 + verb + object + because + reason",
+        check: "Do not memorize the word alone. Attach it to a reusable pattern.",
+      },
+      {
+        label: "Grammar drill",
+        title: "Use 了 correctly once",
+        prompt: "Say one completed action from yesterday.",
+        structure: "我昨天 + verb + 了 + object",
+        check: "Use 了 for completed action, not every past-time sentence.",
+      },
+      {
+        label: "Listening drill",
+        title: "Predict word order before listening",
+        prompt: "Before listening, predict who, when, action, and object.",
+        structure: "who → time → intention/action → object",
+        check: "HSK listening gets easier when you expect the sentence shape.",
+      },
+    ];
+  }
+
+  return base;
+}
+
 function renderLevelReport(data, report) {
   const safeGoal = goalLabels[data.goal] || "Mandrix Path";
+  const drills = speakingDrillsFor(data, report);
   const evidenceHtml = (report.evidence || []).map((item, index) => `
     <article>
       <span>Evidence ${index + 1}</span>
@@ -1248,6 +1355,24 @@ function renderLevelReport(data, report) {
       <h4>The three most expensive mistakes</h4>
       ${topErrors.length ? `<ol>${topErrors.map((item) => `<li>${item}</li>`).join("")}</ol>` : `<p>Your current answers do not show a single dramatic breakdown. The real issue is that several smaller gaps are slowing retrieval.</p>`}
       <p>Fixing these by yourself is possible, but it usually takes longer because you cannot always see which mistake is structural and which one is just a one-off answer.</p>
+    </div>
+    <div class="speaking-drill-panel">
+      <div class="speaking-drill-head">
+        <span>Free speaking practice</span>
+        <h4>Do these 3 drills before you leave.</h4>
+        <p>These are not random chatbot prompts. They are based on your goal and the Mandrix structure-first method.</p>
+      </div>
+      <div class="speaking-drill-grid">
+        ${drills.map((item) => `
+          <article>
+            <span>${item.label}</span>
+            <strong>${item.title}</strong>
+            <p><b>Say:</b> ${item.prompt}</p>
+            <p><b>Structure:</b> ${item.structure}</p>
+            <p><b>Self-check:</b> ${item.check}</p>
+          </article>
+        `).join("")}
+      </div>
     </div>
     <div class="level-course-recommendation">
       <span>Jane's next step for you</span>
