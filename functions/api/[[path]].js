@@ -1192,7 +1192,7 @@ function renderDynamicSeoPage(row) {
     <meta name="twitter:description" content="${escapeHtml(description)}">
     <meta name="twitter:image" content="${escapeHtml(absoluteAssetUrl(image))}">
     <link rel="icon" type="image/png" href="/assets/mandrix-logo-128.png">
-    <link rel="stylesheet" href="/styles.min.css">
+    <link rel="stylesheet" href="/styles.min.css?v=layout-20260706b">
     <script type="application/ld+json">${JSON.stringify(schema)}</script>
   </head>
   <body>

@@ -13572,6 +13572,249 @@ html[lang^="zh"] .hero h1 {
   padding-top: clamp(56px, 7vw, 82px) !important;
 }
 
+.mandrix-system-section .section-kicker h2,
+.lesson-assets-section .lesson-assets-layout h2 {
+  font-size: clamp(34px, 3.7vw, 48px) !important;
+  line-height: 1.08 !important;
+}
+
+/* Mature layout pass: reserve hero-scale type for the hero only. */
+.section,
+.method-signature-strip,
+.operating-system-section,
+.learning-paths-section,
+.trust-standards-section,
+.outcomes-section {
+  padding-top: clamp(64px, 7vw, 92px) !important;
+  padding-bottom: clamp(64px, 7vw, 92px) !important;
+}
+
+.operating-system-section {
+  background: #ffffff !important;
+}
+
+.operating-system-layout {
+  max-width: 1120px !important;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr) !important;
+  gap: clamp(32px, 5vw, 58px) !important;
+  align-items: center !important;
+}
+
+.operating-system-layout h2,
+.level-check-intro h2,
+.ai-practice-layout h2,
+.method-signature-inner h2,
+.mini-lesson-layout h2,
+.about-copy h2,
+.section-kicker h2,
+.paths-header h2,
+.lesson-assets-layout h2,
+.trust-standards-layout h2,
+#booking .booking-sidebar h2,
+.faq-cta-panel h3,
+html[lang^="zh"] .operating-system-layout h2,
+html[lang^="zh"] .level-check-intro h2,
+html[lang^="zh"] .ai-practice-layout h2,
+html[lang^="zh"] .method-signature-inner h2,
+html[lang^="zh"] .mini-lesson-layout h2,
+html[lang^="zh"] .about-copy h2,
+html[lang^="zh"] .section-kicker h2,
+html[lang^="zh"] .paths-header h2,
+html[lang^="zh"] .lesson-assets-layout h2,
+html[lang^="zh"] .trust-standards-layout h2,
+html[lang^="zh"] #booking .booking-sidebar h2 {
+  font-size: clamp(34px, 3.7vw, 48px) !important;
+  line-height: 1.08 !important;
+  letter-spacing: 0 !important;
+  text-wrap: balance;
+}
+
+.operating-system-layout h2,
+.level-check-intro h2,
+.about-copy h2 {
+  text-align: left !important;
+}
+
+.level-check-intro .lead,
+.paths-header p,
+.section-kicker .lead,
+.about-copy p,
+.method-signature-inner p,
+.mini-lesson-layout .lead,
+.trust-standards-layout .lead {
+  font-size: 16px !important;
+  line-height: 1.68 !important;
+  text-wrap: pretty;
+}
+
+.operating-system-grid {
+  gap: 14px !important;
+}
+
+.operating-system-grid article {
+  min-height: 126px !important;
+  padding: 24px 26px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 14px 36px rgba(31, 45, 70, 0.05) !important;
+}
+
+.operating-system-grid strong {
+  font-size: 22px !important;
+  line-height: 1.22 !important;
+}
+
+.level-check-section {
+  background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%) !important;
+}
+
+.level-check-layout {
+  gap: clamp(28px, 4vw, 48px) !important;
+  align-items: start !important;
+}
+
+.level-check-intro {
+  position: static !important;
+  top: auto !important;
+}
+
+.level-check-promise {
+  gap: 14px !important;
+}
+
+.level-check-promise article {
+  padding: 14px 0 14px 18px !important;
+}
+
+.level-check-start {
+  padding: 24px !important;
+  border-radius: 12px !important;
+}
+
+.level-check-start h3 {
+  font-size: clamp(28px, 2.8vw, 38px) !important;
+  line-height: 1.12 !important;
+}
+
+.ai-practice-layout,
+.mini-lesson-layout,
+.trust-standards-layout,
+.lesson-assets-layout {
+  max-width: 1120px !important;
+}
+
+.ai-practice-grid article,
+.mini-lesson-board article,
+.trust-standards-grid article,
+.lesson-assets-grid article {
+  min-height: 0 !important;
+  padding: 20px !important;
+  box-shadow: 0 14px 34px rgba(31, 45, 70, 0.05) !important;
+}
+
+.about-layout {
+  max-width: 1120px !important;
+  align-items: center !important;
+  gap: clamp(32px, 5vw, 58px) !important;
+}
+
+.about-photo img {
+  max-height: 640px !important;
+  object-position: center top !important;
+}
+
+.outcomes-section,
+.testimonials-section {
+  background: #f8fafc !important;
+}
+
+.learning-paths-section {
+  background: #f5f7fb !important;
+}
+
+.paths-header {
+  max-width: 760px !important;
+  margin-bottom: 34px !important;
+}
+
+.pricing-principle,
+.lesson-choice-guide,
+.learning-path-grid {
+  max-width: 1120px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.pricing-principle article,
+.lesson-choice-guide article,
+.learning-path-card {
+  border-radius: 10px !important;
+  box-shadow: 0 14px 38px rgba(31, 45, 70, 0.06) !important;
+}
+
+.learning-path-card {
+  padding: 20px !important;
+}
+
+.learning-path-card h3 {
+  font-size: clamp(22px, 2vw, 28px) !important;
+  line-height: 1.2 !important;
+}
+
+.premium-programs {
+  max-width: 1120px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+#booking .booking-layout {
+  max-width: 1120px !important;
+}
+
+#booking .booking-sidebar {
+  align-self: start !important;
+}
+
+@media (max-width: 900px) {
+  .section,
+  .method-signature-strip,
+  .operating-system-section,
+  .learning-paths-section,
+  .trust-standards-section,
+  .outcomes-section {
+    padding-top: 56px !important;
+    padding-bottom: 56px !important;
+  }
+
+  .operating-system-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .operating-system-layout h2,
+  .level-check-intro h2,
+  .ai-practice-layout h2,
+  .method-signature-inner h2,
+  .mini-lesson-layout h2,
+  .about-copy h2,
+  .section-kicker h2,
+  .paths-header h2,
+  .lesson-assets-layout h2,
+  .trust-standards-layout h2,
+  #booking .booking-sidebar h2,
+  html[lang^="zh"] .operating-system-layout h2,
+  html[lang^="zh"] .level-check-intro h2,
+  html[lang^="zh"] .ai-practice-layout h2,
+  html[lang^="zh"] .method-signature-inner h2,
+  html[lang^="zh"] .mini-lesson-layout h2,
+  html[lang^="zh"] .about-copy h2,
+  html[lang^="zh"] .section-kicker h2,
+  html[lang^="zh"] .paths-header h2,
+  html[lang^="zh"] .lesson-assets-layout h2,
+  html[lang^="zh"] .trust-standards-layout h2,
+  html[lang^="zh"] #booking .booking-sidebar h2 {
+    font-size: clamp(31px, 8vw, 40px) !important;
+  }
+}
+
 .learning-path-card {
   display: flex !important;
   flex-direction: column !important;
@@ -13894,5 +14137,186 @@ html[lang^="zh"] .hero h1 {
 
   .hero-visual-parts {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Chinese page maturity pass: compact long Chinese copy and remove PPT-like gaps. */
+html[lang^="zh"] .method-signature-strip,
+html[lang^="zh"] .section,
+html[lang^="zh"] .audience-section,
+html[lang^="zh"] .difference-section,
+html[lang^="zh"] .proof-section,
+html[lang^="zh"] .method-section,
+html[lang^="zh"] .signature-section,
+html[lang^="zh"] .programs-section,
+html[lang^="zh"] .testimonials-section,
+html[lang^="zh"] .faq-section,
+html[lang^="zh"] .trust-standards-section {
+  padding-top: clamp(56px, 6vw, 82px) !important;
+  padding-bottom: clamp(56px, 6vw, 82px) !important;
+}
+
+html[lang^="zh"] .hero {
+  padding-bottom: 40px !important;
+}
+
+html[lang^="zh"] .zh-recommender-strip {
+  margin-top: 0 !important;
+  background: #ffffff !important;
+}
+
+html[lang^="zh"] .method-signature-inner,
+html[lang^="zh"] .commercial-grid,
+html[lang^="zh"] .value-layout,
+html[lang^="zh"] .about-layout,
+html[lang^="zh"] .programs-section > .wrap,
+html[lang^="zh"] #booking .booking-layout,
+html[lang^="zh"] .trust-standards-layout,
+html[lang^="zh"] .ai-practice-layout {
+  max-width: 1120px !important;
+  gap: clamp(30px, 4vw, 52px) !important;
+  align-items: center !important;
+}
+
+html[lang^="zh"] h2,
+html[lang^="zh"] .commercial-grid h2,
+html[lang^="zh"] .value-layout h2,
+html[lang^="zh"] .value-layout .value-hero h2,
+html[lang^="zh"] .method-signature-inner h2,
+html[lang^="zh"] .section-kicker h2,
+html[lang^="zh"] .programs-section h2,
+html[lang^="zh"] .about-copy h2,
+html[lang^="zh"] .trust-standards-layout h2,
+html[lang^="zh"] #booking .booking-sidebar h2,
+html[lang^="zh"] .contact h2 {
+  font-size: clamp(30px, 3vw, 40px) !important;
+  line-height: 1.18 !important;
+  letter-spacing: 0 !important;
+  text-wrap: balance;
+}
+
+html[lang^="zh"] .hero h1 {
+  font-size: clamp(42px, 3.8vw, 56px) !important;
+  line-height: 1.08 !important;
+  max-width: 640px !important;
+}
+
+html[lang^="zh"] .hero .lead {
+  font-size: 18px !important;
+  line-height: 1.45 !important;
+}
+
+html[lang^="zh"] .hero-support,
+html[lang^="zh"] .commercial-grid .lead,
+html[lang^="zh"] .value-layout p,
+html[lang^="zh"] .method-signature-inner p,
+html[lang^="zh"] .section-kicker .lead,
+html[lang^="zh"] .about-copy p,
+html[lang^="zh"] .programs-section .section-kicker p,
+html[lang^="zh"] #booking .booking-sidebar > p:not(.eyebrow) {
+  font-size: 15.5px !important;
+  line-height: 1.72 !important;
+}
+
+html[lang^="zh"] .hero-risk {
+  width: auto !important;
+  max-width: 440px !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html[lang^="zh"] .method-signature-steps,
+html[lang^="zh"] .value-proof,
+html[lang^="zh"] .commercial-points,
+html[lang^="zh"] .ai-practice-grid,
+html[lang^="zh"] .trust-standards-grid {
+  gap: 14px !important;
+}
+
+html[lang^="zh"] .method-signature-steps article,
+html[lang^="zh"] .commercial-points article,
+html[lang^="zh"] .value-proof article,
+html[lang^="zh"] .ai-practice-grid article,
+html[lang^="zh"] .trust-standards-grid article {
+  min-height: 0 !important;
+  padding: 20px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 14px 34px rgba(31, 45, 70, 0.05) !important;
+}
+
+html[lang^="zh"] .zh-recommender-strip .method-signature-inner,
+html[lang^="zh"] .ai-practice-loop .ai-practice-layout {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) !important;
+}
+
+html[lang^="zh"] .ai-practice-loop .ai-practice-layout h2 {
+  font-size: clamp(30px, 3vw, 40px) !important;
+  line-height: 1.18 !important;
+}
+
+html[lang^="zh"] .zh-recommender-strip .method-signature-steps article {
+  background: #fbfcff !important;
+  border: 1px solid rgba(31, 42, 51, 0.1) !important;
+}
+
+html[lang^="zh"] .programs-section {
+  background: #f6f8fb !important;
+}
+
+html[lang^="zh"] .programs-section .section-kicker {
+  max-width: 760px !important;
+  margin-bottom: 32px !important;
+}
+
+html[lang^="zh"] .program-hero,
+html[lang^="zh"] .diagnostic-entry {
+  border-radius: 12px !important;
+}
+
+html[lang^="zh"] .program-copy h3,
+html[lang^="zh"] .diagnostic-main h3 {
+  font-size: clamp(26px, 2.6vw, 36px) !important;
+  line-height: 1.18 !important;
+}
+
+html[lang^="zh"] .program-card h4 {
+  font-size: 21px !important;
+  line-height: 1.25 !important;
+}
+
+html[lang^="zh"] .testimonials-section .testimonial-card,
+html[lang^="zh"] .faq-grid details,
+html[lang^="zh"] #booking .booking-form {
+  border-radius: 10px !important;
+  box-shadow: 0 14px 34px rgba(31, 45, 70, 0.05) !important;
+}
+
+@media (max-width: 900px) {
+  html[lang^="zh"] .method-signature-strip,
+  html[lang^="zh"] .section,
+  html[lang^="zh"] .audience-section,
+  html[lang^="zh"] .difference-section,
+  html[lang^="zh"] .programs-section {
+    padding-top: 48px !important;
+    padding-bottom: 48px !important;
+  }
+
+  html[lang^="zh"] h2,
+  html[lang^="zh"] .commercial-grid h2,
+  html[lang^="zh"] .value-layout h2,
+  html[lang^="zh"] .method-signature-inner h2,
+  html[lang^="zh"] .section-kicker h2,
+  html[lang^="zh"] .programs-section h2,
+  html[lang^="zh"] .about-copy h2,
+  html[lang^="zh"] #booking .booking-sidebar h2 {
+    font-size: clamp(28px, 7.5vw, 36px) !important;
+  }
+
+  html[lang^="zh"] .zh-recommender-strip .method-signature-inner,
+  html[lang^="zh"] .ai-practice-loop .ai-practice-layout {
+    grid-template-columns: 1fr !important;
   }
 }
