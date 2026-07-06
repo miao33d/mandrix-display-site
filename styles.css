@@ -10636,6 +10636,57 @@ body:has(.insights-index) {
   text-decoration: none;
 }
 
+.legal-consent {
+  grid-column: 1 / -1 !important;
+  display: grid !important;
+  grid-template-columns: 18px minmax(0, 1fr) !important;
+  gap: 10px !important;
+  align-items: flex-start !important;
+  padding: 14px 16px !important;
+  border: 1px solid rgba(33, 49, 68, 0.12) !important;
+  border-radius: 10px !important;
+  background: rgba(248, 250, 252, 0.94) !important;
+  color: #42536a !important;
+  font-size: 13px !important;
+  line-height: 1.55 !important;
+}
+
+.legal-consent input {
+  width: 18px !important;
+  height: 18px !important;
+  margin-top: 2px !important;
+  accent-color: #1f2a33 !important;
+}
+
+.legal-consent a,
+.booking-trust-stack a,
+.legal-trust-strip a {
+  color: #245c82 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+
+.legal-trust-strip {
+  grid-column: 1 / -1 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-top: -4px !important;
+}
+
+.legal-trust-strip span {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 30px !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 248, 238, 0.9) !important;
+  border: 1px solid rgba(192, 134, 54, 0.16) !important;
+  color: #5f4a2b !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+}
+
 .corporate-page .hero-visual {
   overflow: hidden;
   padding: 0;
@@ -13090,5 +13141,121 @@ html:not([lang^="zh"]) .hero h1 {
 @media (max-width: 900px) {
   html:not([lang^="zh"]) .hero h1 {
     font-size: clamp(42px, 12vw, 54px) !important;
+  }
+}
+
+/* Legal and trust layer: visible before checkout, not buried in the footer. */
+.legal-consent {
+  grid-column: 1 / -1 !important;
+  display: grid !important;
+  grid-template-columns: 18px minmax(0, 1fr) !important;
+  gap: 10px !important;
+  align-items: flex-start !important;
+  padding: 14px 16px !important;
+  border: 1px solid rgba(33, 49, 68, 0.12) !important;
+  border-radius: 10px !important;
+  background: rgba(248, 250, 252, 0.94) !important;
+  color: #42536a !important;
+  font-size: 13px !important;
+  line-height: 1.55 !important;
+}
+
+.legal-consent input {
+  width: 18px !important;
+  height: 18px !important;
+  margin-top: 2px !important;
+  accent-color: #1f2a33 !important;
+}
+
+.legal-consent a,
+.booking-trust-stack a,
+.legal-trust-strip a {
+  color: #245c82 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+
+.legal-trust-strip {
+  grid-column: 1 / -1 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-top: -4px !important;
+}
+
+.legal-trust-strip span {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 30px !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 248, 238, 0.9) !important;
+  border: 1px solid rgba(192, 134, 54, 0.16) !important;
+  color: #5f4a2b !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+}
+
+.trust-standards-section {
+  background: #f7f4ee;
+}
+
+.trust-standards-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 42px;
+  align-items: start;
+}
+
+.trust-standards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.trust-standards-grid article {
+  min-height: 190px;
+  padding: 22px;
+  border: 1px solid rgba(35, 49, 68, 0.11);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 42px rgba(31, 45, 70, 0.06);
+}
+
+.trust-standards-grid span {
+  display: block;
+  color: #925f13;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.trust-standards-grid p {
+  margin: 12px 0 16px;
+  color: #4d5f72;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.trust-standards-grid a {
+  color: #1f2a33;
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 900px) {
+  .trust-standards-layout,
+  .trust-standards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trust-standards-grid article {
+    min-height: 0;
+  }
+
+  .legal-trust-strip span {
+    width: 100%;
   }
 }

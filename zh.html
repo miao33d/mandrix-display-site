@@ -780,6 +780,22 @@
       </div>
     </section>
 
+    <section class="section trust-standards-section" aria-label="Mandrix 信任与规则说明">
+      <div class="wrap trust-standards-layout">
+        <div>
+          <p class="eyebrow">信任与规则</p>
+          <h2>付款前，把规则说清楚。</h2>
+          <p class="lead">Mandrix 是创始人主导的在线教育品牌。付款、隐私、AI 测评边界和课程结果预期都会在下单前说明。</p>
+        </div>
+        <div class="trust-standards-grid">
+          <article><span>隐私</span><p>测评答案、预约信息和联系方式仅用于报告、排课、邮件通知和课程支持。</p><a href="/privacy">查看隐私政策</a></article>
+          <article><span>付款</span><p>付款信息由 PayPal 处理。Mandrix 只保存订单号等信息，用于匹配预约和课程。</p><a href="/terms">查看服务条款</a></article>
+          <article><span>AI 边界</span><p>免费 AI 测评是初步学习诊断，不是官方 HSK 分数、学校分班证明或结果保证。</p><a href="/level-check">开始 AI 测评</a></article>
+          <article><span>学习结果</span><p>Mandrix 提供结构、纠错和材料；实际进步取决于出勤、练习、起点和执行。</p><a href="/#results">查看学员结果</a></article>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="booking">
       <div class="wrap booking-layout">
         <aside class="booking-sidebar">
@@ -819,6 +835,7 @@
             <article><strong>通过 PayPal 付款</strong><span>你不会把银行卡信息提交给 Mandrix，付款由 PayPal 页面完成。</span></article>
             <article><strong>提交后即时确认</strong><span>PayPal 成功后，页面会自动带入订单号。</span></article>
             <article><strong>双方自动邮件通知</strong><span>系统会自动通知 Jane 和学生，并发送课程安排与视频教室链接。</span></article>
+            <article><strong>隐私与服务条款</strong><span><a href="/privacy" target="_blank" rel="noopener">隐私政策</a> · <a href="/terms" target="_blank" rel="noopener">服务条款</a></span></article>
           </div>
         </aside>
         <form class="booking-form" id="bookingForm" data-lang="zh">
@@ -938,6 +955,15 @@
           <input type="hidden" name="paypalPayerEmail" id="paypalPayerEmail">
           <label>学习目标<textarea name="goal" placeholder="例如：通过 HSK 3、提升工作邮件、明年去中国旅行" required></textarea></label>
           <label>其他需求<textarea name="notes"></textarea></label>
+          <label class="legal-consent">
+            <input name="legalConsent" type="checkbox" required>
+            <span>我同意 <a href="/terms" target="_blank" rel="noopener">服务条款</a>，并了解 Mandrix 会按照 <a href="/privacy" target="_blank" rel="noopener">隐私政策</a> 处理预约、付款、邮件和课程沟通数据。</span>
+          </label>
+          <div class="legal-trust-strip" aria-label="隐私与付款说明">
+            <span>付款由 PayPal 处理。</span>
+            <span>Mandrix 不保存银行卡号。</span>
+            <span>信息仅用于预约、排课、邮件通知和课程支持。</span>
+          </div>
           <button class="btn primary" type="submit" id="submitBooking">提交预约</button>
           <div class="booking-output" id="bookingOutput" hidden>
             <p class="price" id="bookingResultTitle">你的预约已提交。</p>

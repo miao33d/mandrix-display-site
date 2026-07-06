@@ -945,6 +945,22 @@
       </div>
     </section>
 
+    <section class="section trust-standards-section" aria-label="Mandrix trust and policy standards">
+      <div class="wrap trust-standards-layout">
+        <div>
+          <p class="eyebrow">Trust &amp; policy</p>
+          <h2>Clear rules before you pay.</h2>
+          <p class="lead">Mandrix is a founder-led education brand. Payment, privacy, AI use, and lesson expectations are explained before checkout.</p>
+        </div>
+        <div class="trust-standards-grid">
+          <article><span>Privacy</span><p>Your diagnostic answers, booking details, and contact information are used for reports, scheduling, email, and lesson support.</p><a href="/privacy">Read Privacy Policy</a></article>
+          <article><span>Payment</span><p>PayPal handles payment details. Mandrix stores order references only to match payment with the correct booking.</p><a href="/terms">Read Terms</a></article>
+          <article><span>AI boundary</span><p>The free AI check is an initial learning diagnosis, not an official HSK score or guaranteed placement certificate.</p><a href="/level-check">Start AI Check</a></article>
+          <article><span>Results</span><p>Mandrix provides structure, correction, and materials. Progress depends on attendance, practice, starting level, and follow-through.</p><a href="/#results">View Results</a></article>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="booking">
       <div class="wrap booking-layout">
         <aside class="booking-sidebar">
@@ -979,6 +995,7 @@
             <article><strong>PayPal Business checkout</strong><span>Mandrix never stores your card details.</span></article>
             <article><strong>Auto schedule</strong><span>The selected date, time, and frequency generate the lesson plan.</span></article>
             <article><strong>Video classroom email</strong><span>Student and Jane receive the same booking record automatically.</span></article>
+            <article><strong>Clear policy pages</strong><span><a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> · <a href="/terms" target="_blank" rel="noopener">Terms of Service</a></span></article>
           </div>
         </aside>
 
@@ -1099,6 +1116,15 @@
           <input type="hidden" name="paypalPayerEmail" id="paypalPayerEmail">
           <label>Learning Goal<textarea name="goal" placeholder="e.g. pass HSK 3, improve work emails, travel to China next year" required></textarea></label>
           <label>Special Requests<textarea name="notes" placeholder="Optional: scheduling notes, learning background, or questions"></textarea></label>
+          <label class="legal-consent">
+            <input name="legalConsent" type="checkbox" required>
+            <span>I agree to the <a href="/terms" target="_blank" rel="noopener">Terms of Service</a> and understand that Mandrix uses my booking, payment, email, and lesson information according to the <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+          </label>
+          <div class="legal-trust-strip" aria-label="Payment and privacy notes">
+            <span>Payment is processed by PayPal.</span>
+            <span>Mandrix does not store card numbers.</span>
+            <span>Your information is used for booking, scheduling, email, and lesson support.</span>
+          </div>
           <button class="btn primary" type="submit" id="submitBooking">Submit Booking</button>
           <div class="booking-output" id="bookingOutput" hidden>
             <p class="price" id="bookingResultTitle">Your paid booking has been submitted.</p>
