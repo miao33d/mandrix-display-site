@@ -17,11 +17,13 @@ const sectionRoutes = [
   "/level-check",
   "/courses",
   "/about",
-  "/business",
-  "/hsk",
   "/sourcing-spotlight",
   "/corporate",
   "/insights",
+  "/booking",
+  "/faq",
+  "/privacy",
+  "/terms",
   "/zh",
 ];
 

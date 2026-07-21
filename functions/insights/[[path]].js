@@ -27,6 +27,14 @@ function cleanSlug(value) {
   return clean(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 90);
 }
 
+const deletedInsightPaths = new Set([
+  "daily-chinese/learn-conversational-chinese-as-an-adult",
+  "chinese-for-amazon-sellers/chinese-for-amazon-sellers",
+  "polite-no-chinese-business",
+  "hsk-for-professionals",
+  "logic-based-business-chinese",
+]);
+
 function absoluteAssetUrl(value) {
   const image = clean(value || "assets/backup-study-desk.jpg");
   if (/^https?:\/\//i.test(image)) return image;
@@ -48,6 +56,72 @@ function readingMinutes(value) {
   return Math.max(4, Math.ceil(words / 170));
 }
 
+function renderInsightsIndex() {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mandrix Insights | Sourcing Chinese Guides</title>
+    <meta name="description" content="Mandrix Insights publishes practical sourcing Chinese guides for supplier messages, MOQ, samples, 1688, Alibaba, Canton Fair, and quality follow-up.">
+    <link rel="canonical" href="${SITE_URL}/insights">
+    <meta property="og:title" content="Mandrix Insights | Sourcing Chinese Guides">
+    <meta property="og:description" content="Practical guides for Amazon sellers, importers, buyers, and sourcing teams who communicate with Chinese suppliers.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="${SITE_URL}/insights">
+    <meta property="og:image" content="${SITE_URL}/assets/mandrix-logo-128.png">
+    <link rel="icon" type="image/png" href="/assets/mandrix-logo-128.png">
+    <link rel="stylesheet" href="/styles.min.css">
+  </head>
+  <body>
+    <div class="shell insight-shell">
+      <header class="nav" translate="no">
+        <div class="nav-inner">
+          <a class="brand" href="/"><img src="/assets/mandrix-logo-128.png" alt="Mandrix logo" width="128" height="128" decoding="async"><span class="brand-word"><span class="brand-name">Mandrix</span><span class="brand-line">Chinese for Sourcing</span></span></a>
+          <nav class="nav-links" id="navLinks"><a href="/">Home</a><a href="/#method">How It Works</a><a href="/courses">Sourcing Program</a><a href="/#results">Results</a><a href="/about">About Jane</a><a href="/faq">FAQ</a><a class="nav-cta" href="/level-check">Free Audit</a><a class="lang-switch" href="/zh">中文</a></nav>
+          <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+        </div>
+      </header>
+      <main>
+        <section class="wrap insight-hero">
+          <p class="eyebrow">Mandrix Insights</p>
+          <h1>Sourcing Chinese guides for real supplier conversations.</h1>
+          <p class="lead">New articles will focus on buyer intent: supplier messages, MOQ, samples, delivery, quality issues, 1688, Alibaba, Canton Fair, and factory follow-up.</p>
+        </section>
+      </main>
+    </div>
+    <section class="section insights-index">
+      <div class="wrap insight-grid" id="dynamicInsightsGrid">
+        <article class="insight-card dynamic-insight-card" id="emptyInsightsCard">
+          <span>Content reset</span>
+          <h2>Old SEO articles have been removed.</h2>
+          <p>Publish the next sourcing-focused guides from the SEO backend. They will appear here automatically and enter the dynamic sitemap.</p>
+          <a class="program-cta" href="/level-check">Start Free Sourcing Audit</a>
+        </article>
+      </div>
+    </section>
+    <section class="section alt contact">
+      <div class="wrap">
+        <p class="eyebrow">Start with diagnosis</p>
+        <h2>Before writing or buying lessons, find the supplier-message blocker.</h2>
+        <p class="lead">The free sourcing audit points to the communication issue that matters most: clarity, tone, negotiation leverage, or next-step follow-up.</p>
+        <div class="actions"><a class="btn primary" href="/level-check">Start Free Sourcing Audit</a><a class="btn secondary" href="/courses">View Sourcing Program</a></div>
+      </div>
+    </section>
+    <footer class="footer"><div class="wrap"><div class="footer-brand"><strong>Mandrix</strong><span>Chinese for Sourcing</span><p>Supplier communication Chinese for Amazon sellers, importers, buyers, and cross-border teams.</p></div><nav class="footer-links" aria-label="Contact links"><a href="/method">How It Works</a><a href="/courses">Sourcing Program</a><a href="/insights">Insights</a><a href="/booking">Booking</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="mailto:Jane.Mandrix@outlook.com">Jane.Mandrix@outlook.com</a></nav><span>© 2026 Mandrix | Jane Chen. All Rights Reserved.</span></div></footer>
+    <script src="/analytics.js" defer></script>
+    <script>
+      const navToggle=document.querySelector("#navToggle");const navLinks=document.querySelector("#navLinks");navToggle?.addEventListener("click",()=>{const isOpen=navLinks.classList.toggle("nav-open");navToggle.setAttribute("aria-expanded",isOpen?"true":"false")});
+      const dynamicInsightsGrid=document.querySelector("#dynamicInsightsGrid");const emptyInsightsCard=document.querySelector("#emptyInsightsCard");
+      const categoryLabels={"sourcing-chinese":"Sourcing Chinese","supplier-communication":"Supplier Communication","chinese-for-amazon-sellers":"Chinese for Amazon Sellers","canton-fair-chinese":"Canton Fair Chinese","1688-alibaba-chinese":"1688 & Alibaba Chinese","factory-negotiation":"Factory Negotiation","moq-sample-requests":"MOQ & Sample Requests","quality-issue-chinese":"Quality Issue Chinese","import-export-chinese":"Import / Export Chinese"};
+      const escapeHtml=(value)=>String(value||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+      const categoryLabel=(value)=>categoryLabels[value]||String(value||"Mandrix Guide").split("-").filter(Boolean).map((word)=>word.charAt(0).toUpperCase()+word.slice(1)).join(" ");
+      async function loadDynamicInsights(){if(!dynamicInsightsGrid)return;try{const response=await fetch("/api/seo-pages.js");const data=await response.json();if(!response.ok||!Array.isArray(data.pages)||!data.pages.length)return;const cards=data.pages.slice(0,24).map((page)=>\`<article class="insight-card dynamic-insight-card"><span>\${escapeHtml(categoryLabel(page.category))}</span><h2>\${escapeHtml(page.title||"Mandrix Guide")}</h2><p>\${escapeHtml(page.excerpt||page.description||"")}</p><a class="program-cta" href="/insights/\${encodeURIComponent(page.category)}/\${encodeURIComponent(page.slug)}">Read guide</a></article>\`).join("");emptyInsightsCard?.remove();dynamicInsightsGrid.insertAdjacentHTML("afterbegin",cards)}catch(error){console.info("Dynamic insights unavailable",error)}}loadDynamicInsights();
+    </script>
+  </body>
+</html>`;
+}
+
 function renderPage(row) {
   const payload = parseJson(row.payload, {});
   const category = cleanSlug(row.category);
@@ -64,9 +138,9 @@ function renderPage(row) {
     { title: payload.card2Title, text: payload.card2Text },
     { title: payload.card3Title, text: payload.card3Text },
   ].filter((card) => clean(card.title) || clean(card.text));
-  const primaryLabel = clean(payload.primaryLabel || "Start Free AI Level Check");
+  const primaryLabel = clean(payload.primaryLabel || "Start Free Sourcing Audit");
   const primaryHref = clean(payload.primaryHref || "/level-check");
-  const secondaryLabel = clean(payload.secondaryLabel || "View Courses");
+  const secondaryLabel = clean(payload.secondaryLabel || "View Sourcing Program");
   const secondaryHref = clean(payload.secondaryHref || "/courses");
   const schema = {
     "@context": "https://schema.org",
@@ -121,8 +195,8 @@ function renderPage(row) {
     <div class="shell insight-shell">
       <header class="nav" translate="no">
         <div class="nav-inner">
-          <a class="brand" href="/"><img src="/assets/mandrix-logo-128.png" alt="Mandrix logo" width="128" height="128" decoding="async"><span class="brand-word"><span class="brand-name">Mandrix</span><span class="brand-line">Chinese, decoded.</span></span></a>
-          <nav class="nav-links" id="navLinks"><a href="/method">Method</a><a href="/#core-system">Core System</a><a href="/#learning-paths">Learning Paths</a><a href="/corporate">Corporate</a><a href="/#results">Results</a><a href="/about">About Jane</a><a href="/faq">FAQ</a><a class="nav-cta" href="/level-check">Free AI Check</a><a class="lang-switch" href="/zh">中文</a></nav>
+          <a class="brand" href="/"><img src="/assets/mandrix-logo-128.png" alt="Mandrix logo" width="128" height="128" decoding="async"><span class="brand-word"><span class="brand-name">Mandrix</span><span class="brand-line">Chinese for Sourcing</span></span></a>
+          <nav class="nav-links" id="navLinks"><a href="/">Home</a><a href="/#method">How It Works</a><a href="/courses">Sourcing Program</a><a href="/#results">Results</a><a href="/about">About Jane</a><a href="/faq">FAQ</a><a class="nav-cta" href="/level-check">Free Audit</a><a class="lang-switch" href="/zh">中文</a></nav>
           <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
         </div>
       </header>
@@ -143,13 +217,13 @@ function renderPage(row) {
           <div class="article-cta-copy">
             <p class="article-cta-kicker">${escapeHtml(payload.ctaEyebrow || "Start with diagnosis")}</p>
             <h2>${escapeHtml(payload.ctaTitle || "Find the blocker before choosing a course.")}</h2>
-            <p>${escapeHtml(payload.ctaBody || "Use the free AI level check to identify your likely level, main blocker, and recommended Mandrix path before choosing a paid program.")}</p>
+            <p>${escapeHtml(payload.ctaBody || "Use the free sourcing audit to identify your supplier-message blocker before choosing a paid program.")}</p>
           </div>
           <div class="article-cta-actions"><a class="btn primary" href="${escapeHtml(primaryHref)}">${escapeHtml(primaryLabel)}</a>${secondaryButton}</div>
         </div>
       </article>
     </main>
-    <footer class="footer"><div class="wrap"><div class="footer-brand"><strong>Mandrix</strong><span>Chinese, decoded.</span><p>Clearer Chinese for adult learners.</p></div><nav class="footer-links" aria-label="Contact links"><a href="/method">Method</a><a href="/courses">Courses</a><a href="/corporate">Corporate</a><a href="/insights">Insights</a><a href="/booking">Booking</a><a href="mailto:Jane.Mandrix@outlook.com">Jane.Mandrix@outlook.com</a></nav><span>© 2026 Mandrix | Jane Chen. All Rights Reserved.</span></div></footer>
+    <footer class="footer"><div class="wrap"><div class="footer-brand"><strong>Mandrix</strong><span>Chinese for Sourcing</span><p>Supplier communication Chinese for Amazon sellers, importers, buyers, and cross-border teams.</p></div><nav class="footer-links" aria-label="Contact links"><a href="/method">How It Works</a><a href="/courses">Sourcing Program</a><a href="/insights">Insights</a><a href="/booking">Booking</a><a href="mailto:Jane.Mandrix@outlook.com">Jane.Mandrix@outlook.com</a></nav><span>© 2026 Mandrix | Jane Chen. All Rights Reserved.</span></div></footer>
     <script src="/analytics.js" defer></script>
     <script>const navToggle=document.querySelector("#navToggle");const navLinks=document.querySelector("#navLinks");navToggle?.addEventListener("click",()=>{const isOpen=navLinks.classList.toggle("nav-open");navToggle.setAttribute("aria-expanded",isOpen?"true":"false")});</script>
   </body>
@@ -158,12 +232,16 @@ function renderPage(row) {
 
 export async function onRequest(context) {
   const path = Array.isArray(context.params.path) ? context.params.path : [context.params.path].filter(Boolean);
-  if (path.length !== 2) return context.next();
-  const [category, slug] = path.map(cleanSlug);
+  const cleanPath = path.map(cleanSlug).filter(Boolean);
+  if (!cleanPath.length) return text(renderInsightsIndex());
+  const pathKey = cleanPath.join("/");
+  if (deletedInsightPaths.has(pathKey)) return text("Gone", 410, "text/plain; charset=utf-8");
+  if (cleanPath.length !== 2) return text("Not found", 404, "text/plain; charset=utf-8");
+  const [category, slug] = cleanPath;
   const db = context.env.MANDRIX_DB || context.env.DB;
   if (!db) return text("Cloudflare D1 binding MANDRIX_DB is not configured.", 500, "text/plain; charset=utf-8");
   const row = await db.prepare("SELECT * FROM seo_pages WHERE status = 'published' AND category = ? AND slug = ? LIMIT 1")
     .bind(category, slug).first();
-  if (!row) return context.next();
+  if (!row) return text("Not found", 404, "text/plain; charset=utf-8");
   return text(renderPage(row));
 }

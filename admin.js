@@ -113,49 +113,47 @@ const seoImageLibrary = [
 ];
 
 const seoCategoryLabels = {
-  "business-chinese": "Business Chinese",
-  "hsk-prep": "HSK Prep",
-  "daily-chinese": "Daily Chinese",
   "sourcing-chinese": "Sourcing Chinese",
-  "culture-communication": "Culture & Communication",
-  "learning-method": "Learning Method",
   "supplier-communication": "Supplier Communication",
-  "workplace-mandarin": "Workplace Mandarin",
   "chinese-for-amazon-sellers": "Chinese for Amazon Sellers",
-  "adult-mandarin-learning": "Adult Mandarin Learning",
-  "professional-chinese": "Professional Chinese",
+  "canton-fair-chinese": "Canton Fair Chinese",
+  "1688-alibaba-chinese": "1688 & Alibaba Chinese",
+  "factory-negotiation": "Factory Negotiation",
+  "moq-sample-requests": "MOQ & Sample Requests",
+  "quality-issue-chinese": "Quality Issue Chinese",
+  "import-export-chinese": "Import / Export Chinese",
 };
 
 const seoPresets = {
   custom: {
-    category: "learning-method",
+    category: "supplier-communication",
     status: "published",
-    slug: "new-mandarin-page",
-    title: "Learn Mandarin Chinese Online | Mandrix",
-    description: "Logic-based Mandarin Chinese lessons for adults. Start with the free AI level check, then choose a paid path if it fits.",
-    eyebrow: "Mandrix Chinese",
-    h1: "Build Chinese you can actually use.",
-    lead: "A focused Mandrix page for adult learners who want Chinese explained through logic, structure, and real output.",
-    articleBody: "This guide should explain one clear Chinese learning problem, show how Mandrix diagnoses it, and give the learner a practical next step. Keep the writing specific, grounded, and useful for adults.",
-    image: "assets/mandrix-scene-method.jpg",
-    imageAlt: "Reviewing Mandarin learning materials on a laptop",
-    chips: "Logic first, Adult learners, Real output, Free AI check",
-    primaryLabel: "Start Free AI Level Check",
+    slug: "supplier-message-chinese",
+    title: "Chinese Supplier Messages That Sound Clear | Mandrix",
+    description: "Learn how to write clearer Chinese supplier messages for MOQ, samples, delivery, price, and quality follow-up.",
+    eyebrow: "Supplier Communication",
+    h1: "Write Chinese supplier messages that get clearer replies.",
+    lead: "A focused Mandrix page for sellers, buyers, and importers who need Chinese for real supplier conversations. The goal is not generic Mandarin; it is clearer messages that reduce misunderstanding.",
+    articleBody: "This guide should explain one concrete supplier communication problem, show why translated Chinese often sounds weak or abrupt, and give the learner a useful next step. Keep the writing specific, grounded, and commercially useful for Amazon sellers, buyers, and importers.",
+    image: "assets/sourcing-supplier-laptop.jpg",
+    imageAlt: "Reviewing supplier communication on a laptop",
+    chips: "Supplier messages, MOQ, Samples, Free sourcing audit",
+    primaryLabel: "Start Free Sourcing Audit",
     primaryHref: "/level-check",
-    secondaryLabel: "View Courses",
+    secondaryLabel: "View Sourcing Program",
     secondaryHref: "/courses",
-    card1Title: "Diagnose the blocker",
-    card1Text: "Find the exact grammar, tone, or communication gap that keeps your Chinese from moving forward.",
-    card2Title: "Decode the logic",
-    card2Text: "Learn the sentence structure behind useful Chinese instead of memorizing scattered phrases.",
-    card3Title: "Build real output",
-    card3Text: "Leave each session with templates, corrected wording, or a roadmap you can use right away.",
+    card1Title: "Ask without sounding abrupt",
+    card1Text: "Turn blunt translated requests into polite but firm supplier questions.",
+    card2Title: "Confirm the details that matter",
+    card2Text: "Build message patterns for quantity, packaging, delivery, material, sample, and payment details.",
+    card3Title: "Keep the deal moving",
+    card3Text: "Use follow-up language that gets a clear next step without sounding pushy.",
     sectionEyebrow: "Why Mandrix works",
-    sectionTitle: "Chinese becomes lighter when the structure is visible.",
-    sectionBody: "Most adult learners do not need more random phrases. They need someone to show how Chinese sentences are assembled, then help them build their own.",
+    sectionTitle: "Supplier Chinese is a business communication skill.",
+    sectionBody: "General Mandarin does not teach buyers how to ask for samples, clarify MOQ, handle a quality issue, or follow up after silence. Mandrix starts from the supplier task and then teaches the Chinese structure behind it.",
     ctaEyebrow: "Start with diagnosis",
-    ctaTitle: "Find the blocker first.",
-    ctaBody: "The free AI level check gives you an initial direction before you invest in a paid program.",
+    ctaTitle: "Audit your supplier message first.",
+    ctaBody: "The free sourcing audit shows where your Chinese message sounds unclear, weak, too direct, or translated before you invest in a paid program.",
   },
   sourcing: {
     category: "sourcing-chinese",
@@ -170,7 +168,7 @@ const seoPresets = {
     image: "assets/sourcing-supplier-laptop.jpg",
     imageAlt: "Reviewing supplier details and sourcing messages on a laptop",
     chips: "Factory visits, Supplier WeChat, 1688 listings, MOQ and price terms",
-    primaryLabel: "Start Free AI Level Check",
+    primaryLabel: "Start Free Sourcing Audit",
     primaryHref: "/level-check",
     secondaryLabel: "View Sourcing Program",
     secondaryHref: "/specialty",
@@ -184,25 +182,25 @@ const seoPresets = {
     sectionTitle: "Sourcing Chinese protects business decisions.",
     sectionBody: "General Chinese teaches you how to order food and introduce yourself. Sourcing Chinese teaches you how to ask about quality without sounding accusatory, negotiate price without losing face, and understand what a supplier means when they say no problem.",
     ctaEyebrow: "Not sure where to start?",
-    ctaTitle: "Start with the free AI level check.",
-    ctaBody: "In 60 minutes, Jane identifies what blocks your supplier communication and maps the fastest path toward usable sourcing Chinese.",
+    ctaTitle: "Start with the free sourcing audit.",
+    ctaBody: "In 8 minutes, the audit identifies what blocks your supplier communication and points you toward the most useful sourcing Chinese path.",
   },
   business: {
-    category: "business-chinese",
+    category: "factory-negotiation",
     status: "published",
-    slug: "business-chinese-online",
-    title: "Business Chinese Lessons Online for Professionals | Mandrix",
-    description: "1-on-1 Business Chinese coaching for professionals. Emails, WeChat, meetings, negotiations. Bring real work materials. Start with the free AI level check.",
-    eyebrow: "Business Chinese Online",
-    h1: "Sound professional in Chinese, not just grammatically correct.",
+    slug: "factory-negotiation-chinese",
+    title: "Factory Negotiation Chinese for Buyers | Mandrix",
+    description: "Learn Chinese for factory negotiation, price questions, MOQ, samples, delivery, and professional supplier follow-up.",
+    eyebrow: "Factory Negotiation",
+    h1: "Negotiate with Chinese factories without sounding translated.",
     lead: "Business Chinese is not vocabulary. Tone, structure, and cultural context decide whether your message sounds clear and trustworthy or blunt and unprepared.",
     articleBody: "Business Chinese requires more than correct grammar. In real work, the same sentence can sound confident, abrupt, vague, or overly casual depending on structure and tone.\n\nMandrix helps professionals work with real materials: WeChat messages, emails, meeting notes, proposals, presentations, and follow-up wording. The focus is to understand why Chinese business communication works the way it does, then build reusable templates.\n\nStart with a diagnostic if you need to know whether your blocker is grammar, vocabulary, tone, pronunciation, or cultural context.",
     image: "assets/backup-business-meeting.jpg",
     imageAlt: "Business meeting desk with reports and working notes",
     chips: "WeChat and email, Meetings and calls, Negotiation, Professional tone",
-    primaryLabel: "Start Free AI Level Check",
+    primaryLabel: "Start Free Sourcing Audit",
     primaryHref: "/level-check",
-    secondaryLabel: "View Business Programs",
+    secondaryLabel: "View Sourcing Program",
     secondaryHref: "/courses",
     card1Title: "WeChat and professional email",
     card1Text: "Write messages that sound natural, respectful, and appropriately formal instead of translated or stiff.",
@@ -218,21 +216,21 @@ const seoPresets = {
     ctaBody: "The free AI level check identifies likely grammar, tone, or structure gaps behind your business communication problem.",
   },
   hsk: {
-    category: "hsk-prep",
+    category: "canton-fair-chinese",
     status: "published",
-    slug: "hsk-preparation-online",
-    title: "HSK 3.0 Exam Preparation Online — Tutor & Coaching | Mandrix",
-    description: "Structured HSK 3.0 preparation with 1-on-1 coaching. Vocabulary, grammar, listening, reading, and mock tests. Aligned with official HSK framework.",
-    eyebrow: "HSK Exam Preparation",
-    h1: "Pass your HSK exam without just drilling vocabulary lists.",
+    slug: "canton-fair-chinese-phrases",
+    title: "Canton Fair Chinese for Buyers | Mandrix",
+    description: "Learn practical Chinese for Canton Fair booth conversations, supplier introductions, product questions, and follow-up messages.",
+    eyebrow: "Canton Fair Chinese",
+    h1: "Talk to suppliers at the Canton Fair with more control.",
     lead: "Most students struggle with HSK because they never understood the grammar patterns behind the exam questions. Mandrix decodes the logic so the test format has no surprises.",
     articleBody: "HSK preparation works best when vocabulary, grammar, listening, reading, and mock test correction are connected. Memorizing lists may help short term, but it often breaks down when the exam asks the same pattern in a new way.\n\nMandrix starts with a level diagnosis, then builds a study plan around the learner's target level, weak grammar points, listening habits, and reading speed.\n\nThe goal is exam readiness and practical Chinese at the same time.",
     image: "assets/backup-study-desk.jpg",
     imageAlt: "Online HSK preparation desk with notes and video lesson",
     chips: "Level diagnosis, Grammar logic, Mock tests, Correction plan",
-    primaryLabel: "Start Free AI Level Check",
+    primaryLabel: "Start Free Sourcing Audit",
     primaryHref: "/level-check",
-    secondaryLabel: "View HSK Programs",
+    secondaryLabel: "View Sourcing Program",
     secondaryHref: "/courses",
     card1Title: "Level diagnosis first",
     card1Text: "Know exactly where you are and what to study before buying a full course or choosing an exam date.",
@@ -1455,7 +1453,7 @@ function cleanSeoSlug(value) {
 
 function cleanSeoCategory(value) {
   const category = cleanSeoSlug(value);
-  return category || "learning-method";
+  return seoCategoryLabels[category] ? category : "supplier-communication";
 }
 
 function seoCategoryLabel(value) {
@@ -1508,17 +1506,15 @@ function seoSuggestedImages(data = seoFields()) {
   const category = cleanSeoCategory(data.category);
   const seen = new Set(Object.keys(seoUsedImages));
   const topicHints = {
-    "business-chinese": ["business", "meeting", "corporate"],
-    "hsk-prep": ["hsk", "study", "diagnostic"],
-    "daily-chinese": ["daily", "conversation"],
     "sourcing-chinese": ["sourcing", "supplier", "warehouse"],
-    "culture-communication": ["reception", "business", "daily"],
-    "learning-method": ["method", "diagnostic", "study"],
     "supplier-communication": ["sourcing", "supplier", "warehouse"],
-    "workplace-mandarin": ["business", "meeting", "corporate"],
     "chinese-for-amazon-sellers": ["sourcing", "warehouse", "business"],
-    "adult-mandarin-learning": ["study", "lesson", "method"],
-    "professional-chinese": ["business", "meeting", "lesson"],
+    "canton-fair-chinese": ["business", "meeting", "sourcing"],
+    "1688-alibaba-chinese": ["sourcing", "supplier", "warehouse"],
+    "factory-negotiation": ["sourcing", "business", "meeting"],
+    "moq-sample-requests": ["sourcing", "supplier", "warehouse"],
+    "quality-issue-chinese": ["sourcing", "supplier", "warehouse"],
+    "import-export-chinese": ["sourcing", "business", "warehouse"],
   };
   const hints = topicHints[category] || [];
   const rank = (item) => {
@@ -1587,9 +1583,9 @@ function buildSeoHtml(rawData = seoFields()) {
   const h1 = data.h1 || title.replace(/\s*\|\s*Mandrix\s*$/i, "");
   const lead = data.lead || description;
   const cards = seoCardData(data).filter((card) => card.title || card.text);
-  const primaryLabel = data.primaryLabel || "Start Free AI Level Check";
+  const primaryLabel = data.primaryLabel || "Start Free Sourcing Audit";
   const primaryHref = data.primaryHref || "/level-check";
-  const secondaryLabel = data.secondaryLabel || "View Courses";
+  const secondaryLabel = data.secondaryLabel || "View Sourcing Program";
   const secondaryHref = data.secondaryHref || "/courses";
   const schema = {
     "@context": "https://schema.org",
@@ -1773,13 +1769,13 @@ Use this data as directional evidence only. If data is thin, rely on search inte
 function seoAiPrompt() {
   return `你是 Mandrix 官网 SEO 页面文案助手。请只输出一个可复制的 JSON 代码块，不要解释。
 
-品牌：Mandrix，在线中文教学，高级、清楚、专业，面向成年学习者、商务人士、HSK 学生、采购/跨境/企业客户。
-目标：生成一个可直接粘贴进 Mandrix 后台的 SEO 页面。语言为英文。不要幼稚、不要夸张、不要长篇大论。格式必须固定，字段一个都不能少，不要额外添加字段。
+品牌：Mandrix，在线采购汉语与供应商沟通训练，高级、清楚、专业，面向 Amazon sellers、importers、buyers、sourcing teams、Canton Fair visitors、跨境/外贸客户。
+目标：生成一个可直接粘贴进 Mandrix 后台的 SEO 页面。语言为英文。主题必须优先服务采购汉语爆款主线，不写泛泛成人中文、泛泛 HSK 或日常中文。不要幼稚、不要夸张、不要长篇大论。格式必须固定，字段一个都不能少，不要额外添加字段。
 
 固定输出格式如下，字段一个都不要少：
 \`\`\`json
 {
-  "category": "business-chinese",
+  "category": "supplier-communication",
   "status": "published",
   "slug": "example-page-url",
   "title": "SEO title, 35-65 characters, ends with | Mandrix",
@@ -1791,9 +1787,9 @@ function seoAiPrompt() {
   "image": "assets/backup-business-meeting.jpg",
   "imageAlt": "Short image alt text",
   "chips": "Chip one, Chip two, Chip three, Chip four",
-  "primaryLabel": "Start Free AI Level Check",
+  "primaryLabel": "Start Free Sourcing Audit",
   "primaryHref": "/level-check",
-  "secondaryLabel": "View Courses",
+  "secondaryLabel": "View Sourcing Program",
   "secondaryHref": "/courses",
   "card1Title": "Card 1 title",
   "card1Text": "Card 1 text, specific and useful.",
@@ -1828,13 +1824,13 @@ Allowed image values only:
 - assets/sourcing-supplier-laptop.jpg
 
 Rules:
-- category must be one of: business-chinese, hsk-prep, daily-chinese, sourcing-chinese, culture-communication, learning-method, supplier-communication, workplace-mandarin, chinese-for-amazon-sellers, adult-mandarin-learning, mandarin-pronunciation, professional-chinese
+- category must be one of: sourcing-chinese, supplier-communication, chinese-for-amazon-sellers, canton-fair-chinese, 1688-alibaba-chinese, factory-negotiation, moq-sample-requests, quality-issue-chinese, import-export-chinese
 - image must use one of the allowed scene image paths above. Do not generate images. Do not ask for uploads.
-- Do not invent prices. Use only the approved course prices and the free AI level check.
+- Do not invent prices. Use only the approved course prices: free sourcing audit, Starter $149 / 3 lessons, Bridge $299 / 6 lessons, Core $599 / 12 lessons, Intensive $1,099 / 24 lessons.
 - Do not promise fluency in unrealistic time.
 - Keep title readable, not keyword stuffing.
 - H1 should sound human, not AI startup language.
-- Use concrete learner situations, not abstract methodology.
+- Use concrete buyer situations: MOQ, samples, price, delivery, packaging, quality issues, WeChat follow-up, 1688, Alibaba, Canton Fair, factory visits.
 - Output JSON only.`;
 }
 
@@ -1867,9 +1863,9 @@ function normalizeSeoAiData(data) {
   cleaned.slug = cleanSeoSlug(cleaned.slug);
   cleaned.category = cleanSeoCategory(cleaned.category);
   cleaned.status = cleaned.status === "draft" ? "draft" : "published";
-  cleaned.primaryLabel ||= "Start Free AI Level Check";
+  cleaned.primaryLabel ||= "Start Free Sourcing Audit";
   cleaned.primaryHref ||= "/level-check";
-  cleaned.secondaryLabel ||= "View Courses";
+  cleaned.secondaryLabel ||= "View Sourcing Program";
   cleaned.secondaryHref ||= "/courses";
   const imageField = seoForm?.elements.image;
   const hasKnownImage = seoImageLibrary.some((item) => item.value === cleaned.image);

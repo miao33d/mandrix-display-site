@@ -952,7 +952,7 @@ if (floatingContact && floatingHideSections.length) {
   updateFloatingContact();
 }
 
-/* ─── Free AI Level Check: branded report + lead capture ─────────── */
+/* ─── Free sourcing audit: branded report + lead capture ─────────── */
 const levelCheckForm = document.querySelector("#levelCheckForm");
 const levelCheckSubmit = document.querySelector("#levelCheckSubmit");
 const levelReport = document.querySelector("#levelReport");
@@ -973,11 +973,11 @@ let levelAudioSeconds = 0;
 let levelAudioStream = null;
 
 const goalLabels = {
-  daily: "Daily Chinese",
-  business: "Business Chinese",
+  daily: "Daily Chinese after sourcing needs are clear",
+  business: "Business Chinese with Chinese partners",
   hsk: "HSK System Prep",
-  sourcing: "Sourcing & Supplier Chinese",
-  travel: "Travel / Relocation Chinese",
+  sourcing: "China Sourcing Communication",
+  travel: "Canton Fair / Factory Visit Chinese",
 };
 
 function textLengthScore(sample = "") {
@@ -1011,29 +1011,29 @@ function estimateLevel(data) {
   score += answerScore(data.scenario);
   score += textLengthScore(data.sample);
 
-  if (score <= 4) return { label: "Beginner", hsk: "Closest HSK range: Pre-HSK / HSK 1", score };
-  if (score <= 9) return { label: "Elementary", hsk: "Closest HSK range: HSK 1-2", score };
-  if (score <= 14) return { label: "Lower-intermediate", hsk: "Closest HSK range: HSK 2-3", score };
-  return { label: "Intermediate", hsk: "Closest HSK range: HSK 3-4+", score };
+  if (score <= 4) return { label: "High-risk supplier messaging", hsk: "Likely needs templates before direct factory negotiation", score };
+  if (score <= 9) return { label: "Basic sourcing communication", hsk: "Can start with simple inquiries, but tone and structure need support", score };
+  if (score <= 14) return { label: "Developing buyer communication", hsk: "Ready for MOQ, sample, delivery, and quality scripts", score };
+  return { label: "Deal-ready foundation", hsk: "Can handle more advanced negotiation with correction", score };
 }
 
 function blockerInsight(blocker) {
   const map = {
     translation: {
-      title: "Translation habit",
-      detail: "You may know more Chinese than you can use because every sentence passes through English first.",
+      title: "Machine-translation risk",
+      detail: "Your supplier messages may sound translated, vague, or too direct. Factories often respond differently when a buyer sounds inexperienced.",
     },
     "word-order": {
-      title: "Sentence order instability",
-      detail: "Your next improvement will likely come from reusable sentence frames, not more isolated vocabulary.",
+      title: "Supplier-message structure risk",
+      detail: "Your next improvement will likely come from reusable inquiry, MOQ, sample, and follow-up frames, not more isolated words.",
     },
     grammar: {
-      title: "Disconnected grammar",
-      detail: "Rules may feel like separate facts. Mandrix would connect them into patterns you can reuse.",
+      title: "Pattern control risk",
+      detail: "The grammar is not the point by itself. You need reliable patterns that can survive real WeChat and factory conversations.",
     },
     output: {
-      title: "Passive-to-active gap",
-      detail: "Your comprehension is probably ahead of your speaking. You need controlled output practice.",
+      title: "Passive-to-active supplier gap",
+      detail: "You may understand more than you can use. Supplier communication needs controlled output practice because vague replies can cost time and leverage.",
     },
   };
   return map[blocker] || map["word-order"];
@@ -1043,13 +1043,13 @@ function recommendPath(goal) {
   const map = {
     daily: {
       path: "Daily Chinese",
-      why: "Best for real-life fluency, daily interaction, and speaking confidence.",
-      firstStep: "Build 8-10 reusable sentence frames for introductions, needs, plans, and opinions.",
+      why: "Useful if your China plans include daily life, travel, or relocation after the sourcing need is handled.",
+      firstStep: "Start with sourcing if factory communication affects money now; add daily Chinese when travel or relocation becomes the next priority.",
     },
     business: {
       path: "Business Chinese",
-      why: "Best for meetings, messages, client conversations, negotiation, and professional tone.",
-      firstStep: "Start with polite request structures, meeting language, and work-message templates.",
+      why: "Best when supplier communication expands into meetings, partnerships, client conversations, and professional trust.",
+      firstStep: "Start with polite request structures, follow-up messages, and business-tone templates that transfer into supplier work.",
     },
     hsk: {
       path: "HSK System Prep",
@@ -1057,14 +1057,14 @@ function recommendPath(goal) {
       firstStep: "Map your current HSK gap, then study grammar and vocabulary through exam-style output.",
     },
     sourcing: {
-      path: "Sourcing & Supplier Chinese",
-      why: "Best for factory visits, WeChat supplier messages, pricing, MOQ, samples, and problem solving.",
-      firstStep: "Learn supplier-message templates for price, quality, timeline, samples, and follow-up.",
+      path: "China Sourcing Communication",
+      why: "Best for 1688, Alibaba, WeChat supplier messages, pricing, MOQ, samples, quality issues, delivery, and factory follow-up.",
+      firstStep: "Build your first corrected supplier-message set: inquiry, MOQ, sample, price condition, delivery confirmation, and quality follow-up.",
     },
     travel: {
-      path: "Travel / Relocation Chinese",
-      why: "Best for practical survival Chinese and confidence in daily Chinese-speaking environments.",
-      firstStep: "Practice high-frequency scenes: food, transport, housing, appointments, and help requests.",
+      path: "Canton Fair / Factory Visit Chinese",
+      why: "Best when you need Chinese for booth conversations, product questions, supplier introductions, and post-meeting follow-up.",
+      firstStep: "Prepare a trade-fair introduction, 10 product questions, sample requests, and a WeChat follow-up script.",
     },
   };
   return map[goal] || map.daily;
@@ -1074,38 +1074,38 @@ function diagnosticEvidence(data) {
   const evidence = [];
   if (data.recognition !== "high") {
     evidence.push({
-      title: "Meaning was not automatic",
-      detail: "The basic sentence 我今天想喝茶 should be recognized immediately. A miss here suggests your brain is still translating instead of retrieving structure directly.",
+      title: "Basic meaning was not automatic",
+      detail: "If simple meaning recognition is slow, supplier messages will be even harder under pressure. This affects live calls, factory visits, and fast WeChat replies.",
     });
   }
   if (data.transferDuration !== "high") {
     evidence.push({
-      title: "English duration pattern interfered",
-      detail: "For “I have been learning Chinese for 3 months,” natural Chinese uses 已经 + duration + 了. Choosing a direct 'have/for' structure is a classic English-transfer signal.",
+      title: "English structure interfered",
+      detail: "Direct English-to-Chinese structure is exactly what makes supplier messages sound machine-translated. The course trains Chinese patterns before templates.",
     });
   }
   if (data.wordOrder !== "high") {
     evidence.push({
-      title: "Time word placement is unstable",
-      detail: "In 我明天要见一个中国客户, 明天 sits before the action. If this felt uncertain, your word order is probably not automated yet.",
+      title: "Time and action order is unstable",
+      detail: "Delivery dates, sample timing, and follow-up deadlines depend on clear time placement. This needs to be automatic in supplier messages.",
     });
   }
   if (data.chunking !== "high") {
     evidence.push({
-      title: "Chunking needs work",
-      detail: "能不能 and 提前半小时 should function as reusable chunks. If they moved around awkwardly, the issue is not vocabulary but sentence assembly.",
+      title: "Reusable chunks need work",
+      detail: "Supplier Chinese depends on chunks such as 能不能, 确认一下, 如果数量增加, and 价格还有空间吗. If chunks move awkwardly, templates break.",
     });
   }
   if (data.scenario !== "business") {
     evidence.push({
-      title: "Communication tone needs calibration",
-      detail: "In supplier or client conversations, literal replies can sound abrupt. You need controlled practice with polite pressure, softening, and negotiation structures.",
+      title: "Negotiation tone needs calibration",
+      detail: "Literal replies can sound abrupt or weak. Supplier communication needs polite pressure, clear conditions, and a next-step structure.",
     });
   }
   if (textLengthScore(data.sample) <= 1) {
     evidence.push({
-      title: "Output sample was limited",
-      detail: "A short or mixed sample is normal. It suggests the next useful step is guided output, where you build one accurate sentence pattern at a time.",
+      title: "Supplier output evidence was limited",
+      detail: "A short or mixed sample is normal, but it limits negotiation leverage. The next useful step is guided output that turns one real sourcing problem into a corrected message.",
     });
   }
   return evidence.slice(0, 3);
@@ -1125,16 +1125,16 @@ function buildLevelReport(data) {
   const path = recommendPath(data.goal);
   const structureCorrect = [data.recognition, data.transferDuration, data.wordOrder, data.grammar, data.chunking].filter((value) => value === "high").length;
   const grammarNote = structureCorrect >= 2
-    ? "You can recognize basic meaning and structure. The next step is making that structure available during real-time speaking."
-    : "The structure tasks suggest that meaning, word order, and aspect markers may still feel separate. That is exactly where a pattern-first method helps.";
+    ? "You can recognize basic structure. The next step is using it inside supplier messages where tone, timing, and leverage matter."
+    : "The structure tasks suggest that meaning, word order, and message logic may still feel separate. That is exactly where a sourcing-pattern method helps.";
   const scenarioNote = data.scenario === "business"
-    ? "Your scenario choice shows awareness of tone and negotiation context, not just literal translation."
-    : "Your scenario choice suggests you may need more practice with tone, politeness, and context-specific Chinese.";
+    ? "Your scenario choice shows awareness of supplier tone and negotiation context, not just literal translation."
+    : "Your scenario choice suggests you may need more practice with polite pressure, factory tone, and sourcing-specific Chinese.";
   const sampleNote = textLengthScore(data.sample) >= 2
-    ? "Your optional sample gives Jane extra material for a sharper follow-up diagnosis."
-    : "You did not need a Chinese keyboard to finish this check. For a deeper human diagnosis, you can later send Chinese, pinyin, voice, or English notes.";
+    ? "Your supplier-message sample gives Jane material for a sharper follow-up diagnosis."
+    : "You did not need a Chinese keyboard to finish this audit. For a deeper human review, you can send Chinese, pinyin, voice, English notes, or a real supplier chat.";
   const voiceNote = data.spokenSampleIncluded
-    ? "You also included a spoken sample. Jane can use it to review fluency, hesitation, tone, and how quickly you retrieve sentence patterns."
+    ? "You also included a spoken sample. Jane can use it to review fluency, hesitation, tone, and how quickly you retrieve supplier-message patterns."
     : "";
 
   return {
@@ -1150,10 +1150,10 @@ function buildLevelReport(data) {
     scores: {
       structure: Math.min(95, 28 + level.score * 4 + structureCorrect * 8),
       comprehension: Math.min(94, 34 + answerScore(data.recognition) * 15 + answerScore(data.transferDuration) * 12 + answerScore(data.wordOrder) * 11 + answerScore(data.grammar) * 8),
-      communication: Math.min(92, 35 + answerScore(data.scenario) * 18 + (data.goal === "business" || data.goal === "sourcing" ? 8 : 0)),
+      communication: Math.min(92, 35 + answerScore(data.scenario) * 18 + (data.goal === "business" || data.goal === "sourcing" || data.goal === "travel" ? 8 : 0)),
       output: Math.min(92, 30 + textLengthScore(data.sample) * 14 + (data.confidence === "high" ? 18 : data.confidence === "medium" ? 8 : 0)),
       confidence: data.confidence === "high" ? 78 : data.confidence === "medium" ? 58 : 38,
-      goalFit: 88,
+      goalFit: data.goal === "sourcing" || data.goal === "travel" ? 94 : 84,
     },
   };
 }
@@ -1311,37 +1311,37 @@ function renderLevelReport(data, report) {
     </div>
   ` : "";
   const costlyErrors = [];
-  if ((report.blocker?.title || "").includes("Translation")) {
-    costlyErrors.push("You are converting too much of Chinese through English before speaking.");
+  if ((report.blocker?.title || "").includes("Translation") || (report.blocker?.title || "").includes("Machine")) {
+    costlyErrors.push("Your supplier message may sound machine-translated, which lowers trust and negotiating leverage.");
   }
-  if ((report.blocker?.title || "").includes("Sentence order")) {
-    costlyErrors.push("Your sentence frames are not stable enough to produce under pressure.");
+  if ((report.blocker?.title || "").includes("Sentence") || (report.blocker?.title || "").includes("structure")) {
+    costlyErrors.push("Your supplier-message frames are not stable enough for MOQ, sample, delivery, and quality follow-up.");
   }
-  if ((report.blocker?.title || "").includes("grammar") || (report.blocker?.title || "").includes("Grammar")) {
-    costlyErrors.push("Grammar feels like separate facts instead of reusable patterns.");
+  if ((report.blocker?.title || "").toLowerCase().includes("grammar") || (report.blocker?.title || "").includes("Pattern")) {
+    costlyErrors.push("Your grammar needs to become reusable sourcing patterns, not isolated rules.");
   }
   if (report.voiceAnalysis?.primaryBottleneck) {
     costlyErrors.push(report.voiceAnalysis.primaryBottleneck);
   }
   const topErrors = costlyErrors.slice(0, 3);
   levelReportContent.innerHTML = `
-    <p class="eyebrow">Diagnostic Report</p>
-    <h3>${data.fullName || "Your"} Chinese bottleneck report</h3>
+    <p class="eyebrow">Sourcing Communication Audit</p>
+    <h3>${data.fullName || "Your"} supplier-message report</h3>
     <div class="level-report-summary">
-      <article><span>Estimated level</span><strong>${report.level.label}</strong><small>${report.level.hsk}</small></article>
-      <article><span>Main blocker</span><strong>${report.blocker.title}</strong><small>${report.blocker.detail}</small></article>
-      <article><span>Best path</span><strong>${safeGoal}</strong><small>${report.path.why}</small></article>
+      <article><span>Sourcing readiness</span><strong>${report.level.label}</strong><small>${report.level.hsk}</small></article>
+      <article><span>Costliest communication risk</span><strong>${report.blocker.title}</strong><small>${report.blocker.detail}</small></article>
+      <article><span>Best next path</span><strong>${safeGoal}</strong><small>${report.path.why}</small></article>
     </div>
     <div class="level-score-panel">
-      ${renderScoreBar("Structure awareness", report.scores.structure)}
-      ${renderScoreBar("Comprehension", report.scores.comprehension)}
-      ${renderScoreBar("Real communication", report.scores.communication)}
-      ${renderScoreBar("Active output", report.scores.output)}
-      ${renderScoreBar("Speaking confidence", report.scores.confidence)}
-      ${renderScoreBar("Mandrix path fit", report.scores.goalFit)}
+      ${renderScoreBar("Message structure", report.scores.structure)}
+      ${renderScoreBar("Meaning clarity", report.scores.comprehension)}
+      ${renderScoreBar("Supplier tone", report.scores.communication)}
+      ${renderScoreBar("Negotiation output", report.scores.output)}
+      ${renderScoreBar("Response confidence", report.scores.confidence)}
+      ${renderScoreBar("Sourcing path fit", report.scores.goalFit)}
     </div>
     <div class="level-report-block">
-      <h4>Your real operating pattern</h4>
+      <h4>Your supplier communication pattern</h4>
       <p>${report.automationGap}</p>
       <p>${report.grammarNote}</p>
       <p>${report.scenarioNote}</p>
@@ -1354,13 +1354,13 @@ function renderLevelReport(data, report) {
     <div class="level-report-block">
       <h4>The three most expensive mistakes</h4>
       ${topErrors.length ? `<ol>${topErrors.map((item) => `<li>${item}</li>`).join("")}</ol>` : `<p>Your current answers do not show a single dramatic breakdown. The real issue is that several smaller gaps are slowing retrieval.</p>`}
-      <p>Fixing these by yourself is possible, but it usually takes longer because you cannot always see which mistake is structural and which one is just a one-off answer.</p>
+      <p>Fixing these by yourself is possible, but it usually takes longer because you cannot always see which mistake weakens price, sample, delivery, or quality conversations.</p>
     </div>
     <div class="speaking-drill-panel">
       <div class="speaking-drill-head">
-        <span>Free speaking practice</span>
-        <h4>Do these 3 drills before you leave.</h4>
-        <p>These are not random chatbot prompts. They are based on your goal and the Mandrix structure-first method.</p>
+        <span>Free sourcing practice</span>
+        <h4>Do these 3 supplier drills before you leave.</h4>
+        <p>These are not random chatbot prompts. They are based on the sourcing situations where small wording mistakes can change the factory's answer.</p>
       </div>
       <div class="speaking-drill-grid">
         ${drills.map((item) => `
@@ -1376,10 +1376,10 @@ function renderLevelReport(data, report) {
     </div>
     <div class="level-course-recommendation">
       <span>Jane's next step for you</span>
-      <strong>Book a short review with Jane</strong>
-      <p>She will read your answers with you, identify the one pattern that is costing you the most, and give you a concrete 30-day fix plan before you choose a course.</p>
-      <p>After that review, Mandrix can recommend the right path with much higher confidence: ${report.path.path}.</p>
-      <a class="btn primary" href="#booking">Book Jane Review</a>
+      <strong>Turn this audit into corrected supplier templates</strong>
+      <p>Jane will read your answers with you, identify the one communication pattern most likely to cost money, and turn it into a concrete 30-day sourcing communication plan.</p>
+      <p>After that review, Mandrix can recommend the right program with much higher confidence: ${report.path.path}.</p>
+      <a class="btn primary" href="#booking">Book Jane to Fix My Supplier Messages</a>
     </div>
   `;
 }

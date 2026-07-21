@@ -22,14 +22,13 @@ const staticUrls = [
   "/level-check",
   "/courses",
   "/about",
-  "/business",
-  "/hsk",
   "/sourcing-spotlight",
   "/corporate",
   "/insights",
-  "/insights/polite-no-chinese-business",
-  "/insights/hsk-for-professionals",
-  "/insights/logic-based-business-chinese",
+  "/booking",
+  "/faq",
+  "/privacy",
+  "/terms",
   "/zh",
 ];
 

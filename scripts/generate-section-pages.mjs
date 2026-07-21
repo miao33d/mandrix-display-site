@@ -20,36 +20,36 @@ const homeSections = [
 const siteUrl = "https://www.mandrix.top";
 const sectionMeta = {
   method: {
-    title: "The Mandrix Method for Adult Mandarin Learners | Mandrix",
-    description: "See how Mandrix teaches Mandarin through diagnosis, structure, and usable output instead of memorized phrases.",
+    title: "The Mandrix Sourcing Method | Mandrix",
+    description: "See how Mandrix teaches sourcing Chinese through supplier-message structure, factory tone, and reusable trade communication templates.",
   },
   courses: {
-    title: "Mandrix Mandarin Courses for Adults | Mandrix",
-    description: "Explore Daily Chinese, Business Chinese, Sourcing Chinese, and HSK learning paths after a free AI level check.",
+    title: "China Sourcing Communication Program | Mandrix",
+    description: "Explore Mandrix sourcing Chinese programs for Amazon sellers, importers, buyers, and teams communicating with Chinese suppliers.",
   },
   about: {
     title: "About Jane Chen, Founder of Mandrix | Mandrix",
     description: "Meet Jane Chen, Mandrix founder and lead educator, and learn how she teaches Chinese through structure and logic.",
   },
   "level-check": {
-    title: "Free AI Chinese Level Check for Adults | Mandrix",
-    description: "Start with a free AI Mandarin level check to identify your likely level, main blocker, and recommended Mandrix path.",
+    title: "Free Sourcing Communication Audit | Mandrix",
+    description: "Start with a free AI-assisted audit for supplier-message clarity, tone, negotiation leverage, and sourcing communication next steps.",
   },
   faq: {
-    title: "Mandrix FAQ | Online Mandarin Lessons for Adults",
-    description: "Answers about Mandrix online Chinese lessons, AI level checks, courses, scheduling, payment, and lesson format.",
+    title: "Mandrix FAQ | Chinese for Sourcing",
+    description: "Answers about Mandrix sourcing Chinese lessons, free sourcing audits, PayPal checkout, scheduling, and supplier communication training.",
   },
   booking: {
-    title: "Book Mandrix Online Mandarin Lessons | Mandrix",
-    description: "Choose a Mandrix course, submit your booking details, and receive your lesson schedule and online classroom link.",
+    title: "Book China Sourcing Chinese Lessons | Mandrix",
+    description: "Choose a Mandrix sourcing Chinese program, submit booking details, and receive your lesson schedule and online classroom link.",
   },
   contact: {
     title: "Contact Mandrix | Online Chinese Lessons",
     description: "Contact Mandrix for adult Mandarin lessons, Business Chinese, HSK preparation, and Chinese communication coaching.",
   },
   diagnostic: {
-    title: "Mandrix Chinese Diagnostic Path | Mandrix",
-    description: "Understand your Chinese learning blocker before choosing a paid course or long-term Mandarin learning path.",
+    title: "Mandrix Sourcing Communication Audit | Mandrix",
+    description: "Understand supplier-message risks before choosing a paid sourcing Chinese program.",
   },
   daily: {
     title: "Daily Chinese Lessons for Adult Learners | Mandrix",
@@ -64,8 +64,8 @@ const sectionMeta = {
     description: "Prepare for HSK with structured Mandarin lessons that connect exam patterns to real communication.",
   },
   specialty: {
-    title: "Specialized Chinese Learning Paths | Mandrix",
-    description: "Explore specialized Mandrix paths for sourcing, workplace Mandarin, business communication, and targeted Chinese goals.",
+    title: "Specialized Sourcing Chinese Programs | Mandrix",
+    description: "Explore Mandrix programs for sourcing Chinese, supplier communication, workplace Mandarin, and targeted trade communication goals.",
   },
   private: {
     title: "Private Mandarin Coaching for Adults | Mandrix",

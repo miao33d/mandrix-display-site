@@ -404,15 +404,15 @@ function levelCheckReportText(payload) {
   const voiceIssues = Array.isArray(voice.specificIssues) ? voice.specificIssues : [];
   const voiceDimensions = Array.isArray(voice.dimensions) ? voice.dimensions : [];
   return [
-    "Mandrix Free AI Level Check",
+    "Mandrix Free Sourcing Communication Audit",
     "",
     `Name: ${clean(payload.fullName)}`,
     `Email: ${clean(payload.email)}`,
     `Goal: ${clean(payload.goal)}`,
-    `Estimated level: ${clean(report.level?.label)}`,
-    `HSK range: ${clean(report.level?.hsk)}`,
-    `Main blocker: ${clean(report.blocker?.title)}`,
-    `Recommended path: ${clean(report.path?.path)}`,
+    `Sourcing readiness: ${clean(report.level?.label)}`,
+    `Readiness note: ${clean(report.level?.hsk)}`,
+    `Costliest communication risk: ${clean(report.blocker?.title)}`,
+    `Recommended next path: ${clean(report.path?.path)}`,
     `Voice sample: ${hasAudio ? "Attached to this email" : "Not included"}`,
     voice.transcript ? `Voice transcript: ${clean(voice.transcript)}` : "",
     voice.primaryBottleneck ? `Voice bottleneck: ${clean(voice.primaryBottleneck)}` : "",
@@ -420,7 +420,7 @@ function levelCheckReportText(payload) {
     ...voiceDimensions.map((item) => `Voice dimension - ${clean(item.label)}: ${clean(item.finding)} Evidence: ${clean(item.evidence)} Implication: ${clean(item.implication)}`),
     ...voiceIssues.map((item, index) => `Voice issue ${index + 1}: ${clean(item.issue)} | You said: ${clean(item.quote)} | Better: ${clean(item.betterVersion)} | ${clean(item.diagnosis)}`),
     "",
-    "Operating pattern:",
+    "Supplier communication pattern:",
     clean(report.automationGap),
     clean(report.grammarNote),
     clean(report.scenarioNote),
@@ -428,10 +428,10 @@ function levelCheckReportText(payload) {
     "Evidence:",
     ...evidence.map((item, index) => `${index + 1}. ${clean(item.title)} - ${clean(item.detail)}`),
     "",
-    "Free speaking practice:",
+    "Free sourcing practice:",
     ...drills.map((item, index) => [
       `${index + 1}. ${clean(item.title)}`,
-      `Prompt: ${clean(item.prompt)}`,
+      `Supplier drill: ${clean(item.prompt)}`,
       `Structure: ${clean(item.structure)}`,
       `Self-check: ${clean(item.check)}`,
     ].join("\n")),
@@ -468,12 +468,12 @@ function levelCheckReportHtml(payload, { admin = false } = {}) {
     </div>
   `).join("");
   const scoreRows = [
-    ["Structure awareness", scores.structure],
-    ["Comprehension", scores.comprehension],
-    ["Real communication", scores.communication],
-    ["Active output", scores.output],
-    ["Speaking confidence", scores.confidence],
-    ["Mandrix path fit", scores.goalFit],
+    ["Message structure", scores.structure],
+    ["Meaning clarity", scores.comprehension],
+    ["Supplier tone", scores.communication],
+    ["Negotiation output", scores.output],
+    ["Response confidence", scores.confidence],
+    ["Sourcing path fit", scores.goalFit],
   ].map(([label, value]) => `
     <tr>
       <td style="padding:10px 0;color:#5b6475;font-size:14px;">${escapeHtml(label)}</td>
@@ -503,9 +503,9 @@ function levelCheckReportHtml(payload, { admin = false } = {}) {
     </div>
   ` : "";
   const costlyErrors = [];
-  if (clean(report.blocker?.title).includes("Translation")) costlyErrors.push("You are converting too much of Chinese through English before speaking.");
-  if (clean(report.blocker?.title).includes("Sentence order")) costlyErrors.push("Your sentence frames are not stable enough to produce under pressure.");
-  if (clean(report.blocker?.title).toLowerCase().includes("grammar")) costlyErrors.push("Grammar feels like separate facts instead of reusable patterns.");
+  if (clean(report.blocker?.title).includes("Translation") || clean(report.blocker?.title).includes("Machine")) costlyErrors.push("Your supplier message may sound machine-translated, which lowers trust and negotiating leverage.");
+  if (clean(report.blocker?.title).includes("Sentence") || clean(report.blocker?.title).includes("structure")) costlyErrors.push("Your supplier-message frames are not stable enough for MOQ, sample, delivery, and quality follow-up.");
+  if (clean(report.blocker?.title).toLowerCase().includes("grammar") || clean(report.blocker?.title).includes("Pattern")) costlyErrors.push("Your grammar needs to become reusable sourcing patterns, not isolated rules.");
   if (voice.primaryBottleneck) costlyErrors.push(clean(voice.primaryBottleneck));
   const costlyErrorHtml = costlyErrors.slice(0, 3).length
     ? `<ol style="margin:10px 0 0;padding-left:20px;color:#172033;font-size:14px;line-height:1.7;">${costlyErrors.slice(0, 3).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ol>`
@@ -514,44 +514,44 @@ function levelCheckReportHtml(payload, { admin = false } = {}) {
     <p style="margin:18px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">Reply directly to this email to follow up with the learner.</p>
   ` : `
     <div style="margin-top:22px;padding:18px;border-radius:16px;background:#172033;color:#ffffff;">
-      <div style="font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.64);">Your conversion point</div>
-      <div style="margin-top:8px;font-size:22px;font-weight:800;line-height:1.25;">Book a short review with Jane</div>
-      <p style="margin:10px 0 0;color:rgba(255,255,255,.8);font-size:14px;line-height:1.65;">This free report shows where the pattern is likely breaking. The Jane review is where the diagnosis becomes usable.</p>
+      <div style="font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.64);">Your next step</div>
+      <div style="margin-top:8px;font-size:22px;font-weight:800;line-height:1.25;">Turn this audit into corrected supplier templates</div>
+      <p style="margin:10px 0 0;color:rgba(255,255,255,.8);font-size:14px;line-height:1.65;">This free report shows where your supplier communication may be losing clarity, tone, or leverage. Jane's review turns the diagnosis into messages you can use.</p>
       <div style="margin-top:14px;padding:14px;border:1px solid rgba(255,255,255,.18);border-radius:12px;background:rgba(255,255,255,.06);">
         <div style="font-size:14px;font-weight:800;">What Jane will do in the review</div>
         <ul style="margin:8px 0 0;padding-left:18px;color:rgba(255,255,255,.78);font-size:14px;line-height:1.7;">
-          <li>Review your exact answers and optional voice sample.</li>
-          <li>Identify the one pattern currently costing you the most progress.</li>
-          <li>Show how to fix it through a 30-day structure-first plan.</li>
-          <li>Recommend the right Mandrix path only if it fits your goal.</li>
+          <li>Review your exact answers, supplier-message sample, and optional voice sample.</li>
+          <li>Identify the one pattern most likely to cost money in supplier communication.</li>
+          <li>Rewrite it into a 30-day sourcing communication practice plan.</li>
+          <li>Recommend a Mandrix program only if it fits your sourcing goal.</li>
         </ul>
       </div>
-      <p style="margin:14px 0 14px;color:rgba(255,255,255,.72);font-size:14px;line-height:1.65;">Likely path after review: <strong style="color:#ffffff;">${escapeHtml(report.path?.path || "Mandrix structured coaching")}</strong>.</p>
-      <a href="https://www.mandrix.top/booking" style="display:inline-block;padding:12px 16px;border-radius:10px;background:#ffffff;color:#172033;text-decoration:none;font-weight:750;">Book Jane Review</a>
+      <p style="margin:14px 0 14px;color:rgba(255,255,255,.72);font-size:14px;line-height:1.65;">Likely path after review: <strong style="color:#ffffff;">${escapeHtml(report.path?.path || "China Sourcing Communication")}</strong>.</p>
+      <a href="https://www.mandrix.top/booking" style="display:inline-block;padding:12px 16px;border-radius:10px;background:#ffffff;color:#172033;text-decoration:none;font-weight:750;">Book Jane to Fix My Supplier Messages</a>
     </div>
   `;
   return `
   <div style="margin:0;padding:28px;background:#f5f7fb;font-family:Inter,Arial,sans-serif;color:#172033;">
     <div style="max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #e7ebf2;border-radius:22px;overflow:hidden;">
       <div style="padding:28px 28px 22px;border-bottom:1px solid #edf0f5;">
-        <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;">Mandrix · Chinese, decoded.</div>
-        <h1 style="margin:10px 0 0;font-size:30px;line-height:1.12;letter-spacing:0;">${admin ? "New level check lead" : "Your Chinese bottleneck report"}</h1>
-        <p style="margin:12px 0 0;color:#5b6475;font-size:15px;line-height:1.65;">This is an initial AI-assisted diagnosis based on automation, English transfer, sentence chunking, and real output evidence.</p>
+        <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;">Mandrix · Chinese for Sourcing</div>
+        <h1 style="margin:10px 0 0;font-size:30px;line-height:1.12;letter-spacing:0;">${admin ? "New sourcing audit lead" : "Your supplier communication audit"}</h1>
+        <p style="margin:12px 0 0;color:#5b6475;font-size:15px;line-height:1.65;">This is an initial AI-assisted audit based on supplier-message structure, English transfer, negotiation tone, and real output evidence.</p>
       </div>
       <div style="padding:26px 28px;">
         <div style="display:grid;gap:12px;">
           <div style="padding:16px;border-radius:14px;background:#f7f9fd;border:1px solid #edf0f5;">
-            <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Estimated level</div>
+            <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Sourcing readiness</div>
             <div style="margin-top:6px;font-size:22px;font-weight:800;">${escapeHtml(report.level?.label || "Pending")}</div>
             <div style="margin-top:4px;color:#5b6475;font-size:14px;">${escapeHtml(report.level?.hsk || "")}</div>
           </div>
           <div style="padding:16px;border-radius:14px;background:#f7f9fd;border:1px solid #edf0f5;">
-            <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Main blocker</div>
+            <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Costliest communication risk</div>
             <div style="margin-top:6px;font-size:20px;font-weight:800;">${escapeHtml(report.blocker?.title || "")}</div>
             <p style="margin:6px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(report.blocker?.detail || "")}</p>
           </div>
           <div style="padding:16px;border-radius:14px;background:#f7f9fd;border:1px solid #edf0f5;">
-            <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Recommended path</div>
+            <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Recommended next path</div>
             <div style="margin-top:6px;font-size:20px;font-weight:800;">${escapeHtml(report.path?.path || "")}</div>
             <p style="margin:6px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(report.path?.why || "")}</p>
           </div>
@@ -560,27 +560,27 @@ function levelCheckReportHtml(payload, { admin = false } = {}) {
           ${scoreRows}
         </table>
         <div style="margin-top:20px;padding:18px;border-radius:16px;background:#fbfcff;border:1px solid #edf0f5;">
-          <div style="font-size:18px;font-weight:800;">Your real operating pattern</div>
+          <div style="font-size:18px;font-weight:800;">Your supplier communication pattern</div>
           <p style="margin:10px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(report.automationGap || "")}</p>
           <p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(report.grammarNote || "")}</p>
           <p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(report.scenarioNote || "")}</p>
         </div>
         ${evidenceCards}
         <div style="margin-top:18px;padding:16px;border-radius:14px;background:#f7f9fd;border:1px solid #edf0f5;">
-          <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">30-day direction</div>
+          <div style="color:#788196;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">30-day sourcing direction</div>
           <p style="margin:8px 0 0;color:#172033;font-size:15px;line-height:1.65;">${escapeHtml(report.path?.firstStep || "")}</p>
         </div>
         ${hasAudio ? `<div style="margin-top:18px;padding:16px;border-radius:14px;background:#f1fbf8;border:1px solid #cfeee5;"><div style="color:#177a62;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Spoken sample included</div><p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;">The optional voice sample is attached to this email for review. Mandrix does not store the audio file on the website.</p></div>` : ""}
         ${voice.summary || voice.transcript ? `<div style="margin-top:18px;padding:16px;border-radius:14px;background:#f6f9ff;border:1px solid #d8e5f4;"><div style="color:#2f55d4;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Spoken output analysis</div>${voice.transcript ? `<p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;"><strong>Transcript:</strong> ${escapeHtml(voice.transcript)}</p>` : ""}${voice.primaryBottleneck ? `<p style="margin:8px 0 0;color:#172033;font-size:15px;line-height:1.65;"><strong>Primary bottleneck:</strong> ${escapeHtml(voice.primaryBottleneck)}</p>` : ""}<p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;">${escapeHtml(voice.summary || "")}</p>${voice.fluencySignal ? `<p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;"><strong>Fluency signal:</strong> ${escapeHtml(voice.fluencySignal)}</p>` : ""}${voiceDimensionsHtml}${voiceIssuesHtml}${voice.betterVersion ? `<p style="margin:10px 0 0;color:#172033;font-size:14px;line-height:1.65;"><strong>Suggested polished version:</strong> ${escapeHtml(voice.betterVersion)}</p>` : ""}${voice.nextStep ? `<p style="margin:8px 0 0;color:#172033;font-size:14px;line-height:1.65;"><strong>Training focus:</strong> ${escapeHtml(voice.nextStep)}</p>` : ""}${voice.conversionBridge ? `<p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">${escapeHtml(voice.conversionBridge)}</p>` : ""}${admin && voice.adminNote ? `<p style="margin:8px 0 0;color:#8a4b2a;font-size:13px;line-height:1.6;"><strong>Admin note:</strong> ${escapeHtml(voice.adminNote)}</p>` : ""}</div>` : ""}
         <div style="margin-top:18px;padding:16px;border-radius:14px;background:#fff8f2;border:1px solid #f0d3bf;">
-          <div style="color:#8a4b2a;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">The expensive mistakes</div>
+          <div style="color:#8a4b2a;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">The expensive supplier-message mistakes</div>
           ${costlyErrorHtml}
-          <p style="margin:10px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">These are the mistakes that usually keep adult learners stuck even when they keep studying vocabulary.</p>
+          <p style="margin:10px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">These are the mistakes that can weaken price, MOQ, sample, delivery, and quality conversations even when the basic meaning is understandable.</p>
         </div>
         <div style="margin-top:18px;padding:18px;border-radius:16px;background:#fffaf2;border:1px solid #ead8bd;">
-          <div style="color:#9a641b;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Free speaking practice</div>
-          <div style="margin-top:8px;color:#172033;font-size:20px;font-weight:850;line-height:1.25;">Do these 3 drills before you leave.</div>
-          <p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">These prompts are based on your goal and the Mandrix structure-first method. They give you one small win before the human review.</p>
+          <div style="color:#9a641b;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;">Free sourcing practice</div>
+          <div style="margin-top:8px;color:#172033;font-size:20px;font-weight:850;line-height:1.25;">Do these 3 supplier drills before you leave.</div>
+          <p style="margin:8px 0 0;color:#5b6475;font-size:14px;line-height:1.65;">These prompts are based on sourcing situations where small wording mistakes can change the factory's answer.</p>
           ${drillCards}
         </div>
         ${sampleBlock}
@@ -612,7 +612,7 @@ async function transcribeLevelCheckAudio(env, payload) {
   const form = new FormData();
   form.append("model", env.OPENAI_TRANSCRIBE_MODEL || "gpt-4o-mini-transcribe");
   form.append("file", new File([base64ToBytes(attachment.content)], attachment.filename, { type }));
-  form.append("prompt", "Mandrix Chinese diagnostic sample. The learner may speak Mandarin, pinyin, English, or mixed Chinese-English about price negotiation, Chinese learning, work, or daily communication.");
+  form.append("prompt", "Mandrix sourcing communication audit sample. The learner may speak Mandarin, pinyin, English, or mixed Chinese-English about supplier messages, MOQ, samples, price negotiation, quality issues, delivery, factory visits, or Canton Fair conversations.");
   const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
     method: "POST",
     headers: { Authorization: `Bearer ${env.OPENAI_API_KEY}` },
@@ -626,7 +626,7 @@ async function transcribeLevelCheckAudio(env, payload) {
 function fallbackVoiceAnalysis(message) {
   return {
     status: "manual_review",
-    summary: "Your spoken sample was received. Jane can review it manually to check fluency, hesitation, sentence assembly, and business tone.",
+    summary: "Your spoken sample was received. Jane can review it manually to check fluency, hesitation, sentence assembly, supplier tone, and negotiation clarity.",
     adminNote: message || "Automatic voice analysis is not available. Review the attached audio manually.",
     transcript: "",
     fluencySignal: "",
@@ -661,19 +661,19 @@ async function analyzeLevelCheckVoice(env, payload, transcript) {
         {
           role: "system",
           content: [
-            "You are Mandrix's expert diagnostic assistant for adult learners of Mandarin Chinese.",
-            "Analyze the spoken transcript as second-language output evidence.",
-            "This must feel like a premium diagnostic report, not generic quiz feedback.",
+            "You are Mandrix's expert sourcing-communication diagnostic assistant for adult learners who need Mandarin for Chinese suppliers, factories, 1688, Alibaba, WeChat, sourcing agents, import/export, Amazon selling, or Canton Fair conversations.",
+            "Analyze the spoken transcript as second-language output evidence in a supplier communication context.",
+            "This must feel like a premium sourcing communication audit, not generic quiz feedback.",
             "Separate what you can infer from transcript text from what requires human listening.",
-            "Assess grammar/syntax, word order, vocabulary choice, pragmatic tone, sentence chunking, English transfer, and fluency/retrieval signals visible from transcript structure.",
+            "Assess grammar/syntax, word order, vocabulary choice, pragmatic supplier tone, negotiation leverage, sentence chunking, English transfer, and fluency/retrieval signals visible from transcript structure.",
             "Mention pronunciation only as a limitation unless the transcript explicitly includes pronunciation notes.",
             "Return only valid JSON with keys: summary, primaryBottleneck, fluencySignal, dimensions, specificIssues, betterVersion, nextStep, conversionBridge.",
-            "dimensions must be 4-6 objects with keys: label, finding, evidence, implication. Include labels such as Grammar & syntax, Word order, Vocabulary choice, Pragmatic tone, Chunking, Fluency/retrieval.",
+            "dimensions must be 4-6 objects with keys: label, finding, evidence, implication. Include labels such as Message structure, Supplier tone, Negotiation leverage, Vocabulary precision, Chunking, Fluency/retrieval.",
             "specificIssues must be an array of 1-3 objects with keys: quote, issue, betterVersion, diagnosis.",
-            "betterVersion should be one polished Chinese version suited to the learner's scenario, with pinyin only if the transcript used pinyin.",
-            "nextStep should name one concrete Mandrix training focus.",
-            "conversionBridge should naturally invite a Jane review without sounding pushy.",
-            "Use clear English. Be specific, high-end, adult, and commercially useful.",
+            "betterVersion should be one polished Chinese supplier-message version suited to the learner's scenario, with pinyin only if the transcript used pinyin.",
+            "nextStep should name one concrete Mandrix sourcing training focus.",
+            "conversionBridge should naturally invite a Jane review to turn the audit into corrected supplier templates without sounding pushy.",
+            "Use clear English. Be specific, high-end, adult, and commercially useful. Do not promise financial results.",
           ].join(" "),
         },
         {
@@ -1002,7 +1002,7 @@ async function handleLevelCheck(request, env) {
   const adminTo = clean(env.ADMIN_EMAIL) || ADMIN_EMAIL;
   const admin = await sendEmail(env, {
     to: adminTo,
-    subject: `Free level check: ${clean(payload.fullName)}`,
+    subject: `Free sourcing audit: ${clean(payload.fullName)}`,
     text: reportText,
     html: levelCheckReportHtml(payload, { admin: true }),
     replyTo: payload.email,
@@ -1010,7 +1010,7 @@ async function handleLevelCheck(request, env) {
   });
   const student = await sendEmail(env, {
     to: payload.email,
-    subject: "Your Mandrix Chinese Diagnostic Report",
+    subject: "Your Mandrix Sourcing Communication Audit",
     text: reportText,
     html: levelCheckReportHtml(payload),
     replyTo: adminTo,
@@ -1142,7 +1142,7 @@ function renderDynamicSeoPage(row) {
     { title: payload.card2Title, text: payload.card2Text },
     { title: payload.card3Title, text: payload.card3Text },
   ].filter((card) => clean(card.title) || clean(card.text));
-  const primaryLabel = clean(payload.primaryLabel || "Start Free AI Level Check");
+  const primaryLabel = clean(payload.primaryLabel || "Start Free Sourcing Audit");
   const primaryHref = clean(payload.primaryHref || "/level-check");
   const secondaryLabel = clean(payload.secondaryLabel || "View Courses");
   const secondaryHref = clean(payload.secondaryHref || "/courses");
@@ -1201,17 +1201,17 @@ function renderDynamicSeoPage(row) {
         <div class="nav-inner">
           <a class="brand" href="/">
             <img src="/assets/mandrix-logo-128.png" alt="Mandrix logo" width="128" height="128" decoding="async">
-            <span class="brand-word"><span class="brand-name">Mandrix</span><span class="brand-line">Chinese, decoded.</span></span>
+            <span class="brand-word"><span class="brand-name">Mandrix</span><span class="brand-line">Chinese for Sourcing</span></span>
           </a>
           <nav class="nav-links" id="navLinks">
-            <a href="/method">Method</a>
-            <a href="/#core-system">Core System</a>
-            <a href="/#learning-paths">Learning Paths</a>
-            <a href="/corporate">Corporate</a>
+            <a href="/method">How It Works</a>
+            <a href="/#learning-paths">Sourcing Program</a>
+            <a href="/sourcing-spotlight">Sourcing Chinese</a>
+            <a href="/corporate">Corporate Teams</a>
             <a href="/#results">Results</a>
             <a href="/about">About Jane</a>
             <a href="/faq">FAQ</a>
-            <a class="nav-cta" href="/level-check">Free AI Check</a>
+            <a class="nav-cta" href="/level-check">Free Audit</a>
             <a class="lang-switch" href="/zh">中文</a>
           </nav>
           <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
@@ -1235,7 +1235,7 @@ function renderDynamicSeoPage(row) {
           <div class="article-cta-copy">
             <p class="article-cta-kicker">${escapeHtml(payload.ctaEyebrow || "Start with diagnosis")}</p>
             <h2>${escapeHtml(payload.ctaTitle || "Find the blocker before choosing a course.")}</h2>
-            <p>${escapeHtml(payload.ctaBody || "Use the free AI level check to identify your likely level, main blocker, and recommended Mandrix path before choosing a paid program.")}</p>
+            <p>${escapeHtml(payload.ctaBody || "Use the free sourcing communication audit to identify supplier-message clarity, tone, and negotiation risks before choosing a paid program.")}</p>
           </div>
           <div class="article-cta-actions">
             <a class="btn primary" href="${escapeHtml(primaryHref)}">${escapeHtml(primaryLabel)}</a>
@@ -1247,9 +1247,9 @@ function renderDynamicSeoPage(row) {
 
     <footer class="footer">
       <div class="wrap">
-        <div class="footer-brand"><strong>Mandrix</strong><span>Chinese, decoded.</span><p>Clearer Chinese for adult learners.</p></div>
+        <div class="footer-brand"><strong>Mandrix</strong><span>Chinese for Sourcing</span><p>Supplier communication Chinese for Amazon sellers, importers, buyers, and cross-border teams.</p></div>
         <nav class="footer-links" aria-label="Contact links">
-          <a href="/method">Method</a><a href="/courses">Courses</a><a href="/corporate">Corporate</a><a href="/insights">Insights</a><a href="/booking">Booking</a><a href="mailto:Jane.Mandrix@outlook.com">Jane.Mandrix@outlook.com</a>
+          <a href="/method">How It Works</a><a href="/courses">Sourcing Program</a><a href="/corporate">Corporate Teams</a><a href="/insights">Insights</a><a href="/booking">Booking</a><a href="mailto:Jane.Mandrix@outlook.com">Jane.Mandrix@outlook.com</a>
         </nav>
         <span>© 2026 Mandrix | Jane Chen. All Rights Reserved.</span>
       </div>
@@ -1488,7 +1488,7 @@ function safeEqual(a, b) {
 }
 
 async function handleSitemap(env) {
-  const urls = ["/", "/about", "/booking", "/business", "/courses", "/daily", "/diagnostic", "/faq", "/hsk", "/insights", "/level-check", "/method", "/private", "/specialty", "/zh"];
+  const urls = ["/", "/about", "/booking", "/corporate", "/courses", "/faq", "/insights", "/level-check", "/method", "/privacy", "/sourcing-spotlight", "/terms", "/zh"];
   const db = await ensureDb(env).catch(() => null);
   if (db) {
     const rows = await db.prepare("SELECT category, slug, updated_at, created_at FROM seo_pages WHERE status = 'published' ORDER BY updated_at DESC, created_at DESC LIMIT 1000").all();
